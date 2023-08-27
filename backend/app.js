@@ -10,7 +10,7 @@ const isProduction = environment === 'production';
 const routes = require('./routes');
 
 const app = express();
-app.use(routes); // Connect all the routes
+
 
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -40,7 +40,7 @@ if (!isProduction) {
     })
   );
 
-
+  app.use(routes); // Connect all the routes
 
 
 
