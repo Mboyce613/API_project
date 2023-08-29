@@ -90,7 +90,7 @@ information.
 
 * Require Authentication: false
 * Request
-  * Method: POST?
+  * Method: POST
   * URL: /api/session
   * Headers:
     * Content-Type: application/json
