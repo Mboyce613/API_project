@@ -1,0 +1,14 @@
+fetch('/api/users', {
+  method: 'POST',
+  headers: {
+    "Content-Type": "application/json",
+    "XSRF-TOKEN": `mf6LUyrW-fhMPSLyH1Wl5FySjQEbLq8ZH6i0`
+  },
+  body: JSON.stringify({
+    email: 'firestar@spider.man',
+    username: 'Firestar',
+    password: 'ddfdf3456gdf'
+    firstName: 'Peter',
+    lastName: 'Parker',
+  })
+}).then(res => res.json()).then(data => console.log(data));
