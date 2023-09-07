@@ -10,6 +10,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
 const validateLogin = [
+  // console.log('\n\n', req, '\n\n'), breaks server
     check('credential')
       .exists({ checkFalsy: true })
       .notEmpty()
@@ -25,6 +26,7 @@ router.post(
     '/',
     validateLogin,
     async (req, res, next) => {
+      console.log('\n\n', req, '\n\n')
       const { credential, password } = req.body;
   
       const user = await User.unscoped().findOne({
@@ -35,6 +37,8 @@ router.post(
           }
         }
       });
+
+     
   
       if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
         const err = new Error('Login failed');
