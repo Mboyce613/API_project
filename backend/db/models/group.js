@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Group.belongsTo(
+        models.User,
+        {foreignKey: 'organizerId'}
+      )
     }
   }
   Group.init({
@@ -19,21 +23,33 @@ module.exports = (sequelize, DataTypes) => {
     },
     name:{
       type: DataTypes.STRING,
+      validate:{
+        max: 60,
+      }
     },
     about:{
       type: DataTypes.STRING,
+      validate:{
+        min: 50,
+      }
     },
     type:{
       type: DataTypes.STRING,
+      validate:{
+        // only accept 'online' or 'inperson'
+      isIn: [['online', 'inperson']]
+      }
     },
     privite: {
       type: DataTypes.BOOLEAN,
     },
     city:{
       type: DataTypes.STRING,
+      allowNull: false,
     },
     state: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   }, {
     sequelize,
