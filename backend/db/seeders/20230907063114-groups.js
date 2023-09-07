@@ -35,6 +35,7 @@ for (let userGroup of userGroups){
   const theUser = await User.findOne({where:{userName}})
 
   for( let groupInfo of group){
+    console.log(theUser)
     await theUser.createGroup({ ...groupInfo, organizerId: theUser.id})
   }
 }
