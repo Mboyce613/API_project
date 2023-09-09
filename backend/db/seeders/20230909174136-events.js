@@ -45,7 +45,7 @@ module.exports = {
       const theVenue = await Venue.findOne({where:{address}})
     
       for( let eventInfo of event){
-        console.log('\n',theVenue,'\n')
+        // console.log('\n',theVenue,'\n')
         await theVenue.createEvent({ ...eventInfo, groupId: theVenue.groupId, venueId: theVenue.id})
       }
     }
