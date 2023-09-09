@@ -41,7 +41,7 @@ module.exports = {
       const theGroup = await Group.findOne({where:{name}})
     
       for( let venueInfo of venue){
-        console.log('\n',theGroup,'\n')
+        // console.log('\n',theGroup,'\n')
         await theGroup.createVenue({ ...venueInfo, groupId: theGroup.id})
       }
     }
