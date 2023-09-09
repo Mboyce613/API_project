@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Venues', {
+    await queryInterface.createTable('Memberships', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -20,23 +20,16 @@ module.exports = {
           key: 'id',
         }
       },
-      address: {
+      memberId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        }
+      },
+      status: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      state: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      lat: {
-        type: Sequelize.NUMERIC
-      },
-      lng: {
-        type: Sequelize.NUMERIC
       },
       createdAt: {
         allowNull: false,
@@ -51,6 +44,6 @@ module.exports = {
     },options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Venues',options);
+    await queryInterface.dropTable('Memberships',options);
   }
 };

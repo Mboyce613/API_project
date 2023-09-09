@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Venues', {
+    await queryInterface.createTable('Events', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -20,23 +20,34 @@ module.exports = {
           key: 'id',
         }
       },
-      address: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      venueId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Venues',
+          key: 'id',
+        }
       },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      name: {
+        type: Sequelize.STRING
       },
-      state: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      type: {
+        type: Sequelize.STRING
       },
-      lat: {
+      startDate: {
+        type: Sequelize.DATE
+      },
+      endDate: {
+        type: Sequelize.DATE
+      },
+      capacity: {
+        type: Sequelize.INTEGER
+      },
+      price: {
         type: Sequelize.NUMERIC
       },
-      lng: {
-        type: Sequelize.NUMERIC
+      description: {
+        type: Sequelize.STRING,
+        allowNull:false,
       },
       createdAt: {
         allowNull: false,
@@ -48,9 +59,9 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
-    },options);
+    }),options;
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Venues',options);
+    await queryInterface.dropTable('Events',options);
   }
 };

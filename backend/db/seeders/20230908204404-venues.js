@@ -1,7 +1,32 @@
 'use strict';
 
+const { where } = require('sequelize');
 /** @type {import('sequelize-cli').Migration} */
 const {Group, Venue} = require('../models')
+
+const groupVenues = [
+  {
+    name: 'Grave Yard Visiters',
+    venue: [{
+      address: '666 Graveyard way',
+      city: 'Bellingham',
+      state :'WA',
+      lat: 666,
+      lng: 666,
+    }]
+  },
+  {
+    name: 'Vampire Ball Goers',
+    venue:[{
+      address: '999 Bloodsucker blvd',
+      city: 'Bellingham',
+      state :'WA',
+      lat: 999,
+      lng: 999,
+    }]
+    }
+];
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -13,36 +38,15 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    const groupVenues = [
-      {
-        name: 'Grave Yard Visiters',
-        venue: [{
-          address: '666 Graveyard way',
-          city: 'Bellingham',
-          state :'WA',
-          lat: 666,
-          lng: 666,
-        }]
-      },
-      {
-        name: 'Vampire Ball Goers',
-        venue:[{
-          address: '999 Bloodsucker blvd',
-          city: 'Bellingham',
-          state :'WA',
-          lat: 999,
-          lng: 999,
-        }]
-        }
-    ];
+   
     
     for (let groupVenue of groupVenues){
       const {name, venue} = groupVenue
       const theGroup = await Group.findOne({where:{name}})
     
       for( let venueInfo of venue){
-        console.log('\n',theGroup,'\n')
-        await theGroup.createVenue({ ...venueInfo, groupId: theGroup.id})
+        // console.log('\n',theGroup,'\n')
+        await Venue.create({ ...venueInfo, groupId: theGroup.id})
       }
     }
   },
@@ -59,7 +63,7 @@ module.exports = {
       const theGroup = await Group.findOne({where:{name}})
     
       for( let venueInfo of venue){
-        await theGroup.destroyVenue({ ...venueInfo, groupId: theGroup.id})
+        await Venue.destroy({where:{ ...venueInfo, groupId: theGroup.id}})
       }
     }
   }

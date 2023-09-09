@@ -2,8 +2,6 @@
 
 /** @type {import('sequelize-cli').Migration} */
 const {User, Group} = require('../models')
-module.exports = {
-  async up (queryInterface, Sequelize) {
 
 const userGroups = [
   {
@@ -30,13 +28,18 @@ const userGroups = [
     }
 ];
 
+module.exports = {
+  async up (queryInterface, Sequelize) {
+
+
+
 for (let userGroup of userGroups){
   const {userName, group} = userGroup
   const theUser = await User.findOne({where:{userName}})
 
   for( let groupInfo of group){
     // console.log(theUser)
-    await theUser.createGroup({ ...groupInfo, organizerId: theUser.id})
+    await Group.create({ ...groupInfo, organizerId: theUser.id})
   }
 }
 
@@ -49,7 +52,7 @@ for (let userGroup of userGroups){
       const theUser = await User.findOne({where:{userName}})
     
       for( let groupInfo of group){
-        await theUser.destroyGroup({ ...groupInfo, organizerId: theUser.id})
+        await Group.destroy({where:{ ...groupInfo, organizerId: theUser.id}})
       }
     }
   }
