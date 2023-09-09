@@ -21,11 +21,13 @@ module.exports = {
       {
         imageableId: 1,
         imageableType: 'Group',
+        url: 'https://foo.com',
         preview: false,
       },
       {
         imageableId: 1,
         imageableType: 'Event',
+        url: 'https://foo.com',
         preview: true,
       },
     ], { validate: true });
