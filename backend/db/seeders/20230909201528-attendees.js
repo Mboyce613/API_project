@@ -5,8 +5,7 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
-const {Membership} = require('../models')
-
+const {Attendee} = require('../models')
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -18,16 +17,16 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await Membership.bulkCreate([
+    await Attendee.bulkCreate([
       {
-        memberId: 1,
-        groupId: 1,
+        userId: 1,
+        eventId: 1,
         status: 'pending',
       },
       {
-        memberId: 2,
-        groupId: 2,
-        status: 'member',
+        userId: 2,
+        eventId: 2,
+        status: 'attending',
       },
     ], { validate: true });
   },
@@ -39,10 +38,10 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    options.tableName = 'Memberships';
+    options.tableName = 'Attendees';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      memberId: { [Op.in]: [1, 2] }
+      userId: { [Op.in]: [1, 2] }
     }, {});
-  }
+  },
 };
