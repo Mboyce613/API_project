@@ -5,7 +5,7 @@ const {User, Group} = require('../models')
 
 const userGroups = [
   {
-    userName: 'Demo-lition',
+    userName: 'Queen',
     group: [{
       name: 'Grave Yard Visiters',
       about: 'A bunch of awesome goth people getting together to hang out at the graves of the long since past.',
@@ -16,7 +16,7 @@ const userGroups = [
     }]
   },
   {
-    userName: 'FakeUser1',
+    userName: 'Banshee',
     group:[{
       name: 'Vampire Ball Goers',
       about: 'Dressed to the nines vampire fassion dance partys! We go to have fun!!!',
