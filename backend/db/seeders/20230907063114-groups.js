@@ -9,7 +9,7 @@ const userGroups = [
     group: [{
       name: 'Grave Yard Visiters',
       about: 'A bunch of awesome goth people getting together to hang out at the graves of the long since past.',
-      type: 'inperson',
+      type: 'In person',
       privite: false,
       city: 'Bellingham',
       state :'WA',
@@ -20,7 +20,7 @@ const userGroups = [
     group:[{
       name: 'Vampire Ball Goers',
       about: 'Dressed to the nines vampire fassion dance partys! We go to have fun!!!',
-      type: 'inperson',
+      type: 'In person',
       privite: false,
       city: 'Bellingham',
       state :'WA',

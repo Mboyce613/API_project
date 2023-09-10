@@ -62,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate:{
         // only accept 'online' or 'inperson'
-      isIn: [['online', 'inperson']]
+      isIn: [['Online', 'In person']]
       }
     },
     privite: {

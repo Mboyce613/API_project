@@ -30,6 +30,18 @@ module.exports = {
         url: 'https://foo.com',
         preview: true,
       },
+      {
+        imageableId: 2,
+        imageableType: 'Group',
+        url: 'https://bar.com',
+        preview: true,
+      },
+      {
+        imageableId: 2,
+        imageableType: 'Event',
+        url: 'https://bar.com',
+        preview: false,
+      },
     ], { validate: true });
   },
 
