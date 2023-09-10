@@ -60,6 +60,7 @@ router.get('/current', async (req,res) =>{
 //? GroupImages: remove imageableId, imageableType, createdAt, updatedAt
 //? Organizer: remove username
 //? Venues: remove createdAt, updatedAt
+//? ^^^ done through scopes on the models ^^^
 router.get('/:groupId', async (req,res) =>{
     // console.log('\n\n',req.params,'\n\n')
     const {groupId} = req.params
