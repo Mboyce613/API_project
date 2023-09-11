@@ -38,8 +38,8 @@ module.exports = {
 
 
 for (let userGroup of userGroups){
-  const {userName, group} = userGroup
-  const theUser = await User.findOne({where:{userName}})
+  const {username, group} = userGroup
+  const theUser = await User.findOne({where:{username}})
 
   for( let groupInfo of group){
     console.log(groupInfo)
@@ -53,8 +53,8 @@ for (let userGroup of userGroups){
     options.tableName = 'Groups';
 
     for (let userGroup of userGroups){
-      const {userName, group} = userGroup
-      const theUser = await User.findOne({where:{userName}})
+      const {username, group} = userGroup
+      const theUser = await User.findOne({where:{username}})
     
       for( let groupInfo of group){
         await Group.destroy({where:{ ...groupInfo, organizerId: theUser.id}})
