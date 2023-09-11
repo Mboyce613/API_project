@@ -2,6 +2,9 @@
 
 /** @type {import('sequelize-cli').Migration} */
 const {User, Group} = require('../models')
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 
 const userGroups = [
   {
@@ -46,6 +49,7 @@ for (let userGroup of userGroups){
   },
 
   async down (queryInterface, Sequelize) {
+    options.tableName = 'Groups';
 
     for (let userGroup of userGroups){
       const {userName, group} = userGroup
