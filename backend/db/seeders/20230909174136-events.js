@@ -1,5 +1,6 @@
 'use strict';
 
+let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
@@ -37,6 +38,7 @@ const venueEvents = [
 module.exports = {
 
   async up (queryInterface, Sequelize) {
+    options.tableName = 'Events';
 
     for (let venueEvent of venueEvents){
       const {address, event} = venueEvent
