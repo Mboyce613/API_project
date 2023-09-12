@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const userGroups = [
   {
-    userName: 'Queen',
+    username: 'Queen',
     group: [{
       name: 'Grave Yard Visiters',
       about: 'A bunch of awesome goth people getting together to hang out at the graves of the long since past.',
@@ -20,7 +20,7 @@ const userGroups = [
     }]
   },
   {
-    userName: 'Banshee',
+    username: 'Banshee',
     group:[{
       name: 'Vampire Ball Goers',
       about: 'Dressed to the nines vampire fassion dance partys! We go to have fun!!!',
@@ -42,7 +42,7 @@ for (let userGroup of userGroups){
   const theUser = await User.findOne({where:{userName}})
 
   for( let groupInfo of group){
-    // console.log(theUser)
+    console.log(groupInfo)
     await Group.create({ ...groupInfo, organizerId: theUser.id})
   }
 }
