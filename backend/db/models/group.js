@@ -79,6 +79,19 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Group',
-  });
+  },
+  { // options object 
+    defaultScope: { 
+        // Define default scope details here
+    },
+    scopes: {
+        [scopeName1]: {
+            // define scope 1 details here
+        }, 
+        [scopeName2]: {
+            // define scope 2 details here
+        },
+    }
+});
   return Group;
 };
