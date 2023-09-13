@@ -65,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
       isIn: [['Online', 'In person']]
       }
     },
-    privite: {
+    private: {
       type: DataTypes.BOOLEAN,
     },
     city:{

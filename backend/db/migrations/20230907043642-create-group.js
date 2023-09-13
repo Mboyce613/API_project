@@ -29,7 +29,7 @@ module.exports = {
       type: {
         type: Sequelize.STRING
       },
-      privite: {
+      private: {
         type: Sequelize.BOOLEAN
       },
       city: {

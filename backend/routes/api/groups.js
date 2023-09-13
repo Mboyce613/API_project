@@ -7,28 +7,9 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
-//! may need some kind of validation, stole this from users.js
-// const validateSignup = [
-//   check('email')
-//     .exists({ checkFalsy: true })
-//     .isEmail()
-//     .withMessage('Please provide a valid email.'),
-//   check('username')
-//     .exists({ checkFalsy: true })
-//     .isLength({ min: 4 })
-//     .withMessage('Please provide a username with at least 4 characters.'),
-//   check('username')
-//     .not()
-//     .isEmail()
-//     .withMessage('Username cannot be an email.'),
-//   check('password')
-//     .exists({ checkFalsy: true })
-//     .isLength({ min: 6 })
-//     .withMessage('Password must be 6 characters or more.'),
-//   handleValidationErrors
-// ];
 
-
+// GET /api/groups
+//? ---------------- works --------------------
 router.get('/', async (req,res) =>{
     const Groups = await Group.findAll() 
 
@@ -36,7 +17,7 @@ router.get('/', async (req,res) =>{
         const {id} = group
 
         const memberships = await Membership.findAll({where:{groupId: id}})
-        const image = await Image.findAll({where:{imageableType: 'Group', preview: true}})
+        const image = await Image.findAll({where:{imageableType: 'Group', preview: true, imageableId: id}})
 
         // console.log('\n\n',image,'\n\n')
 
@@ -48,18 +29,21 @@ router.get('/', async (req,res) =>{
    return res.json({Groups})
 })
 
+// GET /api/groups/current
 //! ------- Requires Auth --------------
 router.get('/current', async (req,res) =>{
 
 // how do I get info about the current user?
+const userId = req.user.id
 
-   return res.json()
+const ownsGroup = await Group.findAll({where:{organizerId:userId}})
+
+
+   return res.json(ownsGroup)
 })
 
-//! ------------------ NEEDS ----------------
-//? Organizer: remove username
-//? Venues: remove createdAt, updatedAt
-//? ^^^ done through scopes on the models ^^^
+// GET /api/groups/:groupId
+//? --------- WORKS ---------------
 router.get('/:groupId', async (req,res) =>{
     // console.log('\n\n',req.params,'\n\n')
     const {groupId} = req.params
@@ -78,5 +62,47 @@ router.get('/:groupId', async (req,res) =>{
     res.json(group)
 })
 
+
+// POST /api/groups
+
+const validateSignup = [
+    check('name')
+      .exists({ checkFalsy: true })
+      .isLength({ max: 60 })
+      .withMessage('Name must be 60 characters or less'),
+    check('about')
+      .exists({ checkFalsy: true })
+      .isLength({ min: 50 })
+      .withMessage('About must be 50 characters or more'),
+    check('type')
+      .not()
+      .isEmail()
+      .isIn(['In person', 'Online'])
+      .withMessage("Type must be 'Online' or 'In person"),
+    check('private')
+      .exists({ checkFalsy: true })
+      .isIn(['true', 'false'])
+      .withMessage('Private must be a boolean'),
+      check('city')
+      .exists({ checkFalsy: true })
+      .withMessage('City is required'),
+      check('state')
+      .exists({ checkFalsy: true })
+      .withMessage('State is required'),
+    handleValidationErrors
+  ];
+
+//? ---------------- Works ----------------
+router.post('/',validateSignup, async (req,res)=>{
+    const userId = req.user.id
+    let { name, about, type, private, city, state} = req.body
+
+
+  const newGroup = await Group.create({name, about, type, private, city, state, organizerId: userId})
+    
+  console.log(typeof(private))
+    res.json(newGroup)
+
+})
 
 module.exports = router;
