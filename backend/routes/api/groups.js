@@ -57,7 +57,6 @@ router.get('/current', async (req,res) =>{
 })
 
 //! ------------------ NEEDS ----------------
-//? GroupImages: remove imageableId, imageableType, createdAt, updatedAt
 //? Organizer: remove username
 //? Venues: remove createdAt, updatedAt
 //? ^^^ done through scopes on the models ^^^

@@ -32,7 +32,8 @@ module.exports = {
         url: 'https://bar.com',
         preview: false,
       },
-    ], { validate: true });
+    ], { validate: true },
+    );
   },
 
   async down (queryInterface, Sequelize) {

@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN
     },
   }, {
+    defaultScope: { 
+      attributes: { 
+          exclude: [ "imageableId", "imageableType", "createdAt", "updatedAt" ] 
+      }
+  },
     sequelize,
     modelName: 'Image',
   });

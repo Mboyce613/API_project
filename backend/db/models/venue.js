@@ -47,6 +47,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.NUMERIC,
     }
   }, {
+    defaultScope: { 
+      attributes: { 
+          exclude: [ "createdAt", "updatedAt" ] 
+      }
+  },
     sequelize,
     modelName: 'Venue',
   });
