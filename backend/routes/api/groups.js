@@ -198,4 +198,41 @@ router.get('/:groupId/venues', async (req,res)=>{
     }
   })
 
+//POST URL: /api/groups/:groupId/venues
+const validateVenue = [
+    check('address')
+      .exists({ checkFalsy: true })
+      .withMessage('Street address is required'),
+    check('lat')
+      .exists({ checkFalsy: true })
+      .withMessage('Latitude is not valid'),
+    check('lng')
+        .exists({ checkFalsy: true })
+      .withMessage("Longitude is not valid"),
+      check('city')
+      .exists({ checkFalsy: true })
+      .withMessage('City is required'),
+      check('state')
+      .exists({ checkFalsy: true })
+      .withMessage('State is required'),
+    handleValidationErrors
+  ];
+
+//? ---------------- Works ----------------
+router.post('/:groupId/venues',validateVenue, async (req,res)=>{
+    const {groupId} = req.params
+    let { address, lat, lng, city, state} = req.body
+   const isGroup = await Group.findByPk(groupId)
+
+    if(!isGroup){
+        res.statusCode = 404
+        throw new Error("Group couldn't be found")
+    }
+
+   await Venue.create({address, lat, lng, city, state, groupId:groupId})
+    const returnVenue = await Venue.findOne({where:{address}})
+    res.json(returnVenue)
+
+})
+
 module.exports = router;
