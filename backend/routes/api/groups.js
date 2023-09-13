@@ -100,8 +100,59 @@ router.post('/',validateSignup, async (req,res)=>{
 
   const newGroup = await Group.create({name, about, type, private, city, state, organizerId: userId})
     
-  console.log(typeof(private))
     res.json(newGroup)
+
+})
+
+// POST URL: /api/groups/:groupId/images
+//? ----------------- works ------------------
+router.post('/:groupId/images', async (req,res)=>{
+  const {groupId} = req.params
+  const {url, preview} = req.body
+  const theGroup = await Group.findOne({where:{id:groupId}})
+
+  if(theGroup){
+   const newImage = await Image.create({url, preview, imageableId:groupId, imageableType:'Group'})
+   const sendImage = await Image.findOne({where:{url}})
+   res.json(sendImage)
+  } else{
+    res.statusCode = 404
+    throw new Error("Group couldn't be found")
+  }
+})
+
+//PUT URL: /api/groups/:groupId
+const validateGroup = [
+  check('name')
+    .exists({ checkFalsy: true })
+    .isLength({ max: 60 })
+    .withMessage('Name must be 60 characters or less'),
+  check('about')
+    .exists({ checkFalsy: true })
+    .isLength({ min: 50 })
+    .withMessage('About must be 50 characters or more'),
+  check('type')
+    .not()
+    .isEmail()
+    .isIn(['In person', 'Online'])
+    .withMessage("Type must be 'Online' or 'In person"),
+  check('private')
+    .exists({ checkFalsy: true })
+    .isIn(['true', 'false'])
+    .withMessage('Private must be a boolean'),
+    check('city')
+    .exists({ checkFalsy: true })
+    .withMessage('City is required'),
+    check('state')
+    .exists({ checkFalsy: true })
+    .withMessage('State is required'),
+  handleValidationErrors
+];
+
+//? ---------------- Works ----------------
+router.put('/:groupId',validateGroup, async (req,res)=>{
+const {name, about, type, private, city, state} = req.body
+
 
 })
 
