@@ -15,14 +15,19 @@ router.get('/', async (req,res) =>{
 
     for( let group of Groups){
         const {id} = group
+ 
 
         const memberships = await Membership.findAll({where:{groupId: id}})
-        const image = await Image.findAll({where:{imageableType: 'Group', preview: true, imageableId: id}})
-
+        let image = await Image.findOne({where:{imageableType: 'Group', preview: true, imageableId: id}})
         // console.log('\n\n',image,'\n\n')
-
+//  console.log(group)
+        
         group.dataValues.numMembers = memberships.length
-        group.dataValues.previewImage = image[0].dataValues.url
+        if(!image){
+            group.dataValues.previewImage = null
+        } else{
+            group.dataValues.previewImage = image.url
+        }
         // console.log(group)
     }
 
@@ -122,6 +127,7 @@ router.post('/:groupId/images', async (req,res)=>{
 })
 
 //PUT URL: /api/groups/:groupId
+//? ---------------- Works ---------------------
 const validateGroup = [
   check('name')
     .exists({ checkFalsy: true })
@@ -152,8 +158,44 @@ const validateGroup = [
 //? ---------------- Works ----------------
 router.put('/:groupId',validateGroup, async (req,res)=>{
 const {name, about, type, private, city, state} = req.body
+const {groupId} = req.params
+const theGroup = await Group.findOne({where:{id:groupId}})
 
+await theGroup.set({name, about, type, private, city, state})
+
+res.json(theGroup)
 
 })
+
+// DELETE URL: /api/groups/:groupId
+router.delete('/:groupId', async (req,res)=>{
+const {groupId} = req.params
+    const theGroup = await Group.findByPk(groupId)
+    if(!theGroup){
+        res.statusCode = 404
+        throw new Error("Group couldn't be found")
+    }else{
+        // console.log('\n',theGroup,'\n')
+       await theGroup.destroy()
+       return res.json({ "message": "Successfully deleted"})
+    }
+})
+
+// GET URL: /api/groups/:groupId/venues
+router.get('/:groupId/venues', async (req,res)=>{
+    const {groupId} = req.params
+    const theVenues = await Venue.findAll({where:{groupId}})
+  const returnObj = {"Venues": []}
+    for (let venue of theVenues){
+        returnObj.Venues.push(venue)
+    }
+    console.log(theVenues)
+    if(theVenues[0]){
+     res.json(returnObj)
+    } else{
+      res.statusCode = 404
+      throw new Error("Group couldn't be found")
+    }
+  })
 
 module.exports = router;
