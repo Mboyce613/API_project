@@ -28,7 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       ),
       Event.hasMany(
         models.Image,
-        { foreignKey: 'imageableId',
+        { 
+          as:'EventImages',
+          foreignKey: 'imageableId',
           constraints: false,
           scope: {
             imageableType: 'Event'
@@ -54,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate:{
         // only accept 'online' or 'inperson'
-      isIn: [['online', 'inperson']]
+      isIn: [['Online', 'In person']]
       }
     },
     startDate: {
@@ -73,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       validate:{
         afterStart(value){
           if (new Date(value) < this.startDate){
-            throw new Error("end date must be after start date")
+            throw new Error("End date is less than start date")
           }
         }
       },
@@ -82,13 +84,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
     },
     price: {
-      type: DataTypes.NUMERIC,
+      type: DataTypes.FLOAT,
     },
     description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   }, {
+    defaultScope: { 
+      attributes: { 
+          exclude: [ "updatedAt","createdAt" ] 
+      }
+  },
     sequelize,
     modelName: 'Event',
   });

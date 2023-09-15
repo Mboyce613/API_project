@@ -2,7 +2,7 @@ const express = require('express')
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Group, Membership, Image, Venue } = require('../../db/models');
+const { User, Group, Membership, Image, Venue, Event, Attendee } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
@@ -138,8 +138,6 @@ const validateGroup = [
     .isLength({ min: 50 })
     .withMessage('About must be 50 characters or more'),
   check('type')
-    .not()
-    .isEmail()
     .isIn(['In person', 'Online'])
     .withMessage("Type must be 'Online' or 'In person"),
   check('private')
@@ -235,4 +233,110 @@ router.post('/:groupId/venues',validateVenue, async (req,res)=>{
 
 })
 
+//GET URL: /api/groups/:groupId/events
+
+router.get('/:groupId/events', async (req,res)=>{
+  const {groupId} = req.params
+  const returnObj = {"Events":[]}
+  const theEvents = await Event.findAll({where:{groupId:groupId}})
+
+  if(theEvents.length === 0){
+    throw new Error("Group couldn't be found")
+  }
+
+  for( let event of theEvents){
+      const theGroup = await Group.findByPk(event.groupId)
+      const theVenue = await Venue.findOne({where:{id:event.venueId}})
+      const numAttending = await Attendee.findAll({where:{eventId:event.id, status:"attending"}})
+      let image = await Image.findOne({where:{imageableType: 'Event', preview: true, imageableId: event.id}})
+      // console.log('\n',theGroup,'\n')
+      // console.log('\n',event,'\n')
+      if(numAttending.length){
+          event.dataValues.numAttending = numAttending.length
+      } else{
+          event.dataValues.numAttending = 0
+      }
+
+      if(!image){
+          event.dataValues.previewImage = null
+      } else{
+          event.dataValues.previewImage = image.url
+      }
+     
+      if(theGroup){
+          event.dataValues.Group = theGroup
+      } else{
+          event.dataValues.Group = null
+      }
+
+      if(theVenue){
+          event.dataValues.Venue = theVenue
+      } else{
+          event.dataValues.Venue = null
+      }
+
+
+      returnObj.Events.push(event)
+  }
+
+  res.json(returnObj)
+})
+
+//POST URL: /api/groups/:groupId/events
+const validateEvent = [
+  check('venueId')
+    .exists({ checkFalsy: true })
+    .withMessage('Venue does not exist'),
+  check('name')
+    .exists({ checkFalsy: true })
+    .isLength({ min: 5 })
+    .withMessage('Name must be at least 5 characters'),
+  check('type')
+      .exists({ checkFalsy: true })
+      .isIn(['In person', 'Online'])
+    .withMessage("Type must be Online or In person"),
+    check('capacity')
+    .exists({ checkFalsy: true })
+    .isInt()
+    .withMessage('Capacity must be an integer'),
+    check('price')
+    .exists({ checkFalsy: true })
+    .isFloat()
+    .withMessage('Price is invalid'),
+    check('description')
+    .exists({ checkFalsy: true })
+    .withMessage('Description is required'),
+    check('startDate')
+    .exists({ checkFalsy: true })
+    .isAfter(Date())
+    .withMessage('Start date must be in the future'),
+    // check('endDate')
+    // .exists({ checkFalsy: true })
+    // .isAfter('startDate')
+    // .withMessage('End date is less than start date'),
+  handleValidationErrors
+];
+
+//! -------- End date needs to error correctly ------------
+
+router.post('/:groupId/events',validateEvent, async (req,res)=>{
+
+  if(validateEvent.startDate >= validateEvent.endDate){
+    throw new Error('End date is less than start date')
+  }
+
+  const {groupId} = req.params
+  let { venueId, name, type, capacity, price, description, startDate, endDate} = req.body
+ const isGroup = await Group.findByPk(groupId)
+
+  if(!isGroup){
+      res.statusCode = 404
+      throw new Error("Group couldn't be found")
+  }
+
+ await Event.create({venueId, name, type, capacity, price, description, startDate, endDate, groupId:groupId})
+  const returnEvent = await Event.findOne({where:{name}})
+  res.json(returnEvent)
+
+})
 module.exports = router;

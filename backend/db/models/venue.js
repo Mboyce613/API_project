@@ -46,12 +46,13 @@ module.exports = (sequelize, DataTypes) => {
     lng: {
       type: DataTypes.NUMERIC,
     }
-  }, {
-    defaultScope: { 
-      attributes: { 
-          exclude: [ "createdAt", "updatedAt" ] 
-      }
-  },
+  }, 
+  {
+    // defaultScope: { 
+    //   attributes: { 
+    //       exclude: [ "groupId","address","lat","lng","createdAt", "updatedAt" ] 
+      // }
+  // },
     sequelize,
     modelName: 'Venue',
   });

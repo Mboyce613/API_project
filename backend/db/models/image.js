@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Image.belongsTo(
         models.Event, {
+        as:'EventImages',
         foreignKey: 'imageableId',
         constraints: false
       });
@@ -42,11 +43,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN
     },
   }, {
-    defaultScope: { 
-      attributes: { 
-          exclude: [ "imageableId", "imageableType", "createdAt", "updatedAt" ] 
-      }
-  },
+  //   defaultScope: { 
+  //     attributes: { 
+  //         exclude: [ "createdAt", "updatedAt" ] 
+  //     }
+  // },
     sequelize,
     modelName: 'Image',
   });
