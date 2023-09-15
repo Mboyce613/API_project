@@ -13,7 +13,7 @@ const venueEvents = [
     address: '666 Graveyard way',
     event: [{
       name: 'Nearly headless Nicks death day party',
-      type: 'inperson',
+      type: 'In person',
       startDate : '12/30/2023',
       endDate: '01/01/2024',
       capacity: 666,
@@ -25,7 +25,7 @@ const venueEvents = [
     address: '999 Bloodsucker blvd',
     event:[{
       name: 'Blood drive',
-      type: 'inperson',
+      type: 'In person',
       startDate : '12/30/2023',
       endDate: '01/01/2024',
       capacity: 999,

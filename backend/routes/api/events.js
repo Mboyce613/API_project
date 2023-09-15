@@ -5,6 +5,7 @@ const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Group, Membership, Image, Venue, Event, Attendee } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const { where } = require('sequelize');
 const router = express.Router();
 
 
@@ -80,5 +81,104 @@ router.get('/:eventId', async (req,res)=>{
    
     res.json(theEvent)
 })
+
+//POST URL: /api/events/:eventId/images
+
+router.post('/:eventId/images', async (req,res)=>{
+    const {eventId} = req.params
+    const {url, preview} = req.body
+    const theEvent = await Event.findOne({where:{id:eventId}})
+  
+    if(theEvent){
+     await Image.create({url, preview, imageableId:eventId, imageableType:'Event'})
+     const sendImage = await Image.findOne({
+        where:{url},
+        attributes:['id','url','preview'],
+    })
+     res.json(sendImage)
+    } else{
+      res.statusCode = 404
+      throw new Error("Event couldn't be found")
+    }
+  })
+
+//PUT URL: /api/events/:eventId
+const validateEvent = [
+    check('venueId')
+      .exists({ checkFalsy: true })
+      .withMessage('Venue does not exist'),
+    check('name')
+      .exists({ checkFalsy: true })
+      .isLength({ min: 5 })
+      .withMessage('Name must be at least 5 characters'),
+    check('type')
+        .exists({ checkFalsy: true })
+        .isIn(['In person', 'Online'])
+      .withMessage("Type must be Online or In person"),
+      check('capacity')
+      .exists({ checkFalsy: true })
+      .isInt()
+      .withMessage('Capacity must be an integer'),
+      check('price')
+      .exists({ checkFalsy: true })
+      .isFloat()
+      .withMessage('Price is invalid'),
+      check('description')
+      .exists({ checkFalsy: true })
+      .withMessage('Description is required'),
+      check('startDate')
+      .exists({ checkFalsy: true })
+      .isAfter(Date())
+      .withMessage('Start date must be in the future'),
+      // check('endDate')
+      // .exists({ checkFalsy: true })
+      // .isAfter('startDate')
+      // .withMessage('End date is less than start date'),
+    handleValidationErrors
+  ];
+
+  //!---------END DATE NEEDS TO ERROR CORRECTLY
+
+router.put('/:eventId',validateEvent, async (req,res)=>{
+    const {name, venueId, type, capacity, price, description, startDate, endDate} = req.body
+    const {eventId} = req.params
+    const theEvent = await Event.findOne({where:{id:eventId}})
+    const theVenue = await Venue.findByPk(venueId)
+
+    if(!theEvent){
+        throw new Error("Event couldn't be found")
+    }
+
+    if(!theVenue){
+        throw new Error("Venue couldn't be found")
+    }
+    
+    await theEvent.set({name, venueId, type, capacity, price, description, startDate, endDate})
+    
+    res.json(theEvent)
+    
+    })
+
+    //DELETE URL: /api/events/:eventId
+    router.delete('/:eventId', async (req,res)=>{
+        const {eventId} = req.params
+            const theEvent = await Event.findByPk(eventId)
+            if(!theEvent){
+                res.statusCode = 404
+                throw new Error("Event couldn't be found")
+            }else{
+                // console.log('\n',theEvent,'\n')
+                const theImages = await Image.findAll({where:{imageableId:eventId, imageableType: 'Event'}})
+                for (let image of theImages){
+                   await image.destroy()
+                }
+                const theAttendees = await Attendee.findAll({where:{eventId}})
+                for (let attendee of theAttendees){
+                   await attendee.destroy()
+                }
+               await theEvent.destroy()
+               return res.json({ "message": "Successfully deleted"})
+            }
+        })
 
 module.exports = router;

@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Event.belongsTo(
         models.Group,
-        {foreignKey: 'groupId'}
+        {foreignKey: 'groupId',
+        onDelete: 'CASCADE'}
       ),
       Event.belongsTo(
         models.Venue,
@@ -102,5 +103,3 @@ module.exports = (sequelize, DataTypes) => {
   return Event;
 };
 
-//POST URL: /api/events/:eventId/images
-//! ---- I AM HERE ----------

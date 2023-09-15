@@ -339,4 +339,76 @@ router.post('/:groupId/events',validateEvent, async (req,res)=>{
   res.json(returnEvent)
 
 })
+
+
+//GET URL: /api/groups/:groupId/members
+router.get('/:groupId/members', async (req,res)=>{
+  const {groupId} = req.params
+  const owner = false
+
+const theGroup = await Group.findByPk(groupId)
+if(!theGroup){
+  throw new Error("Group couldn't be found")
+}
+if(theGroup.organizerId === req.user.id) owner = true
+
+  const returnObj = {"Members":[]}
+ let theMembers = await Membership.findAll({where:{groupId}})
+ for(let member of theMembers){
+   const {memberId} = member
+   const theMember = await User.findOne({where:{id:memberId}})
+if(owner){
+  const obj = {
+    'id':memberId,
+    "firstName":theMember.firstName,
+    "lastName":theMember.lastName,
+    "Membership":{"status":member.status}
+  }
+  returnObj.Members.push(obj)
+} else{
+  if(member.status !== 'pending'){
+    const obj = {
+      'id':memberId,
+      "firstName":theMember.firstName,
+      "lastName":theMember.lastName,
+      "Membership":{"status":member.status}
+    }
+    returnObj.Members.push(obj)
+  }
+}
+ }
+
+  res.json(returnObj)
+})
+
+//POST URL: /api/groups/:groupId/membership
+router.post('/:groupId/membership', async (req,res)=>{
+  const {groupId} = req.params
+
+  const theGroup = await Group.findByPk(groupId)
+if(!theGroup){
+  throw new Error("Group couldn't be found")
+}
+
+const isMember = await Membership.findOne({where:{'memberId':req.user.id,groupId}})
+// console.log(isMember)
+if(!isMember){
+  const newMembership = await Membership.create({'memberId':req.user.id, 'status':'pending',groupId})
+  const returnMember = await Membership.findOne({
+    where:{'memberId':req.user.id},
+    attributes:['memberId','status']
+  })
+  res.json(returnMember)
+}else if(isMember.status === 'member' || isMember.status === 'co-host'){
+  throw new Error("User is already a member of the group")
+}else if(isMember.status === 'pending'){
+  throw new Error("Membership has already been requested")
+}
+
+})
+
+//PUT URL: /api/groups/:groupId/membership
+
+
 module.exports = router;
+
