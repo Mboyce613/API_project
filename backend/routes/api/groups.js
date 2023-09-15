@@ -408,7 +408,103 @@ if(!isMember){
 })
 
 //PUT URL: /api/groups/:groupId/membership
+// add requireAuth
+router.put('/:groupId/membership',requireAuth, async (req,res)=>{
+  const {groupId} = req.params
+  const {memberId, status} = req.body
+  if(status === 'pending'){
+    res.statusCode = 400
+    res.json({
+      "message": 'Validations Error',
+      "errors": {
+        "status": "Cannot change a membership status to pending"
+      }
+    })
+  }
 
+  const theGroup = await Group.findByPk(groupId)
+  // console.log('\n',theGroup,'\n')
+  if(!theGroup){
+    res.statusCode = 404
+    res.json({
+      "message": 'Validations Error',
+      "errors": {
+        "status": "Group couldn't be found"
+      }
+    })
+  }
+  const theMember = await User.findOne({where:{id:memberId}})
+  if(!theMember){
+    res.statusCode = 400
+    res.json({
+      "message": 'Validations Error',
+      "errors": {
+        "status": "User couldn't be found"
+      }
+    })
+  }
+
+  const theMembership = await Membership.findOne({where:{memberId, groupId}})
+  if(!theMembership){
+    res.statusCode = 404
+    res.json({
+      "message": 'Validations Error',
+      "errors": {
+        "status": "Membership between the user and the group does not exist"
+      }
+    })
+  }
+
+await theMembership.set({status}).save()
+
+const returnMember = await Membership.findOne({
+  where:{groupId,memberId},
+  attributes:['id','groupId', 'memberId', 'status']
+})
+res.json(returnMember)
+})
+
+//DELETE URL: /api/groups/:groupId/membership
+router.delete('/:groupId/membership', async (req,res)=>{
+  const {groupId} = req.params
+
+  const theUser = await User.findOne({where:{id:memberId}})
+  if(!theUser){
+    res.statusCode = 400
+    res.json({
+      "message": 'Validations Error',
+      "errors": {
+        "status": "User couldn't be found"
+      }
+    })
+  }
+
+  const theGroup = await Group.findByPk(groupId)
+  // console.log('\n',theGroup,'\n')
+  if(!theGroup){
+    res.statusCode = 404
+    res.json({
+      "message": 'Validations Error',
+      "errors": {
+        "status": "Group couldn't be found"
+      }
+    })
+  }
+
+  const theMembership = await Membership.findOne({where:{memberId, groupId}})
+  if(!theMembership){
+    res.statusCode = 404
+    res.json({
+      "message": 'Validations Error',
+      "errors": {
+        "status": "Membership between the user and the group does not exist"
+      }
+    })
+  }
+
+//! Errors should be good, need to check, and then make it work.
+
+})
 
 module.exports = router;
 
