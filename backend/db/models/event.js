@@ -101,3 +101,6 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Event;
 };
+
+//POST URL: /api/events/:eventId/images
+//! ---- I AM HERE ----------
