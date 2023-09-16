@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       ),
       Event.belongsTo(
         models.Venue,
-        {foreignKey: 'venueId'}
+        {foreignKey: 'venueId',
+        onDelete: 'CASCADE'}
       ),
       Event.belongsToMany(
         models.User,

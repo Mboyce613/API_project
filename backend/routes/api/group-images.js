@@ -27,6 +27,12 @@ router.delete('/:imageId',requireAuth, async (req,res)=>{
         res.send({"message": "Group Image couldn't be found"})
     }
 
+    const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+    if(theGroup.organizerId !== req.user.id && !isCoHost){
+      res.statusCode = 403
+      res.json({"message": "Forbidden"})
+    }
+
     theImage.destroy()
     res.json({"message": "Successfully deleted"})
 

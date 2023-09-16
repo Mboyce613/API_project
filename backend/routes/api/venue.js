@@ -28,7 +28,7 @@ const validateVenue = [
   ];
   
   //? ---------------- Works ----------------
-  router.put('/:venueId',validateVenue, async (req,res)=>{
+  router.put('/:venueId',validateVenue, requireAuth, async (req,res)=>{
     const {venueId} = req.params
     let { address, lat, lng, city, state} = req.body
    const isVenue = await Venue.findByPk(venueId)

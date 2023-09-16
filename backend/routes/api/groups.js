@@ -30,21 +30,47 @@ router.get('/', async (req,res) =>{
         }
         // console.log(group)
     }
-
+    res.statusCode = 200
    return res.json({Groups})
 })
 
 // GET /api/groups/current
-//! ------- Requires Auth --------------
-router.get('/current', async (req,res) =>{
+//! need numMembers and previewImage
+router.get('/current', requireAuth, async (req,res) =>{
 
-// how do I get info about the current user?
 const userId = req.user.id
 
+const returnObj = {"Groups":[]}
+
 const ownsGroup = await Group.findAll({where:{organizerId:userId}})
+for(let group of ownsGroup){
+  const memberships = await Membership.findAll({where:{groupId: group.organizerId}})
+  let image = await Image.findOne({where:{imageableType: 'Group', preview: true, imageableId: group.organizerId}})
+  group.dataValues.numMembers = memberships.length
+  if(!image){
+      group.dataValues.previewImage = null
+  } else{
+      group.dataValues.previewImage = image.url
+  }
+  returnObj.Groups.push(group)
+}
+//get groups user has joined
+const belongsToGroups = await Membership.findAll({where:{memberId:userId}})
+// console.log(ownsGroup)
+for(let group of belongsToGroups){
+  const memGroup = await Group.findByPk(group.groupId)
+  const memberships = await Membership.findAll({where:{groupId: memGroup.organizerId}})
+  let image = await Image.findOne({where:{imageableType: 'Group', preview: true, imageableId: group.groupId}})
+  memGroup.dataValues.numMembers = memberships.length
+  if(!image){
+    memGroup.dataValues.previewImage = null
+  } else{
+    memGroup.dataValues.previewImage = image.url
+  }
+  returnObj.Groups.push(memGroup)
+}
 
-
-   return res.json(ownsGroup)
+   return res.json(returnObj)
 })
 
 // GET /api/groups/:groupId
@@ -97,8 +123,9 @@ const validateSignup = [
     handleValidationErrors
   ];
 
+ //POST URL: /api/groups
 //? ---------------- Works ----------------
-router.post('/',validateSignup, async (req,res)=>{
+router.post('/',requireAuth, async (req,res)=>{
     const userId = req.user.id
     let { name, about, type, private, city, state} = req.body
 
@@ -111,15 +138,23 @@ router.post('/',validateSignup, async (req,res)=>{
 
 // POST URL: /api/groups/:groupId/images
 //? ----------------- works ------------------
-router.post('/:groupId/images', async (req,res)=>{
+router.post('/:groupId/images', requireAuth, async (req,res)=>{
   const {groupId} = req.params
   const {url, preview} = req.body
   const theGroup = await Group.findOne({where:{id:groupId}})
 
   if(theGroup){
-   const newImage = await Image.create({url, preview, imageableId:groupId, imageableType:'Group'})
-   const sendImage = await Image.findOne({where:{url}})
-   res.json(sendImage)
+    if(theGroup.organizerId !== req.user.id){
+      res.statusCode = 403
+      res.json({"message": "Forbidden"})
+    } else{
+      const newImage = await Image.create({url, preview, imageableId:groupId, imageableType:'Group'})
+      const sendImage = await Image.findOne({
+        where:{url},
+        attributes:["id", "url", "preview"]
+      })
+      res.json(sendImage)
+    }
   } else{
     res.statusCode = 404
     throw new Error("Group couldn't be found")
@@ -153,11 +188,17 @@ const validateGroup = [
   handleValidationErrors
 ];
 
+//PUT URL:/api/group/:groupId
 //? ---------------- Works ----------------
-router.put('/:groupId',validateGroup, async (req,res)=>{
+router.put('/:groupId',validateGroup, requireAuth, async (req,res)=>{
 const {name, about, type, private, city, state} = req.body
 const {groupId} = req.params
 const theGroup = await Group.findOne({where:{id:groupId}})
+
+if(theGroup.organizerId !== req.user.id){
+  res.statusCode = 403
+  res.json({"message": "Forbidden"})
+}
 
 await theGroup.set({name, about, type, private, city, state})
 
@@ -166,13 +207,21 @@ res.json(theGroup)
 })
 
 // DELETE URL: /api/groups/:groupId
-router.delete('/:groupId', async (req,res)=>{
+router.delete('/:groupId', requireAuth, async (req,res)=>{
 const {groupId} = req.params
     const theGroup = await Group.findByPk(groupId)
     if(!theGroup){
         res.statusCode = 404
         throw new Error("Group couldn't be found")
     }else{
+      if(theGroup.organizerId !== req.user.id){
+        res.statusCode = 403
+        res.json({"message": "Forbidden"})
+      }
+      const theImages = await Image.findAll({where:{imageableId:groupId, imageableType: 'Group'}})
+      for (let image of theImages){
+         await image.destroy()
+      }
         // console.log('\n',theGroup,'\n')
        await theGroup.destroy()
        return res.json({ "message": "Successfully deleted"})
@@ -180,7 +229,7 @@ const {groupId} = req.params
 })
 
 // GET URL: /api/groups/:groupId/venues
-router.get('/:groupId/venues', async (req,res)=>{
+router.get('/:groupId/venues', requireAuth, async (req,res)=>{
     const {groupId} = req.params
     const theVenues = await Venue.findAll({where:{groupId}})
   const returnObj = {"Venues": []}
@@ -217,7 +266,7 @@ const validateVenue = [
   ];
 
 //? ---------------- Works ----------------
-router.post('/:groupId/venues',validateVenue, async (req,res)=>{
+router.post('/:groupId/venues',validateVenue, requireAuth, async (req,res)=>{
     const {groupId} = req.params
     let { address, lat, lng, city, state} = req.body
    const isGroup = await Group.findByPk(groupId)
@@ -234,7 +283,6 @@ router.post('/:groupId/venues',validateVenue, async (req,res)=>{
 })
 
 //GET URL: /api/groups/:groupId/events
-
 router.get('/:groupId/events', async (req,res)=>{
   const {groupId} = req.params
   const returnObj = {"Events":[]}
@@ -319,7 +367,7 @@ const validateEvent = [
 
 //! -------- End date needs to error correctly ------------
 
-router.post('/:groupId/events',validateEvent, async (req,res)=>{
+router.post('/:groupId/events',validateEvent, requireAuth, async (req,res)=>{
 
   if(validateEvent.startDate >= validateEvent.endDate){
     throw new Error('End date is less than start date')
@@ -332,6 +380,12 @@ router.post('/:groupId/events',validateEvent, async (req,res)=>{
   if(!isGroup){
       res.statusCode = 404
       throw new Error("Group couldn't be found")
+  }
+
+  const isCoHost = await Membership.findOne({where:{groupId:isGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+  if(isGroup.organizerId !== req.user.id && !isCoHost){
+    res.statusCode = 403
+    res.json({"message": "Forbidden"})
   }
 
  await Event.create({venueId, name, type, capacity, price, description, startDate, endDate, groupId:groupId})
@@ -382,7 +436,7 @@ if(owner){
 })
 
 //POST URL: /api/groups/:groupId/membership
-router.post('/:groupId/membership', async (req,res)=>{
+router.post('/:groupId/membership', requireAuth, async (req,res)=>{
   const {groupId} = req.params
 
   const theGroup = await Group.findByPk(groupId)
@@ -422,7 +476,33 @@ router.put('/:groupId/membership',requireAuth, async (req,res)=>{
     })
   }
 
-  const theGroup = await Group.findByPk(groupId)
+    const theGroup = await Group.findByPk(groupId) //host
+  const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+
+  if(status === 'co-host'){
+    if(theGroup.organizerId !== req.user.id){
+      res.statusCode = 403
+      res.json({"message": "Forbidden"})
+    }
+  }
+
+  if(status === 'member'){
+     if(theGroup.organizerId !== req.user.id && !isCoHost){
+      res.statusCode = 403
+      res.json({"message": "Forbidden"})
+    }
+  }
+
+  // const theGroup = await Group.findByPk(theEvent.groupId) //host
+  // const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+  // if(theGroup.organizerId !== req.user.id && !isCoHost){
+  //   res.statusCode = 403
+  //   res.json({"message": "Forbidden"})
+  // }
+
+
+
+  // const theGroup = await Group.findByPk(groupId)
   // console.log('\n',theGroup,'\n')
   if(!theGroup){
     res.statusCode = 404
@@ -465,7 +545,7 @@ res.json(returnMember)
 })
 
 //DELETE URL: /api/groups/:groupId/membership
-router.delete('/:groupId/membership', async (req,res)=>{
+router.delete('/:groupId/membership', requireAuth, async (req,res)=>{
   const {groupId} = req.params
   const {memberId} = req.body
 
@@ -494,6 +574,11 @@ router.delete('/:groupId/membership', async (req,res)=>{
     res.json({
       "message": "Membership does not exist for this User"
       })
+  }
+
+  if(theGroup.organizerId !== req.user.id && theMembership.memberId !== req.user.id){
+    res.statusCode = 403
+    res.json({"message": "Forbidden"})
   }
   
   theMembership.destroy()

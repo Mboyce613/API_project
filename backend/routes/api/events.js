@@ -10,8 +10,6 @@ const router = express.Router();
 
 
 // GET URL: /api/events
-
-
 //? --------------works -------------------
 router.get('/', async (req,res)=>{
     const returnObj = {"Events":[]}
@@ -147,13 +145,20 @@ router.get('/:eventId', async (req,res)=>{
 })
 
 //POST URL: /api/events/:eventId/images
-
-router.post('/:eventId/images', async (req,res)=>{
+router.post('/:eventId/images', requireAuth, async (req,res)=>{
     const {eventId} = req.params
     const {url, preview} = req.body
     const theEvent = await Event.findOne({where:{id:eventId}})
   
     if(theEvent){
+      const theGroup = await Group.findByPk(theEvent.groupId) //host
+      const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+      const isAttending = await Attendee.findOne({eventId:theEvent.id, userId:req.user.id, status:'attending'})
+      if(theGroup.organizerId !== req.user.id && !isCoHost && !isAttending){
+        res.statusCode = 403
+        res.json({"message": "Forbidden"})
+      }
+
      await Image.create({url, preview, imageableId:eventId, imageableType:'Event'})
      const sendImage = await Image.findOne({
         where:{url},
@@ -203,14 +208,23 @@ const validateEvent = [
 
   //!---------END DATE NEEDS TO ERROR CORRECTLY
 
-router.put('/:eventId',validateEvent, async (req,res)=>{
+router.put('/:eventId',validateEvent, requireAuth, async (req,res)=>{
     const {name, venueId, type, capacity, price, description, startDate, endDate} = req.body
     const {eventId} = req.params
     const theEvent = await Event.findOne({where:{id:eventId}})
     const theVenue = await Venue.findByPk(venueId)
 
+    
+    
     if(!theEvent){
-        throw new Error("Event couldn't be found")
+      throw new Error("Event couldn't be found")
+    }
+    
+    const theGroup = await Group.findByPk(theEvent.groupId) //host
+    const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+    if(theGroup.organizerId !== req.user.id && !isCoHost){
+      res.statusCode = 403
+      res.json({"message": "Forbidden"})
     }
 
     if(!theVenue){
@@ -224,13 +238,20 @@ router.put('/:eventId',validateEvent, async (req,res)=>{
     })
 
     //DELETE URL: /api/events/:eventId
-    router.delete('/:eventId', async (req,res)=>{
+    router.delete('/:eventId', requireAuth, async (req,res)=>{
         const {eventId} = req.params
             const theEvent = await Event.findByPk(eventId)
             if(!theEvent){
                 res.statusCode = 404
                 throw new Error("Event couldn't be found")
             }else{
+
+              const theGroup = await Group.findByPk(theEvent.groupId) //host
+              const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+              if(theGroup.organizerId !== req.user.id && !isCoHost){
+                res.statusCode = 403
+                res.json({"message": "Forbidden"})
+              }
                 // console.log('\n',theEvent,'\n')
                 const theImages = await Image.findAll({where:{imageableId:eventId, imageableType: 'Event'}})
                 for (let image of theImages){
@@ -248,7 +269,7 @@ router.put('/:eventId',validateEvent, async (req,res)=>{
         //GET URL: /api/events/:eventId/attendees
         router.get('/:eventId/attendees', async (req,res)=>{
             const {eventId} = req.params
-            const owner = false
+            let owner = false
           
           const theEvent = await Event.findByPk(eventId)
           if(!theEvent){
@@ -260,8 +281,8 @@ router.put('/:eventId',validateEvent, async (req,res)=>{
           const theGroup = await Group.findByPk(groupId)
 
           if(theGroup.organizerId === req.user.id) owner = true
-          const isCo = await Membership.findOne({where:{memberId:req.user.id, groupId}})
-          if(isCo.status === "co-host") owner = true
+          const isCo = await Membership.findOne({where:{memberId:req.user.id, groupId, status:'co-host'}})
+          if(isCo) owner = true
           
             const returnObj = {"Attendees":[]}
            let theAttendees = await Attendee.findAll({where:{eventId}})
@@ -294,12 +315,20 @@ router.put('/:eventId',validateEvent, async (req,res)=>{
 
 
 //POST URL: /api/events/:eventId/attendance
-router.post('/:eventId/attendance', async (req,res)=>{
+router.post('/:eventId/attendance', requireAuth, async (req,res)=>{
     const {eventId} = req.params
   
     const theEvent = await Event.findByPk(eventId)
   if(!theEvent){
     throw new Error("Event couldn't be found")
+  }
+
+  const theGroup = await Group.findByPk(theEvent.groupId)
+  const isMember = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id}})
+
+  if(!isMember){
+    res.statusCode = 403
+    res.json({"message": "Forbidden"})
   }
   
   const isAttending = await Attendee.findOne({where:{'userId':req.user.id,eventId}})
@@ -320,7 +349,6 @@ router.post('/:eventId/attendance', async (req,res)=>{
   })
 
   //PUT URL: /api/events/:eventId/attendance
-// add requireAuth
 router.put('/:eventId/attendance',requireAuth, async (req,res)=>{
   const {eventId} = req.params
   const {userId, status} = req.body
@@ -353,6 +381,12 @@ router.put('/:eventId/attendance',requireAuth, async (req,res)=>{
     res.json({"message": "Attendance between the user and the event does not exist"})
     }
   
+    const theGroup = await Group.findByPk(theEvent.groupId) //host
+    const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+    if(theGroup.organizerId !== req.user.id && !isCoHost){
+      res.statusCode = 403
+      res.json({"message": "Forbidden"})
+    }
 
 await theAttendance.set({status}).save()
 
@@ -365,7 +399,7 @@ res.json(returnMember)
 
 
 //DELETE URL: /api/events/:eventId/attendance
-router.delete('/:eventId/attendance', async (req,res)=>{
+router.delete('/:eventId/attendance', requireAuth, async (req,res)=>{
     const {eventId} = req.params
     const {userId} = req.body
   
@@ -383,6 +417,7 @@ router.delete('/:eventId/attendance', async (req,res)=>{
           res.statusCode = 403
           res.json({"message": "Only the User or organizer may delete an Attendance"})
       }
+
     
   
     const theAttendance = await Attendee.findOne({where:{userId, eventId}})
