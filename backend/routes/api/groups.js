@@ -467,6 +467,7 @@ res.json(returnMember)
 //DELETE URL: /api/groups/:groupId/membership
 router.delete('/:groupId/membership', async (req,res)=>{
   const {groupId} = req.params
+  const {memberId} = req.body
 
   const theUser = await User.findOne({where:{id:memberId}})
   if(!theUser){
@@ -474,7 +475,7 @@ router.delete('/:groupId/membership', async (req,res)=>{
     res.json({
       "message": 'Validations Error',
       "errors": {
-        "status": "User couldn't be found"
+        "memberId": "User couldn't be found"
       }
     })
   }
@@ -483,26 +484,21 @@ router.delete('/:groupId/membership', async (req,res)=>{
   // console.log('\n',theGroup,'\n')
   if(!theGroup){
     res.statusCode = 404
-    res.json({
-      "message": 'Validations Error',
-      "errors": {
-        "status": "Group couldn't be found"
-      }
-    })
-  }
+    res.json({"message": "Group couldn't be found"})
+    }
+  
 
   const theMembership = await Membership.findOne({where:{memberId, groupId}})
   if(!theMembership){
     res.statusCode = 404
     res.json({
-      "message": 'Validations Error',
-      "errors": {
-        "status": "Membership between the user and the group does not exist"
-      }
-    })
+      "message": "Membership does not exist for this User"
+      })
   }
+  
+  theMembership.destroy()
+  res.json({"message": "Successfully deleted membership from group"})
 
-//! Errors should be good, need to check, and then make it work.
 
 })
 
