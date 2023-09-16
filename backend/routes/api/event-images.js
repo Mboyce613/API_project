@@ -8,7 +8,28 @@ const { handleValidationErrors } = require('../../utils/validation');
 const { where } = require('sequelize');
 const router = express.Router();
 
+//Delete URL: /api/event-images/:imageId
+router.delete('/:imageId',requireAuth, async (req,res)=>{
+    const {imageId} = req.params
+    const theImage = await Image.findOne({where:{imageableId:imageId, imageableType:'Event'}})
 
+    if(!theImage){
+        res.statusCode = 404
+        res.json({"message": "Event Image couldn't be found"})
+    }
 
+    const theEvent = await Event.findByPk(imageId)
+    const theGroup = await Group.findByPk(theEvent.groupId)
+    const theMembership = await Membership.findOne({where:{memberId:req.user.id}})
+
+    if(theGroup.organizerId !== req.user.id &&  theMembership.status !== 'co-host'){
+        res.statusCode = 404
+        res.send({"message": "Event Image couldn't be found"})
+    }
+
+    theImage.destroy()
+    res.json({"message": "Successfully deleted"})
+
+})
 
 module.exports = router;
