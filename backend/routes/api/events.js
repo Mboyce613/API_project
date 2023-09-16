@@ -10,10 +10,74 @@ const router = express.Router();
 
 
 // GET URL: /api/events
+
+
 //? --------------works -------------------
 router.get('/', async (req,res)=>{
     const returnObj = {"Events":[]}
-    const theEvents = await Event.findAll()
+    let {page, size, name, type, startDate} = req.query
+    let errorCount = 0
+    const errorObj = {
+        "message": "Bad Request",
+        "errors": {}
+    }
+
+    if(page){
+        page = Number(page)
+        if(page < 1){
+            errorObj.errors.page = 'Page must be greater than or equal to 1'
+            errorCount ++
+        } 
+        if(page > 10) page = 10
+    } else{
+        page = 1
+    }
+
+    if(size){
+        size = Number(size)
+        if(size < 1){
+            errorObj.errors.size = 'Size must be greater than or equal to 1'
+            errorCount ++
+        } 
+        if(size > 20) size = 20
+    }else{
+        size = 20
+    }
+
+    if(name){
+        if(typeof(name) !== 'string'){
+            errorObj.errors.name = 'Name must be a string'
+            errorCount ++
+        }
+    }
+
+    if(type){
+        if(type !== "Online" && type !== "In Person" ){
+            errorObj.errors.type = "Type must be 'Online' or 'In Person"
+            errorCount ++
+        }
+    }
+
+    if(startDate){
+        const isDate = new Date(startDate)
+        console.log('\n', startDate, '\n')
+        console.log('\n', isDate.toString(), '\n')
+        if(isDate.toString() === 'Invalid Date' || startDate.length !== 10){
+            errorObj.errors.startDate = "Start date must be a valid datetime"
+            errorCount ++
+        }
+    }
+
+    if(errorCount !== 0){
+        res.statusCode = 400
+        res.send(errorObj)
+    }
+
+    const limit = size
+    const offset = ((page-1)*limit)
+   
+
+    const theEvents = await Event.findAll({limit,offset})
 
     for( let event of theEvents){
         const theGroup = await Group.findByPk(event.groupId)
