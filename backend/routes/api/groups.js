@@ -99,6 +99,8 @@ router.get('/:groupId', async (req,res) =>{
 const validateSignup = [
     check('name')
       .exists({ checkFalsy: true })
+      .withMessage('Name must be 60 characters or less'),
+    check('name')
       .isLength({ max: 60 })
       .withMessage('Name must be 60 characters or less'),
     check('about')
@@ -125,15 +127,14 @@ const validateSignup = [
 
  //POST URL: /api/groups
 //? ---------------- Works ----------------
-router.post('/',requireAuth, async (req,res)=>{
+router.post('/',validateSignup, requireAuth, async (req,res)=>{
     const userId = req.user.id
     let { name, about, type, private, city, state} = req.body
 
 
   const newGroup = await Group.create({name, about, type, private, city, state, organizerId: userId})
-    
+    res.statusCode = 201
     res.json(newGroup)
-
 })
 
 // POST URL: /api/groups/:groupId/images
