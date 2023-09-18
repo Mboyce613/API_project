@@ -76,7 +76,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       validate:{
         afterStart(value){
-          if (new Date(value) < this.startDate){
+          if (new Date(value) < new Date(this.startDate)){
             throw new Error("End date is less than start date")
           }
         }

@@ -39,6 +39,7 @@ const validateVenue = [
     }
 
    await isVenue.set({address, lat, lng, city, state,})
+   await isVenue.save()
     const returnVenue = await Venue.findByPk(venueId)
     res.json(returnVenue)
   

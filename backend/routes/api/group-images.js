@@ -12,22 +12,36 @@ const router = express.Router();
 //Delete URL: /api/group-images/:imageId
 router.delete('/:imageId',requireAuth, async (req,res)=>{
     const {imageId} = req.params
-    const theImage = await Image.findOne({where:{imageableId:imageId, imageableType:'Group'}})
+    const theImage = await Image.findOne({where:{id:imageId, imageableType:'Group'}})
 
     if(!theImage){
         res.statusCode = 404
         res.json({"message": "Group Image couldn't be found"})
     }
 
-    const theGroup = await Group.findByPk(imageId)
-    const theMembership = await Membership.findOne({where:{memberId:req.user.id}})
+    const theGroup = await Group.findByPk(imageId) //?
 
-    if(theGroup.organizerId !== req.user.id &&  theMembership.status !== 'co-host'){
+    if(!theGroup){
         res.statusCode = 404
-        res.send({"message": "Group Image couldn't be found"})
+        res.json({"message": "Image could not be found"})
     }
 
-    const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
+    const theMembership = await Membership.findOne({where:{memberId:req.user.id, groupId:theGroup.id}})
+
+    if(!theMembership){
+        
+        if(theGroup.organizerId !== req.user.id ){
+            res.statusCode = 403
+            res.json({"message": "Forbidden"})
+        }
+
+        theImage.destroy()
+        res.json({"message": "Successfully deleted"})
+
+    }
+
+
+    const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:req.user.id, status:"co-host"}})
     if(theGroup.organizerId !== req.user.id && !isCoHost){
       res.statusCode = 403
       res.json({"message": "Forbidden"})

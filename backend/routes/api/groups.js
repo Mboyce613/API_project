@@ -275,9 +275,15 @@ const validateVenue = [
     check('lat')
       .exists({ checkFalsy: true })
       .withMessage('Latitude is not valid'),
+    check('lat')
+    .isNumeric()
+    .withMessage('Latitude is not valid'),
     check('lng')
         .exists({ checkFalsy: true })
       .withMessage("Longitude is not valid"),
+    check('lng')
+      .isNumeric()
+    .withMessage("Longitude is not valid"),
       check('city')
       .exists({ checkFalsy: true })
       .withMessage('City is required'),
@@ -298,9 +304,19 @@ router.post('/:groupId/venues',validateVenue, requireAuth, async (req,res)=>{
         throw new Error("Group couldn't be found")
     }
 
-   await Venue.create({address, lat, lng, city, state, groupId:groupId})
-    const returnVenue = await Venue.findOne({where:{address}})
-    res.json(returnVenue)
+   const returnVenue = await Venue.create({address, lat, lng, city, state, groupId:groupId})
+    // const returnVenue = await Venue.findOne({where:{address}})
+    const returnObj = {
+      id:returnVenue.id,
+      groupId,
+      address,
+      city,
+      state,
+      lat,
+      lng,
+
+    }
+    res.json(returnObj)
 
 })
 
@@ -388,10 +404,10 @@ const validateEvent = [
     .exists({ checkFalsy: true })
     .isAfter(Date())
     .withMessage('Start date must be in the future'),
-    // check('endDate')
-    // .exists({ checkFalsy: true })
+    check('endDate')
+    .exists({ checkFalsy: true })
     // .isAfter('startDate')
-    // .withMessage('End date is less than start date'),
+    .withMessage('End date is less than start date'),
   handleValidationErrors
 ];
 
@@ -428,7 +444,7 @@ router.post('/:groupId/events',validateEvent, requireAuth, async (req,res)=>{
 //GET URL: /api/groups/:groupId/members
 router.get('/:groupId/members', async (req,res)=>{
   const {groupId} = req.params
-  const owner = false
+  let owner = false
 
 const theGroup = await Group.findByPk(groupId)
 if(!theGroup){
@@ -496,17 +512,41 @@ if(!isMember){
 router.put('/:groupId/membership',requireAuth, async (req,res)=>{
   const {groupId} = req.params
   const {memberId, status} = req.body
-  if(status === 'pending'){
-    res.statusCode = 400
-    res.json({
-      "message": 'Validations Error',
-      "errors": {
-        "status": "Cannot change a membership status to pending"
-      }
-    })
-  }
+
 
     const theGroup = await Group.findByPk(groupId) //host
+
+    if(!theGroup){
+      res.statusCode = 404
+      res.json({
+        "message": 'Validations Error',
+        "errors": {
+          "status": "Group couldn't be found"
+        }
+      })
+    }
+
+    const theMember = await User.findOne({where:{id:memberId}})
+    if(!theMember){
+      res.statusCode = 400
+      res.json({
+        "message": 'Validations Error',
+        "errors": {
+          "status": "User couldn't be found"
+        }
+      })
+    }
+
+    if(status === 'pending'){
+      res.statusCode = 400
+      res.json({
+        "message": 'Validations Error',
+        "errors": {
+          "status": "Cannot change a membership status to pending"
+        }
+      })
+    }
+
   const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
 
   if(status === 'co-host'){
@@ -534,25 +574,8 @@ router.put('/:groupId/membership',requireAuth, async (req,res)=>{
 
   // const theGroup = await Group.findByPk(groupId)
   // console.log('\n',theGroup,'\n')
-  if(!theGroup){
-    res.statusCode = 404
-    res.json({
-      "message": 'Validations Error',
-      "errors": {
-        "status": "Group couldn't be found"
-      }
-    })
-  }
-  const theMember = await User.findOne({where:{id:memberId}})
-  if(!theMember){
-    res.statusCode = 400
-    res.json({
-      "message": 'Validations Error',
-      "errors": {
-        "status": "User couldn't be found"
-      }
-    })
-  }
+
+
 
   const theMembership = await Membership.findOne({where:{memberId, groupId}})
   if(!theMembership){

@@ -49,11 +49,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, 
   {
-    // defaultScope: { 
-    //   attributes: { 
-    //       exclude: [ "groupId","address","lat","lng","createdAt", "updatedAt" ] 
-      // }
-  // },
+    defaultScope: { 
+      attributes: { 
+          exclude: [ "createdAt", "updatedAt" ] 
+      }
+  },
     sequelize,
     modelName: 'Venue',
   });

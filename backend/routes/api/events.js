@@ -209,12 +209,37 @@ const validateEvent = [
       .exists({ checkFalsy: true })
       .isAfter(Date())
       .withMessage('Start date must be in the future'),
-      // check('endDate')
-      // .exists({ checkFalsy: true })
-      // .isAfter('startDate')
-      // .withMessage('End date is less than start date'),
+      check('endDate')
+      .exists({ checkFalsy: true })
+      // .custom((req, {})=>{
+      //   let {endDate, startDate} = req.body
+      //   if(new Date(startDate) > new Date(endDate)){
+      //     throw new Error("End date must be greater than the start date")
+      //   }
+      //   return true
+      // }),
+      .withMessage('End date is less than start date'),
     handleValidationErrors
   ];
+
+
+
+  // check('startDate').custom((startDate, { req }) => {
+  //   const { endDate } = req.body;
+  //   const currentDate = new Date();
+
+  //   // Check if the start date is in the past
+  //   if (new Date(startDate) < currentDate) {
+  //     throw new Error('Start date must be in the future');
+  //   }
+
+  //   // Check if the end date is less than the start date
+  //   if (new Date(endDate) < new Date(startDate)) {
+  //     throw new Error('End date must be greater than the start date');
+  //   }
+
+  //   return true;
+  // }),
 
   //!---------END DATE NEEDS TO ERROR CORRECTLY
 
@@ -224,7 +249,9 @@ router.put('/:eventId',validateEvent, requireAuth, async (req,res)=>{
     const theEvent = await Event.findOne({where:{id:eventId}})
     const theVenue = await Venue.findByPk(venueId)
 
-    
+    if(!theVenue){
+      throw new Error("Venue couldn't be found")
+  }
     
     if(!theEvent){
       throw new Error("Event couldn't be found")
@@ -237,12 +264,8 @@ router.put('/:eventId',validateEvent, requireAuth, async (req,res)=>{
       res.json({"message": "Forbidden"})
     }
 
-    if(!theVenue){
-        throw new Error("Venue couldn't be found")
-    }
-    
     await theEvent.set({name, venueId, type, capacity, price, description, startDate, endDate})
-    
+    await theEvent.save()
     res.json(theEvent)
     
     })
@@ -336,7 +359,7 @@ router.post('/:eventId/attendance', requireAuth, async (req,res)=>{
   const theGroup = await Group.findByPk(theEvent.groupId)
   const isMember = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id}})
 
-  if(!isMember){
+  if(!isMember && theGroup.organizerId !== req.user.id){
     res.statusCode = 403
     res.json({"message": "Forbidden"})
   }

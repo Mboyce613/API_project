@@ -50,35 +50,35 @@
 //// Match response to API docs (included extra info that is not needed)
 //// I.e. including hashedPassword under Organizer
 
-// Edit a Group that doesn’t exist:
-// On an error response
-// Getting “Cannot read property ‘organizerId’ of null” instead of “Group couldn’t be found”
+//// Edit a Group that doesn’t exist:
+//// On an error response
+//// Getting “Cannot read property ‘organizerId’ of null” instead of “Group couldn’t be found”
 
-// Create a New Venue for a Group by Id:
-// On an error response
-// Include validation error messaging for lat / lng when giving non numeric values
+//// Create a New Venue for a Group by Id:
+//// On an error response
+//// Include validation error messaging for lat / lng when giving non numeric values
 
-// Edit a Venue by Id:
-// On a successful response
-// It returns the unedited venue as the response (no changes made)
+//// Edit a Venue by Id:
+//// On a successful response
+//// It returns the unedited venue as the response (no changes made)
 
-// Create an Event by Group Id:
-// On an error response
-// No validation message for when endDate starts before startDate
+//// Create an Event by Group Id:
+//// On an error response
+//// No validation message for when endDate starts before startDate
 
-// Edit an Event:
-// On an error response
-// No validation message for when venue does not exist and if endDate is less than startDate
+//// Edit an Event:
+//// On an error response
+//// No validation message for when venue does not exist and if endDate is less than startDate
 
-// Change status of Membership by Group Id:
-// On an error response
-// Getting “Cannot read property ‘organizerId’ of null” vs “User couldn’t be found” when group id / member id / membership is not found
+//// Change status of Membership by Group Id:
+//// On an error response
+//// Getting “Cannot read property ‘organizerId’ of null” vs “User couldn’t be found” when group id / member id / membership is not found
 
-// Get All Members by Group Id:
-// Getting error “Assignment to constant variable’
+//// Get All Members by Group Id:
+//// Getting error “Assignment to constant variable’
 
-// Request to Attend an Event by Id:
-// Getting a Forbidden error when requesting to attend an event
+//// Request to Attend an Event by Id:
+//// Getting a Forbidden error when requesting to attend an event
 
 // Delete routes:
 // Seem to be broken and getting “... could not be found” errors. Could be associated with retrieving all members error above 

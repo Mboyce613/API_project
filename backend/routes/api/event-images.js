@@ -11,29 +11,47 @@ const router = express.Router();
 //Delete URL: /api/event-images/:imageId
 router.delete('/:imageId',requireAuth, async (req,res)=>{
     const {imageId} = req.params
-    const theImage = await Image.findOne({where:{imageableId:imageId, imageableType:'Event'}})
+    const theImage = await Image.findOne({where:{id:imageId, imageableType:'Event'}})
 
     if(!theImage){
         res.statusCode = 404
         res.json({"message": "Event Image couldn't be found"})
     }
 
-    const theEvent = await Event.findByPk(imageId)
-    const theGroup = await Group.findByPk(theEvent.groupId)
-    const theMembership = await Membership.findOne({where:{memberId:req.user.id}})
+    const theEvent = await Event.findByPk(theImage.imageableId)
 
-    if(theGroup.organizerId !== req.user.id &&  theMembership.status !== 'co-host'){
+    if(!theEvent){
         res.statusCode = 404
-        res.send({"message": "Event Image couldn't be found"})
+        res.json({"message": "Image could not be found"})
     }
 
-    const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
-    if(theGroup.organizerId !== req.user.id && !isCoHost){
+    const theGroup = await Group.findByPk(theEvent.groupId)
+
+    if(!theGroup){
+        res.statusCode = 404
+        res.json({"message": "Image could not be found"})
+    }
+
+    const theMembership = await Membership.findOne({where:{memberId:req.user.id, groupId: theGroup.id}})
+    if(theMembership){
+        if(theGroup.organizerId !== req.user.id &&  theMembership.status !== 'co-host'){
+            res.statusCode = 403
+            res.json({"message": "Forbidden"})
+        }
+        
+        await theImage.destroy()
+        res.json({"message": "Successfully deleted"})
+
+    }
+
+
+    // const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:req.user.id, status:"co-host"}})
+    if(theGroup.organizerId !== req.user.id ){
       res.statusCode = 403
       res.json({"message": "Forbidden"})
     }
 
-    theImage.destroy()
+    await theImage.destroy()
     res.json({"message": "Successfully deleted"})
 
 })
