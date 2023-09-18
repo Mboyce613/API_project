@@ -1,14 +1,14 @@
 //?------------------------------------------
 //? General Fixes:
-// numMembers should default to 1 as I would consider the organizer as a member
-// When displaying any group details
+//// numMembers should default to 1 as I would consider the organizer as a member
+//// When displaying any group details
 
-// Add additional validation to check that Group.name exists (should be required)
-// When creating / editing Groups
+// //Add additional validation to check that Group.name exists (should be required)
+//// When creating / editing Groups
 
-// Clean up response objects as some have additional information than is required. Check the API docs again to match
-// I.e. Get all Events route, Get all Events by Group Id, Get Details by Event Id
-// Include more seed data to test if you are NOT the organizer, return only members without status of “pending”
+//// Clean up response objects as some have additional information than is required. Check the API docs again to match
+//// I.e. Get all Events route, Get all Events by Group Id, Get Details by Event Id
+//// Include more seed data to test if you are NOT the organizer, return only members without status of “pending”
 //?-----------------------------------------------
 
 //?----------------------------------------------
@@ -45,10 +45,10 @@
 //// }
 
 
-// Get Details of Group by Id:
-// On a successful response
-// Match response to API docs (included extra info that is not needed)
-// I.e. including hashedPassword under Organizer
+//// Get Details of Group by Id:
+//// On a successful response
+//// Match response to API docs (included extra info that is not needed)
+//// I.e. including hashedPassword under Organizer
 
 // Edit a Group that doesn’t exist:
 // On an error response
