@@ -75,11 +75,21 @@ router.get('/', async (req,res)=>{
     const offset = ((page-1)*limit)
    
 
-    const theEvents = await Event.findAll({limit,offset})
+    const theEvents = await Event.findAll({
+      attributes:["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
+      limit,
+      offset
+    })
 
     for( let event of theEvents){
-        const theGroup = await Group.findByPk(event.groupId)
-        const theVenue = await Venue.findOne({where:{id:event.venueId}})
+        const theGroup = await Group.findOne({
+          where:{id:event.groupId},
+          attributes:["id", "name", "city", "state"]
+        })
+        const theVenue = await Venue.findOne({
+          where:{id:event.venueId},
+          attributes: ["id", "city", "state"]
+        })
         const numAttending = await Attendee.findAll({where:{eventId:event.id, status:"attending"}})
         let image = await Image.findOne({where:{imageableType: 'Event', preview: true, imageableId: event.id}})
         // console.log('\n',theGroup,'\n')

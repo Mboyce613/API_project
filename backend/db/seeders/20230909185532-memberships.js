@@ -13,12 +13,32 @@ module.exports = {
       {
         memberId: 1,
         groupId: 1,
-        status: 'pending',
+        status: 'co-host',
       },
       {
         memberId: 2,
         groupId: 2,
+        status: 'co-host',
+      },
+      {
+        memberId: 3,
+        groupId: 2,
         status: 'member',
+      },
+      {
+        memberId: 4,
+        groupId: 2,
+        status: 'member',
+      },
+      {
+        memberId: 5,
+        groupId: 1,
+        status: 'pending',
+      },
+      {
+        memberId: 5,
+        groupId: 2,
+        status: 'pending',
       },
     ], { validate: true });
   },

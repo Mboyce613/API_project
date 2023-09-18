@@ -80,11 +80,20 @@ router.get('/:groupId', async (req,res) =>{
     const {groupId} = req.params
     const group = await Group.findOne({where:{id:groupId}})
     const numMembers = await Membership.findAll({where:{groupId: groupId}})
-    const images = await Image.findAll({where:{imageableType: 'Group'}})
+    const images = await Image.findAll({
+      where:{imageableType: 'Group'},
+      attributes:["id", "url", "preview"]
+    })
     const {organizerId} = group
-    const organizer = await User.findOne({where:{id: organizerId}})
+    const organizer = await User.findOne({
+      where:{id: organizerId},
+      attributes:["id", "firstName", "lastName"]
+    })
     // console.log('\n',organizer,'\n')
-    const venues = await Venue.findOne({where:{groupId: groupId}})
+    const venues = await Venue.findOne({
+      where:{groupId: groupId},
+      attributes:["id", "groupId", "address", "city", "state", "lat", "lng"]
+    })
     group.dataValues.numMembers = numMembers.length
     group.dataValues.GroupImages = images
     group.dataValues.Organizer = organizer
@@ -131,6 +140,12 @@ router.post('/',validateSignup, requireAuth, async (req,res)=>{
     const userId = req.user.id
     let { name, about, type, private, city, state} = req.body
 
+    const isGroup = await Group.findOne({where:{name:name}})
+
+    if(isGroup){
+      res.statusCode = 400
+      res.json({"message":"Group already exists"})
+    }
 
   const newGroup = await Group.create({name, about, type, private, city, state, organizerId: userId})
     res.statusCode = 201
@@ -195,6 +210,12 @@ router.put('/:groupId',validateGroup, requireAuth, async (req,res)=>{
 const {name, about, type, private, city, state} = req.body
 const {groupId} = req.params
 const theGroup = await Group.findOne({where:{id:groupId}})
+
+
+if(!theGroup){
+  res.statusCode = 400
+  res.json({"message":"Group couldn't be found"})
+}
 
 if(theGroup.organizerId !== req.user.id){
   res.statusCode = 403
@@ -287,15 +308,23 @@ router.post('/:groupId/venues',validateVenue, requireAuth, async (req,res)=>{
 router.get('/:groupId/events', async (req,res)=>{
   const {groupId} = req.params
   const returnObj = {"Events":[]}
-  const theEvents = await Event.findAll({where:{groupId:groupId}})
+  const theEvents = await Event.findAll({
+    attributes:["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
+  })
 
   if(theEvents.length === 0){
     throw new Error("Group couldn't be found")
   }
 
   for( let event of theEvents){
-      const theGroup = await Group.findByPk(event.groupId)
-      const theVenue = await Venue.findOne({where:{id:event.venueId}})
+    const theGroup = await Group.findOne({
+      where:{id:event.groupId},
+      attributes:["id", "name", "city", "state"]
+    })
+    const theVenue = await Venue.findOne({
+      where:{id:event.venueId},
+      attributes: ["id", "city", "state"]
+    })
       const numAttending = await Attendee.findAll({where:{eventId:event.id, status:"attending"}})
       let image = await Image.findOne({where:{imageableType: 'Event', preview: true, imageableId: event.id}})
       // console.log('\n',theGroup,'\n')
