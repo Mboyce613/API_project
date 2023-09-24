@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Image.belongsTo(
         models.Group, {
+        as: 'previewImage',
         foreignKey: 'imageableId',
         constraints: false
       });
