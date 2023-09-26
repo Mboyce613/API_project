@@ -12,18 +12,18 @@ const router = express.Router();
 //Delete URL: /api/group-images/:imageId
 router.delete('/:imageId',requireAuth, async (req,res)=>{
     const {imageId} = req.params
-    const theImage = await Image.findOne({where:{id:imageId, imageableType:'Group'}})
+    const theImage = await Image.findByPk(imageId)
 
     if(!theImage){
         res.statusCode = 404
-        res.json({"message": "Group Image couldn't be found"})
+        return res.json({"message": "Group Image couldn't be found"})
     }
 
-    const theGroup = await Group.findByPk(imageId) //?
+    const theGroup = await Group.findByPk(theImage.imageableId) //?
 
     if(!theGroup){
         res.statusCode = 404
-        res.json({"message": "Image could not be found"})
+        return res.json({"message": "Image could not be found"})
     }
 
     const theMembership = await Membership.findOne({where:{memberId:req.user.id, groupId:theGroup.id}})
@@ -32,11 +32,11 @@ router.delete('/:imageId',requireAuth, async (req,res)=>{
         
         if(theGroup.organizerId !== req.user.id ){
             res.statusCode = 403
-            res.json({"message": "Forbidden"})
+            return res.json({"message": "Forbidden"})
         }
 
         theImage.destroy()
-        res.json({"message": "Successfully deleted"})
+        return res.json({"message": "Successfully deleted"})
 
     }
 
@@ -44,11 +44,11 @@ router.delete('/:imageId',requireAuth, async (req,res)=>{
     const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:req.user.id, status:"co-host"}})
     if(theGroup.organizerId !== req.user.id && !isCoHost){
       res.statusCode = 403
-      res.json({"message": "Forbidden"})
+      return res.json({"message": "Forbidden"})
     }
 
     theImage.destroy()
-    res.json({"message": "Successfully deleted"})
+    return res.json({"message": "Successfully deleted"})
 
 
 })

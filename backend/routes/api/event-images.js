@@ -11,36 +11,36 @@ const router = express.Router();
 //Delete URL: /api/event-images/:imageId
 router.delete('/:imageId',requireAuth, async (req,res)=>{
     const {imageId} = req.params
-    const theImage = await Image.findOne({where:{id:imageId, imageableType:'Event'}})
+    const theImage = await Image.findByPk(imageId)
 
     if(!theImage){
         res.statusCode = 404
-        res.json({"message": "Event Image couldn't be found"})
+        return res.json({"message": "Event Image couldn't be found"})
     }
 
     const theEvent = await Event.findByPk(theImage.imageableId)
 
     if(!theEvent){
         res.statusCode = 404
-        res.json({"message": "Image could not be found"})
+       return  res.json({"message": "Image could not be found"})
     }
 
     const theGroup = await Group.findByPk(theEvent.groupId)
 
     if(!theGroup){
         res.statusCode = 404
-        res.json({"message": "Image could not be found"})
+        return res.json({"message": "Image could not be found"})
     }
 
     const theMembership = await Membership.findOne({where:{memberId:req.user.id, groupId: theGroup.id}})
     if(theMembership){
         if(theGroup.organizerId !== req.user.id &&  theMembership.status !== 'co-host'){
             res.statusCode = 403
-            res.json({"message": "Forbidden"})
+           return  res.json({"message": "Forbidden"})
         }
         
         await theImage.destroy()
-        res.json({"message": "Successfully deleted"})
+       return  res.json({"message": "Successfully deleted"})
 
     }
 
@@ -48,11 +48,11 @@ router.delete('/:imageId',requireAuth, async (req,res)=>{
     // const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:req.user.id, status:"co-host"}})
     if(theGroup.organizerId !== req.user.id ){
       res.statusCode = 403
-      res.json({"message": "Forbidden"})
+      return res.json({"message": "Forbidden"})
     }
 
     await theImage.destroy()
-    res.json({"message": "Successfully deleted"})
+    return res.json({"message": "Successfully deleted"})
 
 })
 
