@@ -5,7 +5,7 @@ const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Group, Membership, Image, Venue, Event, Attendee } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const {isOrganizer} = require('../../utils/authorization')
+const {isOrganizer, isCoHost, isMember} = require('../../utils/authorization')
 
 const router = express.Router();
 
@@ -190,6 +190,7 @@ if(!theGroup){
 //GET URL: /api/groups/:groupId/members
 router.get('/:groupId/members', async (req,res)=>{
   const {groupId} = req.params
+  const curr = req.user.id
   let owner = false
 
 const theGroup = await Group.findByPk(groupId)
@@ -197,7 +198,7 @@ if(!theGroup){
   throw new Error("Group couldn't be found")
 }
 // if(theGroup.organizerId === req.user.id) owner = true
-if(await isOrganizer(groupId,req.user.id)) owner = true
+if(await isOrganizer(groupId,curr)) owner = true
 
 
   const returnObj = {"Members":[]}
@@ -368,6 +369,7 @@ router.get('/', async (req,res) =>{
 //? Create an Event for a Group specified by its id ?//
 //POST URL: /api/groups/:groupId/events
 router.post('/:groupId/events',validateEvent, requireAuth, async (req,res)=>{
+  const curr = req.user.id
 
   if(validateEvent.startDate >= validateEvent.endDate){
     throw new Error('End date is less than start date')
@@ -382,8 +384,7 @@ router.post('/:groupId/events',validateEvent, requireAuth, async (req,res)=>{
       throw new Error("Group couldn't be found")
   }
 
-  const isCoHost = await Membership.findOne({where:{groupId:isGroup.organizerId, memberId:req.user.id, status:"co-host"}})
-  if(!await isOrganizer(isGroup.organizerId,req.user.id) && !isCoHost){
+  if(!await isOrganizer(groupId,curr) && !await isCoHost(groupId,curr)){
     res.statusCode = 403
     res.json({"message": "Forbidden"})
   }
@@ -399,16 +400,17 @@ router.post('/:groupId/events',validateEvent, requireAuth, async (req,res)=>{
 router.post('/:groupId/images', requireAuth, async (req,res)=>{
   const {groupId} = req.params
   const {url, preview} = req.body
+  const curr = req.user.id
   const theGroup = await Group.findOne({where:{id:groupId}})
-
   if(theGroup){
-    if(!await isOrganizer(theGroup.organizerId, req.user.id)){
+    if(!await isOrganizer(groupId, curr)){
       res.statusCode = 403
       res.json({"message": "Forbidden"})
     }
       const newImage = await Image.create({url, preview, imageableId:groupId, imageableType:'Group'})
+      const theId = newImage.id
       const sendImage = await Image.findOne({
-        where:{url},
+        where:{id:theId},
         attributes:["id", "url", "preview"]
       })
       res.json(sendImage)
@@ -424,18 +426,19 @@ router.post('/:groupId/images', requireAuth, async (req,res)=>{
 //POST URL: /api/groups/:groupId/membership
 router.post('/:groupId/membership', requireAuth, async (req,res)=>{
   const {groupId} = req.params
+  const curr = req.user.id
 
   const theGroup = await Group.findByPk(groupId)
 if(!theGroup){
   throw new Error("Group couldn't be found")
 }
 
-const isMember = await Membership.findOne({where:{'memberId':req.user.id,groupId}})
+const isMember = await Membership.findOne({where:{'memberId':curr,groupId}})
 // console.log(isMember)
 if(!isMember){
-  const newMembership = await Membership.create({'memberId':req.user.id, 'status':'pending',groupId})
+  const newMembership = await Membership.create({'memberId':curr, 'status':'pending',groupId})
   const returnMember = await Membership.findOne({
-    where:{'memberId':req.user.id},
+    where:{'memberId':curr},
     attributes:['memberId','status']
   })
   res.json(returnMember)
@@ -507,6 +510,7 @@ router.post('/',validateSignup, requireAuth, async (req,res)=>{
 router.put('/:groupId/membership',requireAuth, async (req,res)=>{
   const {groupId} = req.params
   const {memberId, status} = req.body
+  const curr = req.user.id
 
     const theGroup = await Group.findByPk(groupId) //host
 
@@ -541,17 +545,15 @@ router.put('/:groupId/membership',requireAuth, async (req,res)=>{
       })
     }
 
-  const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:req.user.id, status:"co-host"}})
-
   if(status === 'co-host'){
-    if(theGroup.organizerId !== req.user.id){
+    if(!await isOrganizer(groupId,curr)){
       res.statusCode = 403
       res.json({"message": "Forbidden"})
     }
   }
 
   if(status === 'member'){
-     if(theGroup.organizerId !== req.user.id && !isCoHost){
+     if(!await isOrganizer(groupId,curr) && !await isCoHost(groupId, curr)){
       res.statusCode = 403
       res.json({"message": "Forbidden"})
     }
@@ -597,6 +599,7 @@ res.json(returnMember)
 router.put('/:groupId',validateGroup, requireAuth, async (req,res)=>{
 const {name, about, type, private, city, state} = req.body
 const {groupId} = req.params
+const curr = req.user.id
 const theGroup = await Group.findOne({where:{id:groupId}})
 
 
@@ -605,7 +608,7 @@ if(!theGroup){
   res.json({"message":"Group couldn't be found"})
 }
 
-if(!await isOrganizer(theGroup.organizerId,req.user.id)){
+if(!await isOrganizer(groupId,curr)){
   res.statusCode = 403
   res.json({"message": "Forbidden"})
 }
@@ -629,6 +632,7 @@ res.json(theGroup)
 router.delete('/:groupId/membership', requireAuth, async (req,res)=>{
   const {groupId} = req.params
   const {memberId} = req.body
+  const curr = req.user.id
 
   const theUser = await User.findOne({where:{id:memberId}})
   if(!theUser){
@@ -656,7 +660,7 @@ router.delete('/:groupId/membership', requireAuth, async (req,res)=>{
       })
   }
 
-  if(!await isOrganizer(theGroup.organizerId,req.user.id) && theMembership.memberId !== req.user.id){
+  if(!await isOrganizer(groupId,curr) && theMembership.memberId !== curr){
     res.statusCode = 403
     res.json({"message": "Forbidden"})
   }
@@ -670,12 +674,13 @@ router.delete('/:groupId/membership', requireAuth, async (req,res)=>{
 // DELETE URL: /api/groups/:groupId
 router.delete('/:groupId', requireAuth, async (req,res)=>{
   const {groupId} = req.params
+  const curr = req.user.id
       const theGroup = await Group.findByPk(groupId)
       if(!theGroup){
           res.statusCode = 404
           throw new Error("Group couldn't be found")
       }else{
-        if(!await isOrganizer(theGroup.organizerId,req.user.id)){
+        if(!await isOrganizer(groupId,curr)){
           res.statusCode = 403
           res.json({"message": "Forbidden"})
         }
