@@ -105,7 +105,7 @@ if(isCo) owner = true
 }
   }
         
-  res.json(returnObj)
+  return res.json(returnObj)
 })
 //? --------------------------------------------------------- ?//
 
@@ -136,7 +136,7 @@ router.get('/:eventId', async (req,res)=>{
       theEvent.dataValues.numAttending = 0
   }
  
-  res.json(theEvent)
+  return res.json(theEvent)
 })
 //? --------------------------------------------------------- ?//
 
@@ -253,7 +253,7 @@ router.get('/', async (req,res)=>{
       returnObj.Events.push(event)
   }
 
-  res.json(returnObj)
+  return res.json(returnObj)
 })
 //? --------------------------------------------------------- ?//
 
@@ -281,7 +281,7 @@ const isMember = await Membership.findOne({where:{groupId:theGroup.organizerId, 
 
 if(!isMember && theGroup.organizerId !== curr){
   res.statusCode = 403
-  res.json({"message": "Forbidden"})
+  return res.json({"message": "Forbidden"})
 }
 
 const isAttending = await Attendee.findOne({where:{'userId':curr,eventId}})
@@ -292,7 +292,7 @@ if(!isAttending){
     where:{'userId':curr},
     attributes:['userId','status']
   })
-  res.json(returnAttend)
+  return res.json(returnAttend)
 }else if(isAttending.status === 'member' || isAttending.status === 'co-host'){
   throw new Error("User is already an attendee of the event")
 }else if(isAttending.status === 'pending'){
@@ -314,7 +314,7 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
     const isAttending = await Attendee.findOne({eventId:theEvent.id, userId:curr, status:'attending'})
     if(theGroup.organizerId !== curr && !isCoHost && !isAttending){
       res.statusCode = 403
-      res.json({"message": "Forbidden"})
+      return res.json({"message": "Forbidden"})
     }
 
    await Image.create({url, preview, imageableId:eventId, imageableType:'Event'})
@@ -322,7 +322,7 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
       where:{url},
       attributes:['id','url','preview'],
   })
-   res.json(sendImage)
+   return res.json(sendImage)
   } else{
     res.statusCode = 404
     throw new Error("Event couldn't be found")
@@ -347,14 +347,14 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
     console.log('\n', status, '\n')
     if(status === 'pending'){
       res.statusCode = 400
-      res.json({"message": "Cannot change an attendance status to pending"})
+      return res.json({"message": "Cannot change an attendance status to pending"})
     }
   
     const theEvent = await Event.findByPk(eventId)
     // console.log('\n',theEvent,'\n')
     if(!theEvent){
       res.statusCode = 404
-      res.json({"message": "Event couldn't be found"})
+      return res.json({"message": "Event couldn't be found"})
     }
   //   const theMember = await User.findOne({where:{id:userId}})
   //   if(!theMember){
@@ -370,14 +370,14 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
     const theAttendance = await Attendee.findOne({where:{userId, eventId}})
     if(!theAttendance){
       res.statusCode = 404
-      res.json({"message": "Attendance between the user and the event does not exist"})
+      return res.json({"message": "Attendance between the user and the event does not exist"})
       }
     
       const theGroup = await Group.findByPk(theEvent.groupId) //host
       const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:curr, status:"co-host"}})
       if(theGroup.organizerId !== curr && !isCoHost){
         res.statusCode = 403
-        res.json({"message": "Forbidden"})
+        return res.json({"message": "Forbidden"})
       }
   
   await theAttendance.set({status}).save()
@@ -386,7 +386,7 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
     where:{eventId,userId},
     attributes:['id','eventId', 'userId', 'status']
   })
-  res.json(returnMember)
+  return res.json(returnMember)
   })
   //? --------------------------------------------------------- ?//
 
@@ -411,12 +411,12 @@ router.put('/:eventId',validateEvent, requireAuth, async (req,res)=>{
   const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:curr, status:"co-host"}})
   if(theGroup.organizerId !== curr && !isCoHost){
     res.statusCode = 403
-    res.json({"message": "Forbidden"})
+    return res.json({"message": "Forbidden"})
   }
 
   await theEvent.set({name, venueId, type, capacity, price, description, startDate, endDate})
   await theEvent.save()
-  res.json(theEvent) 
+  return res.json(theEvent) 
   })
 //? --------------------------------------------------------- ?//
 
@@ -439,26 +439,26 @@ router.delete('/:eventId/attendance', requireAuth, async (req,res)=>{
   // console.log('\n',theEvent,'\n')
   if(!theEvent){
     res.statusCode = 404
-    res.json({"message": "Event couldn't be found"})
+    return res.json({"message": "Event couldn't be found"})
     }
 
     const theGroup = await Group.findOne({where:{id:theEvent.groupId}})
 
     if(userId !== curr && theGroup.organizerId !== curr ){
         res.statusCode = 403
-        res.json({"message": "Only the User or organizer may delete an Attendance"})
+        return res.json({"message": "Only the User or organizer may delete an Attendance"})
     }
 
   const theAttendance = await Attendee.findOne({where:{userId, eventId}})
   if(!theAttendance){
     res.statusCode = 404
-    res.json({
+    return res.json({
       "message": "Attendance does not exist for this User"
       })
   }
 
   theAttendance.destroy()
-  res.json({"message": "Successfully deleted attendance from event"})
+  return res.json({"message": "Successfully deleted attendance from event"})
 })
 //? --------------------------------------------------------- ?//
 
@@ -477,7 +477,7 @@ router.delete('/:eventId/attendance', requireAuth, async (req,res)=>{
             const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:curr, status:"co-host"}})
             if(theGroup.organizerId !== curr && !isCoHost){
               res.statusCode = 403
-              res.json({"message": "Forbidden"})
+              return res.json({"message": "Forbidden"})
             }
               // console.log('\n',theEvent,'\n')
               const theImages = await Image.findAll({where:{imageableId:eventId, imageableType: 'Event'}})
