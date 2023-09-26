@@ -689,6 +689,17 @@ router.delete('/:groupId', requireAuth, async (req,res)=>{
            await image.destroy()
         }
           // console.log('\n',theGroup,'\n')
+        //! Find events by the group
+        const theEvents = await Event.findAll({where:{groupId}})
+        for(let event of theEvents){
+          const theAttendees = await Attendee.findAll({where:{eventId:event.id}})
+          for(let attendee of theAttendees){
+            attendee.destroy()
+          }
+        }
+        //! Find the attendies of each event
+        //! Delete the addendies
+
          await theGroup.destroy()
          return res.json({ "message": "Successfully deleted"})
       }
