@@ -143,7 +143,9 @@ router.get('/:groupId/events', async (req,res)=>{
     attributes:["id", "name", "city", "state"]
   })
 if(!theGroup){
-  throw new Error("Group couldn't be found")
+  res.statusCode = 404
+  return res.json({"message": "Group couldn't be found"})
+  // throw new Error("Group couldn't be found")
 }
 
   const theEvents = await Event.findAll({
@@ -195,7 +197,9 @@ router.get('/:groupId/members', async (req,res)=>{
 
 const theGroup = await Group.findByPk(groupId)
 if(!theGroup){
-  throw new Error("Group couldn't be found")
+  res.statusCode = 404
+  return res.json({"message": "Group couldn't be found"})
+  // throw new Error("Group couldn't be found")
 }
 // if(theGroup.organizerId === req.user.id) owner = true
 if(await isOrganizer(groupId,curr)) owner = true
@@ -244,7 +248,8 @@ const returnObj = {"Venues": []}
    return res.json(returnObj)
   } else{
     res.statusCode = 404
-    throw new Error("Group couldn't be found")
+    return res.json({"message": "Group couldn't be found"})
+    // throw new Error("Group couldn't be found")
   }
 })
 //? --------------------------------------------------------- ?//
@@ -295,6 +300,10 @@ router.get('/:groupId', async (req,res) =>{
   // console.log('\n\n',req.params,'\n\n')
   const {groupId} = req.params
   const group = await Group.findOne({where:{id:groupId}})
+  if(!group){
+    res.statusCode = 404
+    res.json({"message": "Group couldn't be found"})
+  }
   const numMembers = await Membership.findAll({where:{groupId: groupId}})
   const images = await Image.findAll({
     where:{imageableType: 'Group', imageableId: groupId},
@@ -381,7 +390,8 @@ router.post('/:groupId/events',validateEvent, requireAuth, async (req,res)=>{
 
   if(!isGroup){
       res.statusCode = 404
-      throw new Error("Group couldn't be found")
+      return res.json({"message": "Group couldn't be found"})
+      // throw new Error("Group couldn't be found")
   }
 
   if(!await isOrganizer(groupId,curr) && !await isCoHost(groupId,curr)){
@@ -417,7 +427,8 @@ router.post('/:groupId/images', requireAuth, async (req,res)=>{
     
   } else{
     res.statusCode = 404
-    throw new Error("Group couldn't be found")
+    return res.json({"message": "Group couldn't be found"})
+    // throw new Error("Group couldn't be found")
   }
 })
 //? --------------------------------------------------------- ?//
@@ -430,7 +441,9 @@ router.post('/:groupId/membership', requireAuth, async (req,res)=>{
 
   const theGroup = await Group.findByPk(groupId)
 if(!theGroup){
-  throw new Error("Group couldn't be found")
+  res.statusCode = 404
+  return res.json({"message": "Group couldn't be found"})
+  // throw new Error("Group couldn't be found")
 }
 
 const isMember = await Membership.findOne({where:{'memberId':curr,groupId}})
@@ -438,14 +451,16 @@ const isMember = await Membership.findOne({where:{'memberId':curr,groupId}})
 if(!isMember){
   const newMembership = await Membership.create({'memberId':curr, 'status':'pending',groupId})
   const returnMember = await Membership.findOne({
-    where:{'memberId':curr},
+    where:{'memberId':curr, groupId},
     attributes:['memberId','status']
   })
   return res.json(returnMember)
 }else if(isMember.status === 'member' || isMember.status === 'co-host'){
   throw new Error("User is already a member of the group")
 }else if(isMember.status === 'pending'){
-  throw new Error("Membership has already been requested")
+  res.statusCode = 400
+  return res.json({"message": "Membership has already been requested"})
+  // throw new Error("Membership has already been requested")
 }
 })
 //? --------------------------------------------------------- ?//
@@ -459,7 +474,8 @@ router.post('/:groupId/venues',validateVenue, requireAuth, async (req,res)=>{
 
   if(!isGroup){
       res.statusCode = 404
-      throw new Error("Group couldn't be found")
+      res.json({"message": "Group couldn't be found"})
+      // throw new Error("Group couldn't be found")
   }
 
  const returnVenue = await Venue.create({address, lat, lng, city, state, groupId:groupId})
@@ -516,12 +532,7 @@ router.put('/:groupId/membership',requireAuth, async (req,res)=>{
 
     if(!theGroup){
       res.statusCode = 404
-      return res.json({
-        "message": 'Validations Error',
-        "errors": {
-          "status": "Group couldn't be found"
-        }
-      })
+      return res.json({"message": "Group couldn't be found"})
     }
 
     const theMember = await User.findOne({where:{id:memberId}})
@@ -604,7 +615,7 @@ const theGroup = await Group.findOne({where:{id:groupId}})
 
 
 if(!theGroup){
-  res.statusCode = 400
+  res.statusCode = 404
   return res.json({"message":"Group couldn't be found"})
 }
 
@@ -678,7 +689,8 @@ router.delete('/:groupId', requireAuth, async (req,res)=>{
       const theGroup = await Group.findByPk(groupId)
       if(!theGroup){
           res.statusCode = 404
-          throw new Error("Group couldn't be found")
+          return res.json({"message": "Group couldn't be found"})
+          // throw new Error("Group couldn't be found")
       }else{
         if(!await isOrganizer(groupId,curr)){
           res.statusCode = 403

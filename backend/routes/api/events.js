@@ -68,7 +68,9 @@ const validateEvent = [
         
  const theEvent = await Event.findByPk(eventId)
  if(!theEvent){
-   throw new Error("Event couldn't be found")
+  res.statusCode = 404
+  return res.json({"message": "Event couldn't be found"})
+  //  throw new Error("Event couldn't be found")
  }
 
   const groupId = theEvent.groupId
@@ -199,7 +201,7 @@ router.get('/', async (req,res)=>{
 
   if(errorCount !== 0){
       res.statusCode = 400
-      res.send(errorObj)
+      res.json(errorObj)
   }
 
   const limit = size
@@ -273,11 +275,13 @@ router.post('/:eventId/attendance', requireAuth, async (req,res)=>{
 
   const theEvent = await Event.findByPk(eventId)
 if(!theEvent){
-  throw new Error("Event couldn't be found")
+  res.statusCode = 404
+  return res.json({"message":"Event couldn't be found"})
+  // throw new Error("Event couldn't be found")
 }
 
 const theGroup = await Group.findByPk(theEvent.groupId)
-const isMember = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:curr}})
+const isMember = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr}})
 
 if(!isMember && theGroup.organizerId !== curr){
   res.statusCode = 403
@@ -289,11 +293,11 @@ const isAttending = await Attendee.findOne({where:{'userId':curr,eventId}})
 if(!isAttending){
   const newAttend= await Attendee.create({'userId':curr, 'status':'pending',eventId})
   const returnAttend = await Attendee.findOne({
-    where:{'userId':curr},
+    where:{'userId':curr, eventId},
     attributes:['userId','status']
   })
   return res.json(returnAttend)
-}else if(isAttending.status === 'member' || isAttending.status === 'co-host'){
+}else if(isAttending.status === 'attending' || isAttending.status === 'co-host'){
   throw new Error("User is already an attendee of the event")
 }else if(isAttending.status === 'pending'){
   throw new Error("Attendance has already been requested")
@@ -325,7 +329,8 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
    return res.json(sendImage)
   } else{
     res.statusCode = 404
-    throw new Error("Event couldn't be found")
+    return res.json({"message": "Event couldn't be found"})
+    // throw new Error("Event couldn't be found")
   }
 })
 //? --------------------------------------------------------- ?//
@@ -400,11 +405,15 @@ router.put('/:eventId',validateEvent, requireAuth, async (req,res)=>{
   const theVenue = await Venue.findByPk(venueId)
 
   if(!theVenue){
-    throw new Error("Venue couldn't be found")
+    res.statusCode = 404
+    return res.json({"message": "Venue couldn't be found"})
+    // throw new Error("Venue couldn't be found")
 }
   
   if(!theEvent){
-    throw new Error("Event couldn't be found")
+    res.statusCode = 404
+    return res.json({"message": "Event couldn't be found"})
+    // throw new Error("Event couldn't be found")
   }
   
   const theGroup = await Group.findByPk(theEvent.groupId) //host
@@ -416,7 +425,8 @@ router.put('/:eventId',validateEvent, requireAuth, async (req,res)=>{
 
   await theEvent.set({name, venueId, type, capacity, price, description, startDate, endDate})
   await theEvent.save()
-  return res.json(theEvent) 
+  const returnEvent = await Event.findOne({where:{name},exclude:['updatedAt']})
+  return res.json(returnEvent) 
   })
 //? --------------------------------------------------------- ?//
 
@@ -470,7 +480,8 @@ router.delete('/:eventId/attendance', requireAuth, async (req,res)=>{
           const theEvent = await Event.findByPk(eventId)
           if(!theEvent){
               res.statusCode = 404
-              throw new Error("Event couldn't be found")
+              return res.json({"message": "Event couldn't be found"})
+              // throw new Error("Event couldn't be found")
           }else{
 
             const theGroup = await Group.findByPk(theEvent.groupId) //host

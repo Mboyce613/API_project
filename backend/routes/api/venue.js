@@ -47,7 +47,8 @@ const validateVenue = [
 
     if(!isVenue){
         res.statusCode = 404
-        throw new Error("Venue couldn't be found")
+        res.send({"message": "Venue couldn't be found"})
+        // throw new Error("Venue couldn't be found")
     }
 
    await isVenue.set({address, lat, lng, city, state,})
