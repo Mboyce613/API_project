@@ -40,7 +40,8 @@ const validateVenue = [
 
 //? Edit a Venue specified by its id ?//
 // PUT URL: /api/venues/:venueId
-  router.put('/:venueId',validateVenue, requireAuth, async (req,res)=>{
+  router.put('/:venueId', requireAuth, validateVenue, async (req,res)=>{
+    const curr = req.user.id
     const {venueId} = req.params
     let { address, lat, lng, city, state} = req.body
    const isVenue = await Venue.findByPk(venueId)
@@ -51,10 +52,19 @@ const validateVenue = [
         // throw new Error("Venue couldn't be found")
     }
 
-   await isVenue.set({address, lat, lng, city, state,})
-   await isVenue.save()
-    const returnVenue = await Venue.findByPk(venueId)
-    res.json(returnVenue)
+    const theGroup = await Group.findByPk(isVenue.groupId)
+    const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr, status: "co-host"}})
+
+    if(theGroup.organizerId === curr || isCoHost){
+      await isVenue.set({address, lat, lng, city, state,})
+      await isVenue.save()
+       const returnVenue = await Venue.findByPk(venueId)
+       return res.json(returnVenue)
+    }
+    
+    res.statusCode = 403
+    return res.json({"message": "Forbidden"})
+
   })
   //? --------------------------------------------------------- ?//
 

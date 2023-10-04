@@ -298,9 +298,11 @@ if(!isAttending){
   })
   return res.json(returnAttend)
 }else if(isAttending.status === 'attending' || isAttending.status === 'co-host'){
-  throw new Error("User is already an attendee of the event")
+  res.statusCode = 400
+  return res.json({"message": "User is already an attendee of the event"})
 }else if(isAttending.status === 'pending'){
-  throw new Error("Attendance has already been requested")
+  res.statusCode = 400
+  return res.json({"message": "Attendance has already been requested"})
 }
 })
 //? --------------------------------------------------------- ?//
@@ -312,26 +314,34 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
   const curr = req.user.id
   const theEvent = await Event.findOne({where:{id:eventId}})
 
-  if(theEvent){
-    const theGroup = await Group.findByPk(theEvent.groupId) //host
-    const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:curr, status:"co-host"}})
-    const isAttending = await Attendee.findOne({eventId:theEvent.id, userId:curr, status:'attending'})
-    if(theGroup.organizerId !== curr && !isCoHost && !isAttending){
-      res.statusCode = 403
-      return res.json({"message": "Forbidden"})
-    }
-
-   await Image.create({url, preview, imageableId:eventId, imageableType:'Event'})
-   const sendImage = await Image.findOne({
-      where:{url},
-      attributes:['id','url','preview'],
-  })
-   return res.json(sendImage)
-  } else{
+  if(!theEvent){
     res.statusCode = 404
     return res.json({"message": "Event couldn't be found"})
-    // throw new Error("Event couldn't be found")
   }
+
+    const theGroup = await Group.findByPk(theEvent.groupId) 
+    const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr, status:"co-host"}})
+    const isAttending = await Attendee.findOne({where:{eventId:theEvent.id, userId:curr, status:'attending'}})
+
+    console.log("\n", "the userid: ", curr)
+    console.log("\n", "the groupid: ", theGroup.id)
+    console.log("\n", "the eventid: ", theEvent.id)
+    console.log("\n", "isCoHost: ", isCoHost)
+    console.log("\n", "isAttending: ", isAttending)
+
+
+    if(theGroup.organizerId === curr || isCoHost || isAttending){
+      const makeImage = await Image.create({url, preview, imageableId:eventId, imageableType:'Event'})
+      const sendImage = await Image.findOne({
+         where:{id:makeImage.idl},
+         attributes:['id','url','preview'],
+        })
+        return res.json(sendImage)
+    }
+
+      res.statusCode = 403
+      return res.json({"message": "Forbidden"})
+
 })
 //? --------------------------------------------------------- ?//
 
@@ -397,7 +407,7 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
 
 //? Edit an Event specified by its id ?//
 //PUT URL: /api/events/:eventId
-router.put('/:eventId',validateEvent, requireAuth, async (req,res)=>{
+router.put('/:eventId', requireAuth, validateEvent,  async (req,res)=>{
   const {name, venueId, type, capacity, price, description, startDate, endDate} = req.body
   const {eventId} = req.params
   const curr = req.user.id
@@ -417,7 +427,7 @@ router.put('/:eventId',validateEvent, requireAuth, async (req,res)=>{
   }
   
   const theGroup = await Group.findByPk(theEvent.groupId) //host
-  const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:curr, status:"co-host"}})
+  const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr, status:"co-host"}})
   if(theGroup.organizerId !== curr && !isCoHost){
     res.statusCode = 403
     return res.json({"message": "Forbidden"})
@@ -485,7 +495,7 @@ router.delete('/:eventId/attendance', requireAuth, async (req,res)=>{
           }else{
 
             const theGroup = await Group.findByPk(theEvent.groupId) //host
-            const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:curr, status:"co-host"}})
+            const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr, status:"co-host"}})
             if(theGroup.organizerId !== curr && !isCoHost){
               res.statusCode = 403
               return res.json({"message": "Forbidden"})

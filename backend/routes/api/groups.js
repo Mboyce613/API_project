@@ -113,8 +113,9 @@ const validateGroup = [
     .isIn(['In person', 'Online'])
     .withMessage("Type must be 'Online' or 'In person"),
   check('private')
-    .exists({ checkFalsy: true })
-    .isIn(['true', 'false'])
+    // .exists({ checkFalsy: true })
+    // .isIn(['true', 'false'])
+    .isBoolean()
     .withMessage('Private must be a boolean'),
   check('city')
     .exists({ checkFalsy: true })
@@ -238,19 +239,28 @@ if(owner){
 // GET URL: /api/groups/:groupId/venues
 router.get('/:groupId/venues', requireAuth, async (req,res)=>{
   const {groupId} = req.params
-  const theVenues = await Venue.findAll({where:{groupId}})
-const returnObj = {"Venues": []}
-  for (let venue of theVenues){
-      returnObj.Venues.push(venue)
-  }
-  console.log(theVenues)
-  if(theVenues[0]){
-   return res.json(returnObj)
-  } else{
+  const curr = req.user.id
+
+  const theGroup = await Group.findOne({where:{id:groupId}})
+  if(!theGroup){
     res.statusCode = 404
     return res.json({"message": "Group couldn't be found"})
-    // throw new Error("Group couldn't be found")
   }
+
+const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr, status:"co-host"}})
+if(theGroup.organizerId === curr || isCoHost){
+
+  const theVenues = await Venue.findAll({where:{groupId}})
+  const returnObj = {"Venues": []}
+    for (let venue of theVenues){
+        returnObj.Venues.push(venue)
+    }
+    if(theVenues[0]){
+     return res.json(returnObj)
+    } 
+}
+res.statusCode = 403
+return res.json({"message": "Forbidden"})
 })
 //? --------------------------------------------------------- ?//
 
@@ -377,7 +387,7 @@ router.get('/', async (req,res) =>{
 
 //? Create an Event for a Group specified by its id ?//
 //POST URL: /api/groups/:groupId/events
-router.post('/:groupId/events',validateEvent, requireAuth, async (req,res)=>{
+router.post('/:groupId/events', requireAuth, validateEvent, async (req,res)=>{
   const curr = req.user.id
 
   if(validateEvent.startDate >= validateEvent.endDate){
@@ -467,7 +477,7 @@ if(!isMember){
 
 //? Create a new Venue for a Group specified by its id ?//
 //POST URL: /api/groups/:groupId/venues
-router.post('/:groupId/venues',validateVenue, requireAuth, async (req,res)=>{
+router.post('/:groupId/venues', requireAuth, validateVenue,  async (req,res)=>{
   const {groupId} = req.params
   let { address, lat, lng, city, state} = req.body
  const isGroup = await Group.findByPk(groupId)
@@ -496,7 +506,7 @@ router.post('/:groupId/venues',validateVenue, requireAuth, async (req,res)=>{
 
 //? Create a Group ?//
 // POST URL: /api/groups
-router.post('/',validateSignup, requireAuth, async (req,res)=>{
+router.post('/', requireAuth, validateSignup, async (req,res)=>{
     const userId = req.user.id
     let { name, about, type, private, city, state} = req.body
 
@@ -607,7 +617,7 @@ return res.json(returnMember)
 
 //? Edit a Group ?//
 //PUT URL: /api/groups/:groupId
-router.put('/:groupId',validateGroup, requireAuth, async (req,res)=>{
+router.put('/:groupId', requireAuth, validateGroup,  async (req,res)=>{
 const {name, about, type, private, city, state} = req.body
 const {groupId} = req.params
 const curr = req.user.id
