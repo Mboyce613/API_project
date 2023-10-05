@@ -42,7 +42,7 @@ for (let userGroup of userGroups){
   const theUser = await User.findOne({where:{username}})
 
   for( let groupInfo of group){
-    console.log(groupInfo)
+    // console.log(groupInfo)
     await Group.create({ ...groupInfo, organizerId: theUser.id})
   }
 }

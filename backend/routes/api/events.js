@@ -183,7 +183,9 @@ router.get('/', async (req,res)=>{
   }
 
   if(type){
-      if(type !== "Online" && type !== "In Person" ){
+    console.log("\n this is type: ", type)
+      if(type !== '"Online"' && type !== '"In Person"' ){
+        console.log("did i get here?")
           errorObj.errors.type = "Type must be 'Online' or 'In Person"
           errorCount ++
       }
@@ -191,6 +193,7 @@ router.get('/', async (req,res)=>{
 
   if(startDate){
       const isDate = new Date(startDate)
+      console.log("\n", isDate)
       console.log('\n', startDate, '\n')
       console.log('\n', isDate.toString(), '\n')
       if(isDate.toString() === 'Invalid Date' || startDate.length !== 10){
@@ -283,27 +286,26 @@ if(!theEvent){
 const theGroup = await Group.findByPk(theEvent.groupId)
 const isMember = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr}})
 
-if(!isMember && theGroup.organizerId !== curr){
+if(theGroup.organizerId === curr || (isMember && isMember.status === 'member')|| (isMember && isMember.status === 'co-host')){
+  const isAttending = await Attendee.findOne({where:{'userId':curr,eventId}})
+  // console.log(isAttending)
+  if(!isAttending){
+    const newAttend= await Attendee.create({'userId':curr, 'status':'pending',eventId})
+    const returnAttend = await Attendee.findOne({
+      where:{'userId':curr, eventId},
+      attributes:['userId','status']
+    })
+    return res.json(returnAttend)
+  }else if(isAttending.status === 'attending' || isAttending.status === 'co-host'){
+    res.statusCode = 400
+    return res.json({"message": "User is already an attendee of the event"})
+  }else if(isAttending.status === 'pending'){
+    res.statusCode = 400
+    return res.json({"message": "Attendance has already been requested"})
+  }
+}
   res.statusCode = 403
   return res.json({"message": "Forbidden"})
-}
-
-const isAttending = await Attendee.findOne({where:{'userId':curr,eventId}})
-// console.log(isAttending)
-if(!isAttending){
-  const newAttend= await Attendee.create({'userId':curr, 'status':'pending',eventId})
-  const returnAttend = await Attendee.findOne({
-    where:{'userId':curr, eventId},
-    attributes:['userId','status']
-  })
-  return res.json(returnAttend)
-}else if(isAttending.status === 'attending' || isAttending.status === 'co-host'){
-  res.statusCode = 400
-  return res.json({"message": "User is already an attendee of the event"})
-}else if(isAttending.status === 'pending'){
-  res.statusCode = 400
-  return res.json({"message": "Attendance has already been requested"})
-}
 })
 //? --------------------------------------------------------- ?//
 
@@ -323,17 +325,17 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
     const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr, status:"co-host"}})
     const isAttending = await Attendee.findOne({where:{eventId:theEvent.id, userId:curr, status:'attending'}})
 
-    console.log("\n", "the userid: ", curr)
-    console.log("\n", "the groupid: ", theGroup.id)
-    console.log("\n", "the eventid: ", theEvent.id)
-    console.log("\n", "isCoHost: ", isCoHost)
-    console.log("\n", "isAttending: ", isAttending)
+    // console.log("\n", "the userid: ", curr)
+    // console.log("\n", "the groupid: ", theGroup.id)
+    // console.log("\n", "the eventid: ", theEvent.id)
+    // console.log("\n", "isCoHost: ", isCoHost)
+    // console.log("\n", "isAttending: ", isAttending)
 
 
     if(theGroup.organizerId === curr || isCoHost || isAttending){
       const makeImage = await Image.create({url, preview, imageableId:eventId, imageableType:'Event'})
       const sendImage = await Image.findOne({
-         where:{id:makeImage.idl},
+         where:{id:makeImage.id},
          attributes:['id','url','preview'],
         })
         return res.json(sendImage)
@@ -359,7 +361,7 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
     const {eventId} = req.params
     const {userId, status} = req.body
     const curr = req.user.id
-    console.log('\n', status, '\n')
+    // console.log('\n', status, '\n')
     if(status === 'pending'){
       res.statusCode = 400
       return res.json({"message": "Cannot change an attendance status to pending"})
@@ -371,17 +373,7 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
       res.statusCode = 404
       return res.json({"message": "Event couldn't be found"})
     }
-  //   const theMember = await User.findOne({where:{id:userId}})
-  //   if(!theMember){
-  //     res.statusCode = 400
-  //     res.json({
-  //       "message": 'Validations Error',
-  //       "errors": {
-  //         "status": "User couldn't be found"
-  //       }
-  //     })
-  //   }
-  
+
     const theAttendance = await Attendee.findOne({where:{userId, eventId}})
     if(!theAttendance){
       res.statusCode = 404
@@ -389,19 +381,27 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
       }
     
       const theGroup = await Group.findByPk(theEvent.groupId) //host
-      const isCoHost = await Membership.findOne({where:{groupId:theGroup.organizerId, memberId:curr, status:"co-host"}})
-      if(theGroup.organizerId !== curr && !isCoHost){
-        res.statusCode = 403
-        return res.json({"message": "Forbidden"})
+      const isCoHost = await Membership.findOne({where:{groupId:theGroup.id, memberId:curr, status:"co-host"}})
+      // if(theGroup.organizerId !== curr && !isCoHost){
+      //   res.statusCode = 403
+      //   return res.json({"message": "Forbidden"})
+      // }
+
+      console.log("\n", theGroup.organizerId === curr ,"\n")
+      console.log("\n", isCoHost ,"\n")
+      console.log("\n", theGroup.id ,"\n")
+
+      if(theGroup.organizerId === curr || isCoHost){
+        await theAttendance.set({status}).save()
+        
+        const returnMember = await Attendee.findOne({
+          where:{eventId,userId},
+          attributes:['id','eventId', 'userId', 'status']
+        })
+        return res.json(returnMember)
       }
-  
-  await theAttendance.set({status}).save()
-  
-  const returnMember = await Attendee.findOne({
-    where:{eventId,userId},
-    attributes:['id','eventId', 'userId', 'status']
-  })
-  return res.json(returnMember)
+          res.statusCode = 403
+        return res.json({"message": "Forbidden"})
   })
   //? --------------------------------------------------------- ?//
 

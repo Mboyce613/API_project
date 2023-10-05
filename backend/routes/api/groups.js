@@ -479,28 +479,34 @@ if(!isMember){
 //POST URL: /api/groups/:groupId/venues
 router.post('/:groupId/venues', requireAuth, validateVenue,  async (req,res)=>{
   const {groupId} = req.params
+  const curr = req.user.id
   let { address, lat, lng, city, state} = req.body
- const isGroup = await Group.findByPk(groupId)
 
+ const isGroup = await Group.findByPk(groupId)
   if(!isGroup){
       res.statusCode = 404
       res.json({"message": "Group couldn't be found"})
       // throw new Error("Group couldn't be found")
   }
 
- const returnVenue = await Venue.create({address, lat, lng, city, state, groupId:groupId})
-  // const returnVenue = await Venue.findOne({where:{address}})
-  const returnObj = {
-    id:returnVenue.id,
-    groupId,
-    address,
-    city,
-    state,
-    lat,
-    lng,
-
+  const isMember = await Membership.findOne({where:{groupId, memberId:curr}})
+  if(isGroup.organizerId === curr || (isMember && isMember.status === 'member')|| (isMember && isMember.status === 'co-host')){
+    const returnVenue = await Venue.create({address, lat, lng, city, state, groupId:groupId})
+     // const returnVenue = await Venue.findOne({where:{address}})
+     const returnObj = {
+       id:returnVenue.id,
+       groupId,
+       address,
+       city,
+       state,
+       lat,
+       lng,
+   
+     }
+     return res.json(returnObj)
   }
-  return res.json(returnObj)
+  res.statusCode = 403
+  return res.json({"message": "Forbidden"})
 })
 //? --------------------------------------------------------- ?//
 
@@ -718,9 +724,16 @@ router.delete('/:groupId', requireAuth, async (req,res)=>{
           for(let attendee of theAttendees){
             attendee.destroy()
           }
+          event.destroy()
         }
-        //! Find the attendies of each event
-        //! Delete the addendies
+        const theVenues = await Venue.findAll({where:{groupId}})
+        for(let venue of theVenues){
+          venue.destroy()
+        }
+        const theMembers = await Membership.findAll({where:{groupId}})
+        for(let member of theMembers){
+          member.destroy()
+        }
 
          await theGroup.destroy()
          return res.json({ "message": "Successfully deleted"})
