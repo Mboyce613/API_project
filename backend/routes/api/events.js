@@ -148,6 +148,7 @@ router.get('/', async (req,res)=>{
   const returnObj = {"Events":[]}
   let {page, size, name, type, startDate} = req.query
   let errorCount = 0
+  const pagination = {}
   const errorObj = {
       "message": "Bad Request",
       "errors": {}
@@ -174,31 +175,49 @@ router.get('/', async (req,res)=>{
   }else{
       size = 20
   }
+  // console.log("\n", typeof(name))
+  // console.log("\n", Number("name"))
 
   if(name){
-      if(typeof(name) !== 'string'){
+      if(typeof(name) !== 'string' || !isNaN(Number(name))){
           errorObj.errors.name = 'Name must be a string'
           errorCount ++
+      }else{
+        pagination.name = name
       }
   }
 
   if(type){
-    console.log("\n this is type: ", type)
-      if(type !== '"Online"' && type !== '"In Person"' ){
-        console.log("did i get here?")
+    // console.log("\n this is type: ", type)
+      if(type !== "Online" && type !== "online" && type !== "In Person" && type !== "In person" ){
+        // console.log("did i get here?")
           errorObj.errors.type = "Type must be 'Online' or 'In Person"
           errorCount ++
+      }else{
+        pagination.type = type
       }
   }
 
   if(startDate){
-      const isDate = new Date(startDate)
-      console.log("\n", isDate)
-      console.log('\n', startDate, '\n')
-      console.log('\n', isDate.toString(), '\n')
-      if(isDate.toString() === 'Invalid Date' || startDate.length !== 10){
+    // startDate = startDate.split("")
+    // startDate.shift()
+    // startDate.pop()
+    // startDate = startDate.join("")
+      // const isDate = new Date(startDate)
+      // console.log("\n", isDate)
+      // console.log('\n', startDate, '\n')
+      // console.log('\n', isDate.toString(), '\n')
+
+      const checkDate = Date.parse(startDate)
+      // console.log(startDate)
+      // console.log("\n",checkDate)
+      // console.log('\n', isDate.valueOf())
+
+      if(isNaN(checkDate)){
           errorObj.errors.startDate = "Start date must be a valid datetime"
           errorCount ++
+      }else{
+        pagination.startDate = startDate
       }
   }
 
@@ -210,9 +229,10 @@ router.get('/', async (req,res)=>{
   const limit = size
   const offset = ((page-1)*limit)
  
-
+console.log("\n", pagination)
   const theEvents = await Event.findAll({
     attributes:["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
+    where:pagination,
     limit,
     offset
   })
@@ -228,8 +248,7 @@ router.get('/', async (req,res)=>{
       })
       const numAttending = await Attendee.findAll({where:{eventId:event.id, status:"attending"}})
       let image = await Image.findOne({where:{imageableType: 'Event', preview: true, imageableId: event.id}})
-      // console.log('\n',theGroup,'\n')
-      // console.log('\n',event,'\n')
+
       if(numAttending.length){
           event.dataValues.numAttending = numAttending.length
       } else{
