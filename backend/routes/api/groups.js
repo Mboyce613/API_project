@@ -466,7 +466,9 @@ if(!isMember){
   })
   return res.json(returnMember)
 }else if(isMember.status === 'member' || isMember.status === 'co-host'){
-  throw new Error("User is already a member of the group")
+  res.statusCode = 400
+  // throw new Error("User is already a member of the group")
+  return res.json({"message": "User is already a member of the group"})
 }else if(isMember.status === 'pending'){
   res.statusCode = 400
   return res.json({"message": "Membership has already been requested"})
@@ -490,7 +492,9 @@ router.post('/:groupId/venues', requireAuth, validateVenue,  async (req,res)=>{
   }
 
   const isMember = await Membership.findOne({where:{groupId, memberId:curr}})
-  if(isGroup.organizerId === curr || (isMember && isMember.status === 'member')|| (isMember && isMember.status === 'co-host')){
+  // console.log("\n", groupId)
+  // console.log("\n",isMember)
+  if(isGroup.organizerId === curr || (isMember && isMember.status === 'co-host')){
     const returnVenue = await Venue.create({address, lat, lng, city, state, groupId:groupId})
      // const returnVenue = await Venue.findOne({where:{address}})
      const returnObj = {
@@ -640,7 +644,7 @@ if(!await isOrganizer(groupId,curr)){
   return res.json({"message": "Forbidden"})
 }
 
-await theGroup.set({name, about, type, private, city, state})
+await theGroup.set({name, about, type, private, city, state}).save()
 
 return res.json(theGroup)
 })
