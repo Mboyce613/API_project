@@ -24,6 +24,10 @@ function LoginFormModal() {
       });
   };
 
+  const handleLogin = (e) =>{
+    closeModal();
+  }
+
   return (
     <>
       <h1>Log In</h1>
@@ -49,7 +53,7 @@ function LoginFormModal() {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button /*</form>onClick={handleLogin}*/ type="submit">Log In</button>
       </form>
     </>
   );
