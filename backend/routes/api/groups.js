@@ -364,9 +364,11 @@ router.get('/', async (req,res) =>{
         const {id} = group
  
         const memberships = await Membership.findAll({where:{groupId: id}})
+        const numEvents = await Event.findAll({where:{groupId: id}})
         let image = await Image.findOne({where:{imageableType: 'Group', preview: true, imageableId: id}})
         
         group.dataValues.numMembers = memberships.length
+        group.dataValues.numEvents = numEvents.length
         if(!image){
             group.dataValues.previewImage = null
         } else{

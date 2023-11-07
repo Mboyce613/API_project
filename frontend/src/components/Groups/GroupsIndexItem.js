@@ -2,23 +2,29 @@ import { Link } from 'react-router-dom';
 import { Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 
+
 const GroupIndexItem = ({ group }) => {
   const dispatch = useDispatch()
+  let gPrivate = ''
+  if(group.private) gPrivate = 'Private'
+  if(!group.private) gPrivate = 'Public'
 
   return (
-    <li>
+    <>
+    <div className = 'groupBox'>
+    <img src={group.previewImage} />
       <div className="li-contents-flex">
-        <Link to={`/groups/${group.id}`}>group #{group.id}</Link>
+        <div>{group.name}</div>
+        <div>{group.city}, {group.state}</div>
+        <div>{group.about}</div>
+        <div>{group.numEvents} Events</div>
+        <div>{gPrivate}</div>
         <div className="buttons-container">
-          <Link
-            className="edit-link"
-            to={`/groups/${group.id}/edit`}
-          >
-            Edit
-          </Link>
+          {/* <Link className="edit-link" to={`/groups/${group.id}/edit`}> Edit </Link> */}
         </div>
       </div>
-    </li>
+      </div>
+    </>
   );
 };
 

@@ -17,19 +17,20 @@ const GroupIndex = () => {
   const dispatch = useDispatch()
 
 
-
-  /* **DO NOT CHANGE THE RETURN VALUE** */
   return (
+    <>
+    <Link to={``}>Events</Link>
+    <Link to={``}>Groups</Link>
     <section>
-      <ul>
         {groups.map((group) => (
-          <GroupIndexItem
+          <Link to={`/groups/${group.id}`}>{<GroupIndexItem
             group={group}
             key={group.id}
-          />
+          />}</Link>
+          
         ))}
-      </ul>
     </section>
+    </>
   );
 };
 
