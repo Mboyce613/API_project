@@ -6,6 +6,7 @@ import Navigation from "./components/Navigation";
 import { Route } from "react-router-dom/cjs/react-router-dom.min";
 import GroupIndex from './components/Groups'
 import EventIndex from "./components/Events";
+import GroupInfo from "./components/Groups/GroupInfo";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Switch>
+          <Route path='/groups/:groupId' component={GroupInfo} />
           <Route path='/groups' component={GroupIndex} />
           <Route path='/events' component={EventIndex} />
         </Switch>}
