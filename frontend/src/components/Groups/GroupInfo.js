@@ -3,26 +3,28 @@ import { Dispatch, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { fetchGroups } from '../../store/groups';
+import { fetchGroupInfo } from '../../store/groups';
 
 //! Looks like works, but loses state and brakes on refresh.
 
 const GroupInfo = () => {
 
-  const [stateGroup, setStateGroup] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
+  const dispatch = useDispatch()
 
     let groupId = useParams()
-    // console.log(groupId)
+    // console.log('line 16',groupId)
     groupId = Number(groupId.groupId)
-    console.log('the group id', groupId)
+    // console.log('line 18',groupId)
+    // console.log('the group id', groupId.groupId)
     useEffect(()=>{
-        dispatch(fetchGroups())
-      },[])
+        dispatch(fetchGroupInfo(groupId)).then(()=>setIsLoading(false))
+      },[dispatch, groupId])
 
     const data = useSelector(state=>state.groups)
-    console.log('hi im state', data)
-    const group = data[groupId]
-    console.log(group)
-  const dispatch = useDispatch()
+    // console.log('hi im group info state', data)
+    const group = data
+    // console.log('the group is ',group)
   let gPrivate = ''
   if(group.private) gPrivate = 'Private'
   if(!group.private) gPrivate = 'Public'

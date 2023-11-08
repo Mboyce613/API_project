@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 
 /** Action Type Constants: */
 export const LOAD_GROUPS = 'groups/LOAD_GROUPS';
+export const LOAD_GROUP_INFO = 'groups/LOAD_GROUP_INFO';
 export const CREATE_GROUP = 'groups/CREATE_GROUP';
 export const READ_GROUP = 'groups/READ_GROUP';
 export const UPDATE_GROUP = 'groups/UPDATE_GROUP';
@@ -11,6 +12,11 @@ export const DELETE_GROUP = 'groups/DELETE_GROUP';
 export const loadGroups = (groups) => ({
     type: LOAD_GROUPS,
     groups,
+  });
+
+  export const loadGroupInfo = (group) => ({
+    type: LOAD_GROUP_INFO,
+    group,
   });
 
   export const createGroup = (group) => ({
@@ -39,13 +45,25 @@ export const fetchGroups = (groups) => async(dispatch)=>{
     const res = await fetch('/api/groups')
     const data = await res.json()
     res.data = data
-    console.log('thunk action creator data', data)
+    // console.log('thunk action creator data', data)
     if(res.ok){
       dispatch(loadGroups(data.Groups))
     }else{
       throw res
     }
     }
+
+    export const fetchGroupInfo = (groupId) => async(dispatch)=>{
+      const res = await fetch(`/api/groups/${groupId}`)
+      const data = await res.json()
+      res.data = data
+      console.log('thunk action creator data', data)
+      if(res.ok){
+        dispatch(loadGroupInfo(data))
+      }else{
+        throw res
+      }
+      }
     
 //     export const deleteReport = (reportId) => async dispatch =>{
 //       const response = await fetch(`/api/reports/${reportId}`, {
@@ -68,6 +86,12 @@ const groupsReducer = (state = {}, action) => {
           }
         });
         return {...groupsState};
+      case LOAD_GROUP_INFO:
+        console.log('action ',action)
+        console.log('action.group ',action.group)
+        // return state[action.group.id]
+       const singleGroupState = action.group
+        return singleGroupState
       case CREATE_GROUP:
         return { ...state, [action.group.id]: action.group };
       case READ_GROUP:
