@@ -9,7 +9,7 @@ const GroupIndex = () => {
 
   useEffect(()=>{
     dispatch(fetchGroups())
-  })
+  },[])
 
   const data = useSelector(state=>state.groups)
   console.log('hi im state', data)
@@ -24,10 +24,7 @@ const GroupIndex = () => {
     <div>Groups in Meetup</div>
     <section>
         {groups.map((group) => (
-          <Link to={`/groups/${group.id}`}>{<GroupIndexItem
-            group={group}
-            key={group.id}
-          />}</Link>
+          <Link to={`/groups/${group.id}`}>{<GroupIndexItem group={group} key={group.id} />}</Link>
           
         ))}
     </section>
