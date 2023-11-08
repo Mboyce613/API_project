@@ -9,7 +9,7 @@ const GroupIndex = () => {
 
   useEffect(()=>{
     dispatch(fetchGroups())
-  },[])
+  })
 
   const data = useSelector(state=>state.groups)
   console.log('hi im state', data)

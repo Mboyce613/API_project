@@ -1,11 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
-import { Dispatch, useEffect } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { fetchGroups } from '../../store/groups';
 
+//! Looks like works, but loses state and brakes on refresh.
 
 const GroupInfo = () => {
+
+  const [stateGroup, setStateGroup] = useState({})
 
     let groupId = useParams()
     // console.log(groupId)
