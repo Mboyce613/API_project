@@ -14,7 +14,7 @@ export const loadEvents = (events) => ({
     events,
   });
 
-  export const loadEventsInfo = (event) => ({
+  export const loadEventInfo = (event) => ({
     type: LOAD_EVENT_INFO,
     event,
   });
@@ -45,7 +45,7 @@ export const fetchEvents = (events) => async(dispatch)=>{
     const res = await fetch('/api/events')
     const data = await res.json()
     res.data = data
-    console.log('thunk action creator data', data)
+    // console.log('thunk action creator data', data)
     if(res.ok){
       dispatch(loadEvents(data.Events))
     }else{
@@ -57,7 +57,7 @@ export const fetchEvents = (events) => async(dispatch)=>{
       const res = await fetch(`/api/events/${eventId}`)
       const data = await res.json()
       res.data = data
-      console.log('thunk action creator data', data)
+      // console.log('thunk action creator data', data)
       if(res.ok){
         dispatch(loadEventInfo(data))
       }else{
@@ -81,7 +81,7 @@ const eventsReducer = (state = {}, action) => {
       case LOAD_EVENTS:
         const eventsState = {};
         action.events.forEach((event) => {
-          if(!eventsState){
+          if(!eventsState[event.id]){
             eventsState[event.id] = event;
           }
         });

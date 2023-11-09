@@ -25,7 +25,6 @@ const GroupIndex = () => {
     <section>
         {groups.map((group) => (
           <Link to={`/groups/${group.id}`}>{<GroupIndexItem group={group} key={group.id} />}</Link>
-          
         ))}
     </section>
     </>

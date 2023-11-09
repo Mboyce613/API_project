@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { fetchGroups } from '../../store/groups';
 import { fetchGroupInfo } from '../../store/groups';
+import EventsIndexItem from '../Events/EventsIndexItem.js'
 
 const GroupInfo = () => {
 
@@ -51,7 +52,9 @@ const GroupInfo = () => {
           <div>What we're about</div>
           <div>{group.about}</div>
           <div>Upcoming Events ({group.numEvents})</div>
-          <div>Place holder (map through each event)</div>
+          <div>{group.Events.map((event) => (
+          <Link to={`/events/${event.id}`}>{<EventsIndexItem event={event} key={event.id} />}</Link>
+        ))}</div>
         </section>
       </>
     );

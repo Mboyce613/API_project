@@ -332,6 +332,7 @@ router.get('/:groupId', async (req,res) =>{
   })
   group.dataValues.numMembers = numMembers.length
   group.dataValues.numEvents = numEvents.length
+  group.dataValues.Events = numEvents
   group.dataValues.GroupImages = images
   group.dataValues.Organizer = organizer
   group.dataValues.Venues = venues

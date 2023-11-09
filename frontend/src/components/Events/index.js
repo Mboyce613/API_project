@@ -20,16 +20,16 @@ const EventIndex = () => {
 
   /* **DO NOT CHANGE THE RETURN VALUE** */
   return (
+    <>
+    <Link to={``}>Events</Link>
+    <Link to={``}>Groups</Link>
+    <div>Events in Meetup</div>
     <section>
-      <ul>
         {events.map((event) => (
-          <EventIndexItem
-            event={event}
-            key={event.id}
-          />
+          <Link to={`/events/${event.id}`}>{<EventIndexItem event={event} key={event.id}/>}</Link>
         ))}
-      </ul>
     </section>
+    </>
   );
 };
 

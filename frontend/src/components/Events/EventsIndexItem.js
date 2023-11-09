@@ -1,24 +1,37 @@
 import { Link } from 'react-router-dom';
 import { Dispatch } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadEventInfo } from '../../store/events';
 
 const EventIndexItem = ({ event }) => {
   const dispatch = useDispatch()
+  console.log(event)
+  const {startDate} = event
+  const time = startDate.split('T')
+  const year = time[0]
+  let hour = time[1]
+  hour = hour.slice(0,5)
+
+  //  const  theEvent =  dispatch(loadEventInfo(event.id))
+  // console.log('What the goddam fuck',theEvent)
+  // const state = useSelector(state=>state.events)
+  // console.log(state)
 
   return (
-    <li>
+    <>
+    <div className = 'eventBox'>
+    <img src={event.previewImage} />
       <div className="li-contents-flex">
-        <Link to={`/events/${event.id}`}>event #{event.id}</Link>
+        <div>{year} {hour}</div>
+        <div>{event.name}</div>
+        <div>{event.city}, {event.state}</div>
+        <div>{event.about}</div>
+        <div>{event.numEvents} Events</div>
         <div className="buttons-container">
-          <Link
-            className="edit-link"
-            to={`/events/${event.id}/edit`}
-          >
-            Edit
-          </Link>
         </div>
       </div>
-    </li>
+      </div>
+    </>
   );
 };
 
