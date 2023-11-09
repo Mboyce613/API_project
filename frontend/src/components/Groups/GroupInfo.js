@@ -19,27 +19,40 @@ const GroupInfo = () => {
 
     const data = useSelector(state=>state.groups)
     const group = data
+    console.log(data)
 
   let gPrivate = ''
   if(group.private) gPrivate = 'Private'
   if(!group.private) gPrivate = 'Public'
 
+//! need # of events, and organizer first and last name.
+
   if(!isLoading){
     return (
       <>
+      <Link to='/groups'>Groups</Link>
       <div className = 'groupBox'>
-      <img src={group.previewImage} />
+      <img src={group.GroupImages[0].url} />
         <div className="li-contents-flex">
           <div>{group.name}</div>
           <div>{group.city}, {group.state}</div>
-          <div>{group.about}</div>
+          {/* <div>{group.about}</div> */}
           <div>{group.numEvents} Events</div>
           <div>{gPrivate}</div>
+          <div>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</div>
           <div className="buttons-container">
-            {/* <Link className="edit-link" to={`/groups/${group.id}/edit`}> Edit </Link> */}
+            <button>Join this group</button>
           </div>
         </div>
         </div>
+        <section>
+          <div>Organizer</div>
+          <div>{group.Organizer.firstName} {group.Organizer.lastName}</div>
+          <div>What we're about</div>
+          <div>{group.about}</div>
+          <div>Upcoming Events ({group.numEvents})</div>
+          <div>Place holder (map through each event)</div>
+        </section>
       </>
     );
   }else{

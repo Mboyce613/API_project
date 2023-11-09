@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 
 /** Action Type Constants: */
 export const LOAD_EVENTS = 'events/LOAD_EVENTS';
+export const LOAD_EVENT_INFO = 'events/LOAD_EVENT_INFO';
 export const CREATE_EVENT = 'events/CREATE_EVENT';
 export const READ_EVENT = 'events/READ_EVENT';
 export const UPDATE_EVENT = 'events/UPDATE_EVENT';
@@ -11,6 +12,11 @@ export const DELETE_EVENT = 'events/DELETE_EVENT';
 export const loadEvents = (events) => ({
     type: LOAD_EVENTS,
     events,
+  });
+
+  export const loadEventsInfo = (event) => ({
+    type: LOAD_EVENT_INFO,
+    event,
   });
 
   export const createEvent = (event) => ({
@@ -46,6 +52,18 @@ export const fetchEvents = (events) => async(dispatch)=>{
       throw res
     }
     }
+
+    export const fetchEventInfo = (eventId) => async(dispatch)=>{
+      const res = await fetch(`/api/events/${eventId}`)
+      const data = await res.json()
+      res.data = data
+      console.log('thunk action creator data', data)
+      if(res.ok){
+        dispatch(loadEventInfo(data))
+      }else{
+        throw res
+      }
+      }
     
 //     export const deleteReport = (reportId) => async dispatch =>{
 //       const response = await fetch(`/api/reports/${reportId}`, {
@@ -63,9 +81,14 @@ const eventsReducer = (state = {}, action) => {
       case LOAD_EVENTS:
         const eventsState = {};
         action.events.forEach((event) => {
-          eventsState[event.id] = event;
+          if(!eventsState){
+            eventsState[event.id] = event;
+          }
         });
-        return eventsState;
+        return {...eventsState};
+        case LOAD_EVENT_INFO:
+         const singleEventState = action.event
+          return singleEventState
       case CREATE_EVENT:
         return { ...state, [action.event.id]: action.event };
       case READ_EVENT:

@@ -315,6 +315,7 @@ router.get('/:groupId', async (req,res) =>{
     res.json({"message": "Group couldn't be found"})
   }
   const numMembers = await Membership.findAll({where:{groupId: groupId}})
+  const numEvents = await Event.findAll({where:{groupId: groupId}})
   const images = await Image.findAll({
     where:{imageableType: 'Group', imageableId: groupId},
     attributes:["id", "url", "preview"]
@@ -330,6 +331,7 @@ router.get('/:groupId', async (req,res) =>{
     attributes:["id", "groupId", "address", "city", "state", "lat", "lng"]
   })
   group.dataValues.numMembers = numMembers.length
+  group.dataValues.numEvents = numEvents.length
   group.dataValues.GroupImages = images
   group.dataValues.Organizer = organizer
   group.dataValues.Venues = venues

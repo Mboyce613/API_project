@@ -79,7 +79,7 @@ export const fetchGroups = (groups) => async(dispatch)=>{
 const groupsReducer = (state = {}, action) => {
     switch (action.type) {
       case LOAD_GROUPS:
-        const groupsState = {...state};
+        const groupsState = {};
         action.groups.forEach((group) => {
           if(!groupsState[group.id]){
             groupsState[group.id] = group;
@@ -87,9 +87,6 @@ const groupsReducer = (state = {}, action) => {
         });
         return {...groupsState};
       case LOAD_GROUP_INFO:
-        console.log('action ',action)
-        console.log('action.group ',action.group)
-        // return state[action.group.id]
        const singleGroupState = action.group
         return singleGroupState
       case CREATE_GROUP:

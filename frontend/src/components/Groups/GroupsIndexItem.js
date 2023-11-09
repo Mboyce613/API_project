@@ -20,7 +20,6 @@ const GroupIndexItem = ({ group }) => {
         <div>{group.numEvents} Events</div>
         <div>{gPrivate}</div>
         <div className="buttons-container">
-          {/* <Link className="edit-link" to={`/groups/${group.id}/edit`}> Edit </Link> */}
         </div>
       </div>
       </div>
