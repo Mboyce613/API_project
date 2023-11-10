@@ -19,8 +19,8 @@ const GroupIndex = () => {
 
   return (
     <>
-    <Link to={``}>Events</Link>
-    <Link to={``}>Groups</Link>
+    <Link to={`/events`}>Events</Link>
+    <Link to={`/groups`}>Groups</Link>
     <div>Groups in Meetup</div>
     <section>
         {groups.map((group) => (

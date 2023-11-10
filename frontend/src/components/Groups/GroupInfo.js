@@ -19,14 +19,12 @@ const GroupInfo = () => {
       },[dispatch, groupId])
 
     const data = useSelector(state=>state.groups)
-    const group = data
-    console.log(data)
+    const group = data[groupId]
+    console.log('GROUP FROM STATE',group)
 
-  let gPrivate = ''
-  if(group.private) gPrivate = 'Private'
-  if(!group.private) gPrivate = 'Public'
-
-//! need # of events, and organizer first and last name.
+  // let gPrivate = ''
+  // if(group.private) gPrivate = 'Private'
+  // if(!group.private) gPrivate = 'Public'
 
   if(!isLoading){
     return (
@@ -37,9 +35,9 @@ const GroupInfo = () => {
         <div className="li-contents-flex">
           <div>{group.name}</div>
           <div>{group.city}, {group.state}</div>
-          {/* <div>{group.about}</div> */}
+          <div>{group.about}</div>
           <div>{group.numEvents} Events</div>
-          <div>{gPrivate}</div>
+          {/* <div>{gPrivate}</div> */}
           <div>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</div>
           <div className="buttons-container">
             <button>Join this group</button>

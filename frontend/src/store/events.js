@@ -86,20 +86,35 @@ const eventsReducer = (state = {}, action) => {
           }
         });
         return {...eventsState};
+
         case LOAD_EVENT_INFO:
-         const singleEventState = action.event
-          return singleEventState
+          const singleState = {...state}
+          const singleInfo = action.event
+          const basicEvent = singleState[singleInfo.id]
+          for(const keys in singleInfo){
+            if(!basicEvent[keys]){
+              // console.log(keys)
+              basicEvent[keys] = singleInfo[keys]
+            }
+          }
+          // console.log('DID IT WORK?',singleState)
+          return singleState
+
       case CREATE_EVENT:
         return { ...state, [action.event.id]: action.event };
-      case READ_EVENT:
+      
+        case READ_EVENT:
         return { ...state, [action.event.id]: action.event };
-      case UPDATE_EVENT:
+      
+        case UPDATE_EVENT:
         return { ...state, [action.event.id]: action.event };
-      case DELETE_EVENT:
+      
+        case DELETE_EVENT:
         const newState = { ...state };
         delete newState[action.eventId];
         return newState;
-      default:
+      
+        default:
         return state;
     }
   };

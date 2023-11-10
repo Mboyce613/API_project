@@ -86,20 +86,39 @@ const groupsReducer = (state = {}, action) => {
           }
         });
         return {...groupsState};
+        
       case LOAD_GROUP_INFO:
-       const singleGroupState = action.group
-        return singleGroupState
+       const singleState = {...state}
+       const singleInfo = action.group
+       console.log('SINGLE INFO',singleInfo) 
+       console.log(singleInfo.id)
+       console.log('GROUPS',singleState)
+       const basicGroup = singleState[singleInfo.id]
+      //  console.log('THE BASIC GROUP', basicGroup)
+        for(const keys in singleInfo){
+          if(!basicGroup[keys]){
+            // console.log(keys)
+            basicGroup[keys] = singleInfo[keys]
+          }
+        }
+        // console.log('DID IT WORK?',singleState)
+        return singleState
+
       case CREATE_GROUP:
         return { ...state, [action.group.id]: action.group };
+      
       case READ_GROUP:
         return { ...state, [action.group.id]: action.group };
+      
       case UPDATE_GROUP:
         return { ...state, [action.group.id]: action.group };
+      
       case DELETE_GROUP:
         const newState = { ...state };
         delete newState[action.groupId];
         return newState;
-      default:
+      
+        default:
         return state;
     }
   };

@@ -2,8 +2,8 @@ import { Link, useParams } from 'react-router-dom';
 import { Dispatch, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { fetchEvents } from '../../store/events';
-import { fetchEventInfo } from '../../store/events';
+import { fetchEvents } from '../../store/events.js';
+import { fetchEventInfo } from '../../store/events.js';
 
 const EventInfo = () => {
 
@@ -18,7 +18,7 @@ const EventInfo = () => {
       },[dispatch, eventId])
 
     const data = useSelector(state=>state.events)
-    const event = data
+    const event = data[eventId]
     // console.log(data)
 
 //! need # of events, and organizer first and last name.
@@ -28,7 +28,7 @@ const EventInfo = () => {
       <>
       <Link to='/events'>Events</Link>
       <div className = 'eventBox'>
-      <img src={event.EventImages[0].url} />
+      {/* <img src={event.EventImages[0].url} /> */}
         <div className="li-contents-flex">
           <div>{event.name}</div>
           <div>{event.city}, {event.state}</div>

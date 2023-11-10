@@ -8,6 +8,7 @@ import GroupIndex from './components/Groups'
 import EventIndex from "./components/Events";
 import GroupInfo from "./components/Groups/GroupInfo";
 import EventInfo from "./components/Events/EventInfo";
+import HomePage from "./components/HomePage";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function App() {
           <Route path='/groups' component={GroupIndex} />
           <Route path='/events/:eventId' component={EventInfo} />
           <Route path='/events' component={EventIndex} />
+          <Route exact path='/' component={HomePage} />
         </Switch>}
     </>
   );

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Dispatch } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadEventInfo } from '../../store/events';
+import { loadEventInfo } from '../../store/events.js';
 
 const EventIndexItem = ({ event }) => {
   const dispatch = useDispatch()
