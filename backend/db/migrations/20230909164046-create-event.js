@@ -51,6 +51,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull:false,
       },
+      hostFirstName: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      hostLastName: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -394,13 +394,20 @@ router.get('/', async (req,res) =>{
 //POST URL: /api/groups/:groupId/events
 router.post('/:groupId/events', requireAuth, validateEvent, async (req,res)=>{
   const curr = req.user.id
+  //! NEW STUFF CAN CAUSE ISSSUES
+  const host = {
+    id:req.user.id,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName
+  }
+  //! NEW STUFF CAN CAUSE ISSSUES
 
   if(validateEvent.startDate >= validateEvent.endDate){
     throw new Error('End date is less than start date')
   }
 
   const {groupId} = req.params
-  let { venueId, name, type, capacity, price, description, startDate, endDate} = req.body
+  let { venueId, name, type, capacity, price, description, hostFirstName, hostLastName, startDate, endDate} = req.body
  const isGroup = await Group.findByPk(groupId)
 
   if(!isGroup){
@@ -414,7 +421,7 @@ router.post('/:groupId/events', requireAuth, validateEvent, async (req,res)=>{
     return res.json({"message": "Forbidden"})
   }
 
- await Event.create({venueId, name, type, capacity, price, description, startDate, endDate, groupId:groupId})
+ await Event.create({venueId, name, type, capacity, price, description, hostFirstName, hostLastName, startDate, endDate, groupId:groupId})
   const returnEvent = await Event.findOne({where:{name}})
   return res.json(returnEvent)
 })

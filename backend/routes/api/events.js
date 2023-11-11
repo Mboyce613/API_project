@@ -154,6 +154,8 @@ router.get('/', async (req,res)=>{
       "errors": {}
   }
 
+// console.log(req.user)
+
   if(page){
       page = Number(page)
       if(page < 1){

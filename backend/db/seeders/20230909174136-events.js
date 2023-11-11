@@ -18,7 +18,9 @@ const venueEvents = [
       endDate: '01/01/2024',
       capacity: 666,
       price: 0,
-      description: 'Come celebrate the day Nick nearly lost his head'
+      description: 'Come celebrate the day Nick nearly lost his head',
+      hostFirstName:'Mortica',
+      hostLastName: 'Addams'
     }]
   },
   {
@@ -30,7 +32,9 @@ const venueEvents = [
       endDate: '01/01/2024',
       capacity: 999,
       price: 20,
-      description: 'Come give blood, it will definitely be used for medical purposes...'
+      description: 'Come give blood, it will definitely be used for medical purposes...',
+      hostFirstName:'Siouxsie',
+      hostLastName: 'Sioux'
     }]
     }
 ];

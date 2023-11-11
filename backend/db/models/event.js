@@ -92,6 +92,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    hostFirstName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    hostLastName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   }, {
     defaultScope: { 
       attributes: { 
