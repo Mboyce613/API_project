@@ -76,46 +76,45 @@ export const fetchEvents = (events) => async(dispatch)=>{
 //     }
 
 /** Reducer */
-const eventsReducer = (state = {}, action) => {
+const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
     switch (action.type) {
-      case LOAD_EVENTS:
-        const eventsState = {};
-        action.events.forEach((event) => {
-          if(!eventsState[event.id]){
-            eventsState[event.id] = event;
-          }
-        });
-        return {...eventsState};
+      case LOAD_EVENTS:{
+      // console.log('action', action.groups)
+      const newState = {}
+      action.events.forEach((event) => {
+          newState[event.id] = event;
+      });
+      // console.log('Line 89 Groupstate',newState)
+      return {...eventState, events:newState};
+      }
 
-        case LOAD_EVENT_INFO:
-          const singleState = {...state}
-          const singleInfo = action.event
-          const basicEvent = singleState[singleInfo.id]
-          for(const keys in singleInfo){
-            if(!basicEvent[keys]){
-              // console.log(keys)
-              basicEvent[keys] = singleInfo[keys]
-            }
+        case LOAD_EVENT_INFO:{
+          const id = action.event.id
+          const newState = {}
+          for(const key in action.event){
+            newState[key] = action.event[key]
           }
-          // console.log('DID IT WORK?',singleState)
-          return singleState
+                // console.log('newState', newState)
+          
+          return {...eventState, currEvent:newState}
+        }
 
       case CREATE_EVENT:
-        return { ...state, [action.event.id]: action.event };
+        return { ...eventState, [action.event.id]: action.event };
       
         case READ_EVENT:
-        return { ...state, [action.event.id]: action.event };
+        return { ...eventState, [action.event.id]: action.event };
       
         case UPDATE_EVENT:
-        return { ...state, [action.event.id]: action.event };
+        return { ...eventState, [action.event.id]: action.event };
       
         case DELETE_EVENT:
-        const newState = { ...state };
+        const newState = { ...eventState };
         delete newState[action.eventId];
         return newState;
       
         default:
-        return state;
+        return eventState;
     }
   };
   

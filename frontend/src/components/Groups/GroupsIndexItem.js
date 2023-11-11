@@ -18,6 +18,7 @@ const GroupIndexItem = ({ group }) => {
         <div>{group.city}, {group.state}</div>
         <div>{group.about}</div>
         <div>{group.numEvents} Events</div>
+        <div>*</div>
         <div>{gPrivate}</div>
         <div className="buttons-container">
         </div>

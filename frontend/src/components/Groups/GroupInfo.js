@@ -18,13 +18,13 @@ const GroupInfo = () => {
         dispatch(fetchGroupInfo(groupId)).then(()=>setIsLoading(false))
       },[dispatch, groupId])
 
-    const data = useSelector(state=>state.groups)
-    const group = data[groupId]
-    console.log('GROUP FROM STATE',group)
+    const group = useSelector(state=>state.groupState.currGroup)
+    // const group = data[groupId]
+    // console.log('GROUP FROM STATE',data)
 
-  // let gPrivate = ''
-  // if(group.private) gPrivate = 'Private'
-  // if(!group.private) gPrivate = 'Public'
+  let gPrivate = ''
+  if(group.private) gPrivate = 'Private'
+  if(!group.private) gPrivate = 'Public'
 
   if(!isLoading){
     return (
@@ -37,7 +37,7 @@ const GroupInfo = () => {
           <div>{group.city}, {group.state}</div>
           <div>{group.about}</div>
           <div>{group.numEvents} Events</div>
-          {/* <div>{gPrivate}</div> */}
+          <div>{gPrivate}</div>
           <div>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</div>
           <div className="buttons-container">
             <button>Join this group</button>

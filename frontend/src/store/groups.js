@@ -57,7 +57,7 @@ export const fetchGroups = (groups) => async(dispatch)=>{
       const res = await fetch(`/api/groups/${groupId}`)
       const data = await res.json()
       res.data = data
-      console.log('thunk action creator data', data)
+      // console.log('thunk action creator data', data)
       if(res.ok){
         dispatch(loadGroupInfo(data))
       }else{
@@ -76,50 +76,46 @@ export const fetchGroups = (groups) => async(dispatch)=>{
 //     }
 
 /** Reducer */
-const groupsReducer = (state = {}, action) => {
-    switch (action.type) {
-      case LOAD_GROUPS:
-        const groupsState = {};
+const groupsReducer = (groupState = {groups:{}, currGroup:{}}, action) => {
+  // console.log('Line 80 Groupstate',groupState)
+  switch (action.type) {
+    case LOAD_GROUPS:{
+      // console.log('action', action.groups)
+        const newState = {}
         action.groups.forEach((group) => {
-          if(!groupsState[group.id]){
-            groupsState[group.id] = group;
-          }
+            newState[group.id] = group;
         });
-        return {...groupsState};
+        // console.log('Line 89 Groupstate',newState)
+        return {...groupState, groups:newState};
+      }
         
-      case LOAD_GROUP_INFO:
-       const singleState = {...state}
-       const singleInfo = action.group
-       console.log('SINGLE INFO',singleInfo) 
-       console.log(singleInfo.id)
-       console.log('GROUPS',singleState)
-       const basicGroup = singleState[singleInfo.id]
-      //  console.log('THE BASIC GROUP', basicGroup)
-        for(const keys in singleInfo){
-          if(!basicGroup[keys]){
-            // console.log(keys)
-            basicGroup[keys] = singleInfo[keys]
-          }
+      case LOAD_GROUP_INFO:{
+        const id = action.group.id
+        const newState = {}
+        for(const key in action.group){
+          newState[key] = action.group[key]
         }
-        // console.log('DID IT WORK?',singleState)
-        return singleState
+              // console.log('newState', newState)
+        
+        return {...groupState, currGroup:newState}
+      }
 
       case CREATE_GROUP:
-        return { ...state, [action.group.id]: action.group };
+        return { ...groupState, [action.group.id]: action.group };
       
       case READ_GROUP:
-        return { ...state, [action.group.id]: action.group };
+        return { ...groupState, [action.group.id]: action.group };
       
       case UPDATE_GROUP:
-        return { ...state, [action.group.id]: action.group };
+        return { ...groupState, [action.group.id]: action.group };
       
       case DELETE_GROUP:
-        const newState = { ...state };
+        const newState = { ...groupState };
         delete newState[action.groupId];
         return newState;
       
         default:
-        return state;
+        return groupState;
     }
   };
   

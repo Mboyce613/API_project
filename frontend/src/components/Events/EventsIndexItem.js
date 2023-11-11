@@ -22,7 +22,7 @@ const EventIndexItem = ({ event }) => {
     <div className = 'eventBox'>
     <img src={event.previewImage} />
       <div className="li-contents-flex">
-        <div>{year} {hour}</div>
+        <div>{year} * {hour}</div>
         <div>{event.name}</div>
         <div>{event.city}, {event.state}</div>
         <div>{event.about}</div>

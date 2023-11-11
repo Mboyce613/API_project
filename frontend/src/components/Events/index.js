@@ -11,8 +11,8 @@ const EventIndex = () => {
     dispatch(fetchEvents())
   },[])
 
-  const data = useSelector(state=>state.events)
-  console.log('hi im state', data)
+  const data = useSelector(state=>state.eventState.events)
+  // console.log('hi im state', data)
   const events = Object.values(data); // populate from Redux store
   const dispatch = useDispatch()
 

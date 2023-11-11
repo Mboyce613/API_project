@@ -17,37 +17,55 @@ const EventInfo = () => {
         dispatch(fetchEventInfo(eventId)).then(()=>setIsLoading(false))
       },[dispatch, eventId])
 
-    const data = useSelector(state=>state.events)
-    const event = data[eventId]
-    // console.log(data)
+    const event = useSelector(state=>state.eventState.currEvent)
+    const group = useSelector(state=>state.groupState.groups[event.groupId])
+    // const group = useSelector(state=>state.groupState.groups)
+    // const event = data[eventId]
+    console.log('THE EVENT DATA',event)
+    console.log('THE GROUP DATA',group)
+    
+    if(!isLoading){
+    const {startDate} = event
+    const startTime = startDate.split('T')
+    const startYear = startTime[0]
+    let startHour = startTime[1]
+    startHour = startHour.slice(0,5)
 
-//! need # of events, and organizer first and last name.
+    const {endDate} = event
+    console.log('ENDDATE',endDate)
+    const endTime = endDate.split('T')
+    const endYear = endTime[0]
+    let endHour = endTime[1]
+    endHour = endHour.slice(0,5)
 
-  if(!isLoading){
     return (
       <>
       <Link to='/events'>Events</Link>
-      <div className = 'eventBox'>
-      {/* <img src={event.EventImages[0].url} /> */}
-        <div className="li-contents-flex">
-          <div>{event.name}</div>
-          <div>{event.city}, {event.state}</div>
-          {/* <div>{event.about}</div> */}
-          <div>{event.numEvents} Events</div>
-          {/* <div>Organized by {event.Organizer.firstName} {event.Organizer.lastName}</div> */}
-          <div className="buttons-container">
-            <button>Join this event</button>
-          </div>
-        </div>
-        </div>
+
         <section>
-          <div>Organizer</div>
-          {/* <div>{event.Organizer.firstName} {event.Organizer.lastName}</div> */}
-          <div>What we're about</div>
-          <div>{event.about}</div>
-          <div>Upcoming Events ({event.numEvents})</div>
-          <div>Place holder (map through each event)</div>
+        <div>{event.name}</div>
+        <div>Hosted by {group.Organizer.firstName} {group.Organizer.lastName}</div>
         </section>
+
+      <img src={event.EventImages[0].url} />
+
+      <section>
+        <img src={group.GroupImages[0].url} />
+        <div>{group.name}</div>
+        <div>{group.private}</div>
+      </section>
+
+      <section>
+        <div>START {startYear} * {startHour}</div>
+        <div>END {endYear} * {endHour}</div>
+        <div>cost</div>
+        <div>{event.type}</div>
+      </section>
+
+      <section>
+      <div>Details</div>
+      <div>{event.about}</div>
+      </section>
       </>
     );
   }else{

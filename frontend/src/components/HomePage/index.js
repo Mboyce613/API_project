@@ -1,10 +1,19 @@
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchGroups } from '../../store/groups';
+import { fetchEvents } from '../../store/events';
 
 const HomePage = () => {
+    const dispatch = useDispatch()
 
-//   useEffect(()=>{
-//     dispatch(fetchGroups())
-//   },[])
+  useEffect(()=>{
+    dispatch(fetchGroups())
+  },[])
+
+useEffect(()=>{
+    dispatch(fetchEvents())
+  },[])
 
   return (
     <>

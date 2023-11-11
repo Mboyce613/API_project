@@ -11,8 +11,8 @@ const GroupIndex = () => {
     dispatch(fetchGroups())
   },[])
 
-  const data = useSelector(state=>state.groups)
-  console.log('hi im state', data)
+  const data = useSelector(state=>state.groupState.groups)
+  // console.log('hi im state', data)
   const groups = Object.values(data); // populate from Redux store
   const dispatch = useDispatch()
 
