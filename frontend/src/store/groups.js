@@ -90,6 +90,7 @@ const groupsReducer = (groupState = {groups:{}, currGroup:{}}, action) => {
       }
         
       case LOAD_GROUP_INFO:{
+        console.log('OH NO IM TRIGGERED')
         const id = action.group.id
         const newState = {}
         for(const key in action.group){

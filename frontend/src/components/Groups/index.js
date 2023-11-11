@@ -19,12 +19,17 @@ const GroupIndex = () => {
 
   return (
     <>
+    <header>
     <Link to={`/events`}>Events</Link>
     <Link to={`/groups`}>Groups</Link>
+    </header>
     <div>Groups in Meetup</div>
     <section>
         {groups.map((group) => (
+          <>
           <Link to={`/groups/${group.id}`}>{<GroupIndexItem group={group} key={group.id} />}</Link>
+          <hr className='solid'/>
+          </>
         ))}
     </section>
     </>

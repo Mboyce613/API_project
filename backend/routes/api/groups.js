@@ -395,11 +395,7 @@ router.get('/', async (req,res) =>{
 router.post('/:groupId/events', requireAuth, validateEvent, async (req,res)=>{
   const curr = req.user.id
   //! NEW STUFF CAN CAUSE ISSSUES
-  const host = {
-    id:req.user.id,
-    firstName: req.user.firstName,
-    lastName: req.user.lastName
-  }
+  const {hostFirstName, hostLastName} = req.user
   //! NEW STUFF CAN CAUSE ISSSUES
 
   if(validateEvent.startDate >= validateEvent.endDate){
@@ -407,7 +403,7 @@ router.post('/:groupId/events', requireAuth, validateEvent, async (req,res)=>{
   }
 
   const {groupId} = req.params
-  let { venueId, name, type, capacity, price, description, hostFirstName, hostLastName, startDate, endDate} = req.body
+  let { venueId, name, type, capacity, price, description, startDate, endDate} = req.body
  const isGroup = await Group.findByPk(groupId)
 
   if(!isGroup){

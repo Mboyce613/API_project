@@ -24,6 +24,11 @@ function LoginFormModal() {
       });
   };
 
+  const handleDemoLogin = () => {
+    setCredential("Queen");
+    setPassword("password");
+  };
+
   const handleLogin = (e) =>{
     closeModal();
   }
@@ -50,10 +55,11 @@ function LoginFormModal() {
             required
           />
         </label>
+        <button type="submit" onClick={handleDemoLogin}> Demo User </button>
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button /*</form>onClick={handleLogin}*/ type="submit">Log In</button>
+        <button disabled={password.length < 6 || credential.length < 4}/*</form>onClick={handleLogin}*/ type="submit">Log In</button>
       </form>
     </>
   );

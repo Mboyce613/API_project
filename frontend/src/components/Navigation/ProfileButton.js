@@ -4,11 +4,17 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom"
+
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+
+  const history = useHistory()
 
   const openMenu = () => {
     if (showMenu) return;
@@ -32,9 +38,11 @@ function ProfileButton({ user }) {
   const closeMenu = () => setShowMenu(false);
 
   const logout = (e) => {
+    
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    history.push("/")
     // setShowMenu(false)
   };
 
@@ -49,9 +57,11 @@ function ProfileButton({ user }) {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            {/* <li>{user.username}</li> */}
+            <li>Hello {user.firstName}</li>
             <li>{user.email}</li>
+            <li><Link to='/events'>Your events</Link></li>
+            <li><Link to='/groups'>Your groups</Link></li>
             <li>
               <button onClick={logout}>Log Out</button>
             </li>
