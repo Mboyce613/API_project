@@ -14,9 +14,9 @@ export const loadEvents = (events) => ({
     events,
   });
 
-  export const loadEventInfo = (event) => ({
+  export const loadEventInfo = (eventId) => ({
     type: LOAD_EVENT_INFO,
-    event,
+    eventId,
   });
 
   export const createEvent = (event) => ({
@@ -55,11 +55,12 @@ export const fetchEvents = (events) => async(dispatch)=>{
 
     export const fetchEventInfo = (eventId) => async(dispatch)=>{
       const res = await fetch(`/api/events/${eventId}`)
-      const data = await res.json()
-      res.data = data
       // console.log('thunk action creator data', data)
       if(res.ok){
+        const data = await res.json()
+        // res.data = data
         dispatch(loadEventInfo(data))
+        return data
       }else{
         throw res
       }

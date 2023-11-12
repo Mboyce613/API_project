@@ -13,20 +13,22 @@ const EventInfo = () => {
 
     let eventId = useParams()
     eventId = Number(eventId.eventId)
-
+    
     const event = useSelector(state=>state.eventState.currEvent)
+    // console.log('PRE THUNK EVENT.GROUPID',event.groupId)
 
     useEffect(()=>{
+      // console.log('POST THUNK EVENT.GROUPID',event.groupId)
         dispatch(fetchEventInfo(eventId))
-        .then(()=>fetchGroupInfo(event.groupId))
+        .then((data)=>dispatch(fetchGroupInfo(data.groupId)))
         .then(()=>setIsLoading(false))
-      },[dispatch,eventId])
+      },[dispatch,eventId,event.groupId])
 
     const group = useSelector(state=>state.groupState.currGroup)
     
     if(!isLoading){
-      console.log('THE EVENT DATA',event)
-      console.log('THE GROUP DATA',group)
+      // console.log('THE EVENT DATA',event)
+      // console.log('THE GROUP DATA',group)
     const {startDate} = event
     const startTime = startDate.split('T')
     const startYear = startTime[0]
@@ -34,7 +36,7 @@ const EventInfo = () => {
     startHour = startHour.slice(0,5)
 
     const {endDate} = event
-    console.log('ENDDATE',endDate)
+    // console.log('ENDDATE',endDate)
     const endTime = endDate.split('T')
     const endYear = endTime[0]
     let endHour = endTime[1]
@@ -62,12 +64,13 @@ const EventInfo = () => {
       <section>
         <img src={group.GroupImages[0].url} />
         <div>{group.name}</div>
+        <div>{"\u00b7"}</div>
         <div>{gPrivate}</div>
       </section>
 
       <section>
-        <div>START {startYear} * {startHour}</div>
-        <div>END {endYear} * {endHour}</div>
+        <div>START {startYear} {"\u00b7"} {startHour}</div>
+        <div>END {endYear} {"\u00b7"} {endHour}</div>
         <div>{price}</div>
         <div>{event.type}</div>
       </section>
