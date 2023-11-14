@@ -22,6 +22,16 @@ const GroupInfo = () => {
 
     const group = useSelector(state=>state.groupState.currGroup)
     const user = useSelector(state=>state.session.user)
+    let events = useSelector(state=>state.groupState.groupEvents)
+
+    const compare = (a, b) => {
+      const dateA = a.startDate;
+      const dateB = b.startDate;
+      return dateA > dateB ? dateA : dateB;
+    };
+
+    // events = events.sort(compare).reverse()
+    console.log('EVENTS',events)
 
     // console.log(user)
     // const group = data[groupId]
@@ -42,6 +52,8 @@ const GroupInfo = () => {
   if(!group.private) gPrivate = 'Public'
 
   if(!isLoading){
+        events = events.sort(compare).reverse()
+        console.log('EVENTS',events)
     return (
       <>
       <Link to='/groups'>Groups</Link>
@@ -63,7 +75,7 @@ const GroupInfo = () => {
           </div>
         </div>
         </div>
-        <section>
+        {/* <section>
           <div>Organizer</div>
           <div>{group.Organizer.firstName} {group.Organizer.lastName}</div>
           <div>What we're about</div>
@@ -72,6 +84,28 @@ const GroupInfo = () => {
           <div>{group.Events.map((event) => (
           <Link to={`/events/${event.id}`}>{<EventsIndexItem event={event} key={event.id} />}</Link>
         ))}</div>
+        </section> */}
+        <section>
+          {events.map(event=>{
+            // {console.log('MAPPED EVENT', event)}
+            const {startDate} = event
+            const time = startDate.split('T')
+            const year = time[0]
+            let hour = time[1]
+            hour = hour.slice(0,5)
+            return(
+            <>
+            <Link to={`/events/${event.id}`}>
+            <img src={event.previewImage}></img>
+            <div>{event.description}</div>
+            <div>{year} {"\u00b7"} {hour}</div>
+            <div>{event.name}</div>
+            <div>{event.Venue.city} {event.Venue.state}</div>
+            </Link>
+            </>
+            )
+
+          })}
         </section>
       </>
     );

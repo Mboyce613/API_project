@@ -25,10 +25,28 @@ const EventIndex = () => {
     <Link to={`/groups`}>Groups</Link>
     <div>Events in Meetup</div>
     <section>
-        {events.map((event) => (
-          <Link to={`/events/${event.id}`}>{<EventIndexItem event={event} key={event.id}/>}</Link>
-        ))}
-    </section>
+          {events.map(event=>{
+            // {console.log('MAPPED EVENT', event)}
+            const {startDate} = event
+            const time = startDate.split('T')
+            const year = time[0]
+            let hour = time[1]
+            hour = hour.slice(0,5)
+            return(
+            <>
+            <Link to={`/events/${event.id}`}>
+            <img src={event.previewImage}></img>
+            <div>{event.description}</div>
+            <div>{year} {"\u00b7"} {hour}</div>
+            <div>{event.name}</div>
+            <div>{event.Venue.city} {event.Venue.state}</div>
+            </Link>
+            <hr className='solid'/>
+            </>
+            )
+
+          })}
+        </section>
     </>
   );
 };

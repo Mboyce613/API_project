@@ -19,7 +19,7 @@ const venueEvents = [
       capacity: 666,
       price: 0,
       description: 'Come celebrate the day Nick nearly lost his head',
-      hostFirstName:'Mortica',
+      hostFirstName:'Morticia',
       hostLastName: 'Addams'
     }]
   },

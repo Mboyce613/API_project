@@ -151,7 +151,7 @@ if(!theGroup){
 
   const theEvents = await Event.findAll({
     where:{groupId},
-    attributes:["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
+    attributes:["id", "description", "groupId", "venueId", "name", "type", "startDate", "endDate"],
   })
 
   for( let event of theEvents){

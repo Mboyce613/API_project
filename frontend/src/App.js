@@ -9,6 +9,7 @@ import EventIndex from "./components/Events";
 import GroupInfo from "./components/Groups/GroupInfo";
 import EventInfo from "./components/Events/EventInfo";
 import HomePage from "./components/HomePage";
+import GroupForm from "./components/Groups/GroupForm";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ function App() {
     <>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Switch>
+          <Route path='/groups/new' component={GroupForm} />
           <Route path='/groups/:groupId' component={GroupInfo} />
           <Route path='/groups' component={GroupIndex} />
           <Route path='/events/:eventId' component={EventInfo} />

@@ -122,10 +122,10 @@ const groupsReducer = (groupState = {groups:{}, currGroup:{}, groupEvents:{}}, a
       case LOAD_EVENTS_BY_GROUPID:{
         const newState ={}
         console.log('ACTION',action.groupId.Events)
-        for(const key in action.groupId.Events){
-          newState[key] = action.groupId[key]
-        }
-        return {...groupState, groupEvents:newState}
+        // for(const key in action.groupId.Events){
+        //   newState[key] = action.groupId.Events[key]
+        // }
+        return {...groupState, groupEvents:action.groupId.Events}
       }
 //! NEED TO NORMALIZE THE DATA ABOVE !
 

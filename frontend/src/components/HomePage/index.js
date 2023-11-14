@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchGroups } from '../../store/groups';
 import { fetchEvents } from '../../store/events';
 
 const HomePage = () => {
     const dispatch = useDispatch()
+    const user = useSelector(state => state.session.user);
 
   useEffect(()=>{
     dispatch(fetchGroups())
@@ -30,14 +31,13 @@ useEffect(()=>{
     
     <section>
         <div>
-            <Link to="/groups">See all groups</Link>
+            <Link to="/groups" >See all groups</Link>
         </div>
         <div>
             <Link to="/events">Find an event</Link>
         </div>
         <div>
-            <Link to="/groups/new">Start a group</Link>
-             disabled if not logged in
+            {user && <Link to="/groups/new" >Start a group</Link>}
         </div>
     </section>
 

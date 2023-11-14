@@ -55,9 +55,9 @@ export const fetchEvents = (events) => async(dispatch)=>{
 
     export const fetchEventInfo = (eventId) => async(dispatch)=>{
       const res = await fetch(`/api/events/${eventId}`)
-      // console.log('thunk action creator data', data)
       if(res.ok){
         const data = await res.json()
+        // console.log('thunk action creator data', data)
         // res.data = data
         dispatch(loadEventInfo(data))
         return data
@@ -90,10 +90,10 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
       }
 
         case LOAD_EVENT_INFO:{
-          const id = action.event.id
+          // const id = action.event.id
           const newState = {}
-          for(const key in action.event){
-            newState[key] = action.event[key]
+          for(const key in action.eventId){
+            newState[key] = action.eventId[key]
           }
                 // console.log('newState', newState)
           

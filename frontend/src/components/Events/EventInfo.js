@@ -25,6 +25,7 @@ const EventInfo = () => {
       },[dispatch,eventId,event.groupId])
 
     const group = useSelector(state=>state.groupState.currGroup)
+    const user = useSelector(state=>state.session.user)
     
     if(!isLoading){
       // console.log('THE EVENT DATA',event)
@@ -50,6 +51,19 @@ const EventInfo = () => {
     if(event.price === 0) price = 'Free'
     if(event.price > 0) price = `$${event.price}`
 
+    //! WHY FIRST NAME FALSE?
+    // const isHost = user?.fristName === event.hostFirstName && user?.lastName === event.hostLastName
+    const isHost = user?.lastName === event.hostLastName
+    console.log('USER',user)
+    console.log('HOSTFN',event.hostFirstName)
+    console.log('HOSTLN',event.hostLastName)
+    console.log('ISHOST',isHost)
+    console.log('TEST FN',user?.fristName === event.hostFirstName)
+    console.log('TEST LN',user?.lastName === event.hostLastName)
+    let showButtons = false
+    if(isHost) showButtons = true
+    //!
+
     return (
       <>
       <Link to='/events'>Events</Link>
@@ -60,6 +74,8 @@ const EventInfo = () => {
         </section>
 
       <img src={event.EventImages[0].url} />
+      {showButtons && <button>Update</button>}
+      {showButtons && <button>Delete</button>}
 
       <section>
         <img src={group.GroupImages[0].url} />
