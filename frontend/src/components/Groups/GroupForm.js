@@ -3,9 +3,16 @@ import {useSelector} from 'react-redux'
 import GroupIndexItem from './GroupsIndexItem.js';
 import { fetchGroups } from '../../store/groups';
 import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const GroupForm = () => {
+    const [location, setLocation] = useState('')
+    const [name, setName] = useState('')
+    const [describe, setDescribe] = useState('')
+    const [online, setOnline] = useState('')
+    const [url, setUrl] = useState('')
+    const [pri, setPri] = useState('')
+    const [errors, setErrors] = useState({})
 
 //   useEffect(()=>{
 //     dispatch(fetchGroups())
@@ -15,48 +22,134 @@ const GroupForm = () => {
   // console.log('hi im state', data)
 //   const groups = Object.values(data); // populate from Redux store
 //   const dispatch = useDispatch()
+const payload = {
+    location,
+    name,
+    describe,
+    online,
+    url,
+    pri
+}
 
+const payloadValidate = () =>{
+    const newErrors = {}
+if(!location.length || location.length < 4) newErrors.location = "needs a location!"
+
+if(!name.length || name.length < 4) newErrors.name = "I ain't no holla back girl!"
+
+if(!describe.length || describe.length < 4) newErrors.describe = "No really tell me about yourself, Im a nice guy I swear!"
+
+if(!online) newErrors.online = "So whats the plan"
+
+if(!pri) newErrors.pri = "Its very exclusive, you would not have heard about it"
+
+if(!url.length || url.length < 4) newErrors.url = "Let me see your pics"
+
+// console.log('payloadvallidate ',newErrors)
+setErrors(newErrors)
+}
+
+const handleSubmit = (e) => {
+    e.preventDefault();
+    payloadValidate()
+    console.log(payload)
+    // console.log('hadlesubmit',errors)
+    reset();
+  };
+
+  const reset = () => {
+    setLocation('');
+    setName('');
+    setDescribe('');
+    setOnline('');
+    setUrl('');
+    setPri('')
+  };
+
+
+
+//   <input
+//   type='text'
+//   onChange={(e) => setTitle(e.target.value)}
+//   value={title}
+//   placeholder='Title'
+//   name='title'
+// />
 
   return (
     <>
-    <title >Start a New Group</title>
+<form onSubmit={handleSubmit}>
     <div>Start a New Group</div>
     <section>
         <header>Set your group's location.</header>
-        <div>Meetup groups meet locally, in person, and online. We'll connect you with people in your area.</div>
-        <input defaultValue={'City, STATE'}></input>
-
+        <div>Meetup groups meet locally, in person, and online. We'll connect you with people in your area.
+        <input 
+        type='text'
+        onChange={(e) => setLocation(e.target.value)}
+        value={location}
+        placeholder='City, STATE' 
+        name='location'
+        />
+        </div>
+        {errors.location && <div className='errors'>{errors.location}</div>}
     </section>
-    <header>What will your group name be?</header>
-    <div>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.</div>
-    <input defaultValue={'What is your group name?'}></input>
 
+    <header>What will your group name be?</header>
+    <div>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.
+    <input
+    type='text'
+    onChange={(e) => setName(e.target.value)}
+    value={name}
+    placeholder='What is your group name?' 
+    name='name'
+    />
+    </div>
+    {errors.name && <div className='errors'>{errors.name}</div>}
     <section>
         <header>Describe the purpose of your group.</header>
-        <div>People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?</div>
-        <textarea defaultValue={'Please write at least 30 characters'}></textarea>
-
+        <div>People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?
+        <textarea 
+        placeholder='Please write at least 30 characters'
+        onChange={(e) => setDescribe(e.target.value)}
+        value={describe}
+        name='describe'
+        />
+        </div>
+    {errors.describe && <div className='errors'>{errors.describe}</div>}
     </section>
         <header>Is this an in-person or online group?</header>
-        <div>
-        <input input type="radio" id="person" name="in-person" value="in-person"></input>
-        <label for="in-person">In Person</label>
-        </div>
-        <div>
-        <input input type="radio" id="online" name="online" value="online"></input>
-        <label for="online">Online</label>
-        </div>
+        <select onChange={(e) => setOnline(e.target.value)} value={online}>
+        <option value="">(Select One)</option>
+        <option value='In-Person' id='In-Person'>In Person</option>
+        <option value='Online' id='Online'>Online</option>
+        </select>
         
-        <div>Please add an image URL for your group below:</div>
-        <input defaultValue={'Image Url'}></input>
+        {errors.online && <div className='errors'>{errors.online}</div>}
 
+        <header>Is this group public or private?</header>
+        <select onChange={(e) => setPri(e.target.value)} value={pri}>
+        <option value="">(Select One)</option>
+        <option value='Private' id='private'>Private</option>
+        <option value='Public' id='public'>Public</option>
+        </select>
+        
+        {errors.pri && <div className='errors'>{errors.pri}</div>}
+
+        <div>Please add an image URL for your group below:
+        <input
+        placeholder='Image Url'
+        onChange={(e) => setUrl(e.target.value)}
+        value={url}
+        name='url'
+        />
+        </div>
+        {errors.url && <div className='errors'>{errors.url}</div>}
     <section>
+        <button>Create Group</button>
 
     </section>
 
-    <section>
-
-    </section>
+    </form>
     </>
   );
 };
