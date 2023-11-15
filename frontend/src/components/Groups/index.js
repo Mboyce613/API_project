@@ -21,6 +21,7 @@ const GroupIndex = () => {
     <>
     <header>
     <Link to={`/events`}>Events</Link>
+       {"                                 "}                             
     <Link to={`/groups`}>Groups</Link>
     </header>
     <div>Groups in Meetup</div>

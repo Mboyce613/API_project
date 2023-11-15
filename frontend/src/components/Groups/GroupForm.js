@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {useSelector} from 'react-redux'
 import GroupIndexItem from './GroupsIndexItem.js';
-import { fetchGroups } from '../../store/groups';
+import { createTheGroup, createTheGroupImage, fetchGroups } from '../../store/groups';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 
@@ -13,6 +13,8 @@ const GroupForm = () => {
     const [url, setUrl] = useState('')
     const [pri, setPri] = useState('')
     const [errors, setErrors] = useState({})
+    const dispatch = useDispatch()
+    const history = useHistory()
 
 //   useEffect(()=>{
 //     dispatch(fetchGroups())
@@ -49,12 +51,44 @@ if(!url.length || url.length < 4) newErrors.url = "Let me see your pics"
 setErrors(newErrors)
 }
 
-const handleSubmit = (e) => {
+const handleSubmit = async(e) => {
     e.preventDefault();
-    payloadValidate()
+   await payloadValidate()
     console.log(payload)
     // console.log('hadlesubmit',errors)
+    console.log(errors)
+    console.log(Object.values(errors).length)
+    if(!Object.values(errors).length){
+      const cityState = payload.location.split(',')
+      
+      const sendIt = {
+        name: payload.name,
+        about: payload.describe,
+        type: payload.online,
+        private: payload.pri,
+        city: cityState[0].trim(),
+        state: cityState[1].trim()
+      }
+
+      const sendUrl = {
+        url: payload.url,
+        preview: true
+      }
+
+      console.log('ALL GOOD',sendIt)
+       let group = await dispatch(createTheGroup(sendIt))
+       console.log('GROUP',group)
+      // const group = useSelector(state=>state.groupState.currGroup)
+      // console.log('RIGHT BEFORE THE PUSH',group)
+      if(group.id){
+        //image dispach here
+        await dispatch(createTheGroupImage(sendUrl,group.id))
+        history.push(`/groups/${group.id}`)
+
+      }
+    }
     reset();
+    // history.push(`/groups/${}`)
   };
 
   const reset = () => {
@@ -119,8 +153,8 @@ const handleSubmit = (e) => {
     </section>
         <header>Is this an in-person or online group?</header>
         <select onChange={(e) => setOnline(e.target.value)} value={online}>
-        <option value="">(Select One)</option>
-        <option value='In-Person' id='In-Person'>In Person</option>
+        <option value="" disabled={true}>(Select One)</option>
+        <option value='In person' id='In person'>In Person</option>
         <option value='Online' id='Online'>Online</option>
         </select>
         
@@ -128,9 +162,9 @@ const handleSubmit = (e) => {
 
         <header>Is this group public or private?</header>
         <select onChange={(e) => setPri(e.target.value)} value={pri}>
-        <option value="">(Select One)</option>
-        <option value='Private' id='private'>Private</option>
-        <option value='Public' id='public'>Public</option>
+        <option value="" disabled={true}>(Select One)</option>
+        <option value={true} id='private'>Private</option>
+        <option value={false} id='public'>Public</option>
         </select>
         
         {errors.pri && <div className='errors'>{errors.pri}</div>}
