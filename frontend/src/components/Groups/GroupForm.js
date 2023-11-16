@@ -1,9 +1,8 @@
-import { Link, useHistory } from 'react-router-dom';
-import {useSelector} from 'react-redux'
+import { useHistory } from 'react-router-dom';
 import GroupIndexItem from './GroupsIndexItem.js';
 import { createTheGroup, createTheGroupImage, fetchGroups } from '../../store/groups';
 import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const GroupForm = () => {
     const [location, setLocation] = useState('')
@@ -16,14 +15,6 @@ const GroupForm = () => {
     const dispatch = useDispatch()
     const history = useHistory()
 
-//   useEffect(()=>{
-//     dispatch(fetchGroups())
-//   },[])
-
-//   const data = useSelector(state=>state.groupState.groups)
-  // console.log('hi im state', data)
-//   const groups = Object.values(data); // populate from Redux store
-//   const dispatch = useDispatch()
 const payload = {
     location,
     name,
@@ -81,14 +72,12 @@ const handleSubmit = async(e) => {
       // const group = useSelector(state=>state.groupState.currGroup)
       // console.log('RIGHT BEFORE THE PUSH',group)
       if(group.id){
-        //image dispach here
         await dispatch(createTheGroupImage(sendUrl,group.id))
         history.push(`/groups/${group.id}`)
 
       }
     }
     reset();
-    // history.push(`/groups/${}`)
   };
 
   const reset = () => {
@@ -100,15 +89,6 @@ const handleSubmit = async(e) => {
     setPri('')
   };
 
-
-
-//   <input
-//   type='text'
-//   onChange={(e) => setTitle(e.target.value)}
-//   value={title}
-//   placeholder='Title'
-//   name='title'
-// />
 
   return (
     <>

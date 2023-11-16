@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { Dispatch, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -7,9 +7,9 @@ import { fetchGroupInfo } from '../../store/groups';
 import EventsIndexItem from '../Events/EventsIndexItem.js'
 
 const GroupInfo = () => {
-
   const [isLoading, setIsLoading] = useState(true)
   const dispatch = useDispatch()
+  const history = useHistory()
 
     let groupId = useParams()
     groupId = Number(groupId.groupId)
@@ -31,7 +31,7 @@ const GroupInfo = () => {
     };
 
     // events = events.sort(compare).reverse()
-    console.log('EVENTS',events)
+    // console.log('EVENTS',events)
 
     // console.log(user)
     // const group = data[groupId]
@@ -53,7 +53,7 @@ const GroupInfo = () => {
 
   if(!isLoading){
         events = events.sort(compare).reverse()
-        console.log('EVENTS',events)
+        // console.log('EVENTS',events)
     return (
       <>
       <Link to='/groups'>Groups</Link>
@@ -69,7 +69,7 @@ const GroupInfo = () => {
           <div>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</div>
           <div className="buttons-container">
             {showJoin && <button onClick={()=>{alert('Feature coming soon')}}>Join this group</button>}
-            {isOrganizer && <button>Create event</button>}
+            {isOrganizer && <button onClick={()=>{history.push(`/events/new`)}}>Create event</button>}
             {isOrganizer && <button>Update</button>}
             {isOrganizer && <button>Delete</button>}
           </div>

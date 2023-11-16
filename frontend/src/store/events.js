@@ -1,4 +1,5 @@
 import { Dispatch } from "react";
+import { csrfFetch } from "./csrf";
 
 /** Action Type Constants: */
 export const LOAD_EVENTS = 'events/LOAD_EVENTS';
@@ -65,6 +66,29 @@ export const fetchEvents = (events) => async(dispatch)=>{
         throw res
       }
       }
+
+      export const createTheEvent = (event,groupId) => async(dispatch)=>{
+        console.log('CODE DONT HURT ME, DONT HURT ME, NO MORE',event,groupId)
+        // const history = useHistory()
+        const res = await csrfFetch(`/api/groups/${groupId}/events`,{
+          method: "POST",
+          // headers: {
+          //   "Content-Type": "application/json"
+          // },
+          body: JSON.stringify(event)
+        })
+        const data = await res.json()
+        console.log('DOES THE REQUEST HAPPEN?',data)
+        if(res.ok){
+          dispatch((createEvent(data)))
+          //return res
+          return data
+          // history.push(`/groups/${res.body.id}`)
+        }else{
+          console.log('I MADE IT',res)
+          throw res.errors
+        }
+      }
     
 //     export const deleteReport = (reportId) => async dispatch =>{
 //       const response = await fetch(`/api/reports/${reportId}`, {
@@ -100,8 +124,12 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
           return {...eventState, currEvent:newState}
         }
 
-      case CREATE_EVENT:
-        return { ...eventState, [action.event.id]: action.event };
+      case CREATE_EVENT:{
+        const newState ={...eventState}
+        newState.currEvent[action.event.id] = action.event
+        // console.log("LINE 158", newState)
+        return newState
+      }
       
         case READ_EVENT:
         return { ...eventState, [action.event.id]: action.event };
