@@ -2,7 +2,7 @@ import { useHistory } from 'react-router-dom';
 import GroupIndexItem from './GroupsIndexItem.js';
 import { createTheGroup, createTheGroupImage, fetchGroups } from '../../store/groups';
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useState, useReducer } from 'react';
 
 const GroupForm = () => {
     const [location, setLocation] = useState('')
@@ -12,6 +12,7 @@ const GroupForm = () => {
     const [url, setUrl] = useState('')
     const [pri, setPri] = useState('')
     const [errors, setErrors] = useState({})
+    const [placeHolder, Update] = useReducer(x => x + 1, 0);
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -25,21 +26,20 @@ const payload = {
 }
 
 const payloadValidate = () =>{
-    const newErrors = {}
-if(!location.length || location.length < 4) newErrors.location = "needs a location!"
+if(!location.length || location.length < 4) errors.location = "Location is required"
 
-if(!name.length || name.length < 4) newErrors.name = "I ain't no holla back girl!"
+if(!name.length || name.length < 4) errors.name = "Name is required"
 
-if(!describe.length || describe.length < 4) newErrors.describe = "No really tell me about yourself, Im a nice guy I swear!"
+if(!describe.length || describe.length < 4) errors.describe = "Description must be at least 30 characters long"
 
-if(!online) newErrors.online = "So whats the plan"
+if(!online) errors.online = "Group Type is required"
 
-if(!pri) newErrors.pri = "Its very exclusive, you would not have heard about it"
+if(!pri) errors.pri = "Visibility Type is required"
 
-if(!url.length || url.length < 4) newErrors.url = "Let me see your pics"
+if(!url.length || url.length < 4) errors.url = "Image URL must end in .png, .jpg, or .jpeg"
 
-// console.log('payloadvallidate ',newErrors)
-setErrors(newErrors)
+// console.log('payloadvallidate ',errors)
+setErrors(errors)
 }
 
 const handleSubmit = async(e) => {
@@ -47,6 +47,12 @@ const handleSubmit = async(e) => {
    await payloadValidate()
     console.log(payload)
     // console.log('hadlesubmit',errors)
+
+    const refresh = () => {
+      Update();
+  }
+  refresh()
+
     console.log(errors)
     console.log(Object.values(errors).length)
     if(!Object.values(errors).length){
@@ -159,7 +165,7 @@ const handleSubmit = async(e) => {
         </div>
         {errors.url && <div className='errors'>{errors.url}</div>}
     <section>
-        <button>Create Group</button>
+        <button disabled={Object.values(errors).length}>Create Group</button>
 
     </section>
 

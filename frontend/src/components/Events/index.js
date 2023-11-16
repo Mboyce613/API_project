@@ -39,7 +39,7 @@ const EventIndex = () => {
             <div>{event.description}</div>
             <div>{year} {"\u00b7"} {hour}</div>
             <div>{event.name}</div>
-            <div>{event.Venue.city} {event.Venue.state}</div>
+            {/* <div>{event.Venue.city} {event.Venue.state}</div> */}
             </Link>
             <hr className='solid'/>
             </>

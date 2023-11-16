@@ -395,7 +395,8 @@ router.get('/', async (req,res) =>{
 router.post('/:groupId/events', requireAuth, validateEvent, async (req,res)=>{
   const curr = req.user.id
   //! NEW STUFF CAN CAUSE ISSSUES
-  const {hostFirstName, hostLastName} = req.user
+  const {firstName, lastName} = req.user
+  console.log('BACKEND REQ.USER', req.user)
   //! NEW STUFF CAN CAUSE ISSSUES
 
   if(validateEvent.startDate >= validateEvent.endDate){
@@ -417,8 +418,9 @@ router.post('/:groupId/events', requireAuth, validateEvent, async (req,res)=>{
     return res.json({"message": "Forbidden"})
   }
 
- await Event.create({venueId, name, type, capacity, price, description, hostFirstName, hostLastName, startDate, endDate, groupId:groupId})
-  const returnEvent = await Event.findOne({where:{name}})
+//  await Event.create({venueId, name, type, capacity, price, description, hostFirstName, hostLastName, startDate, endDate, groupId:groupId}) // Was working until frontend request
+ await Event.create({name, type, capacity, price, description, hostFirstName:firstName, hostLastName:lastName, startDate, endDate, groupId:groupId}) 
+ const returnEvent = await Event.findOne({where:{name}})
   return res.json(returnEvent)
 })
 //? --------------------------------------------------------- ?//

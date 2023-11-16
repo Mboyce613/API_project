@@ -100,7 +100,8 @@ const GroupInfo = () => {
             <div>{event.description}</div>
             <div>{year} {"\u00b7"} {hour}</div>
             <div>{event.name}</div>
-            <div>{event.Venue.city} {event.Venue.state}</div>
+            {/* <div>{event.Venue.city} {event.Venue.state}</div> 
+            I might need to figure out how to grab this differently*/}
             </Link>
             </>
             )

@@ -94,7 +94,7 @@ export const fetchGroups = (groups) => async(dispatch)=>{
     }
 
     export const createTheGroup = (group) => async(dispatch)=>{
-      console.log('WHAT IS LOVE?',group)
+      // console.log('WHAT IS LOVE?',group)
       // const history = useHistory()
       const res = await csrfFetch(`/api/groups`,{
         method: "POST",
@@ -104,33 +104,33 @@ export const fetchGroups = (groups) => async(dispatch)=>{
         body: JSON.stringify(group)
       })
       const data = await res.json()
-      console.log('DOES THE REQUEST HAPPEN?',data)
+      // console.log('DOES THE REQUEST HAPPEN?',data)
       if(res.ok){
         dispatch((createGroup(data)))
         //return res
         return data
         // history.push(`/groups/${res.body.id}`)
       }else{
-        console.log('I MADE IT',res)
+        // console.log('I MADE IT',res)
         throw res.errors
       }
     }
 
     export const createTheGroupImage = (url,groupId) => async(dispatch)=>{
-      console.log('WHAT IS IMAGE?',url)
-      console.log('WHAT IS ID?',groupId)
+      // console.log('WHAT IS IMAGE?',url)
+      // console.log('WHAT IS ID?',groupId)
 
       const res = await csrfFetch(`/api/groups/${groupId}/images`,{
         method: "POST",
         body: JSON.stringify(url)
       })
       const data = await res.json()
-      console.log('DOES THE REQUEST HAPPEN?',data)
+      // console.log('DOES THE REQUEST HAPPEN?',data)
       if(res.ok){
         dispatch((createGroupImage(data)))
         return data
       }else{
-        console.log('I MADE IT',res)
+        // console.log('I MADE IT',res)
         throw res.errors
       }
     }

@@ -2,7 +2,8 @@ import { Link, useHistory } from 'react-router-dom';
 import {useSelector} from 'react-redux'
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { createTheEvent } from '../../store/events.js';
+import { createTheEvent, createTheEventImage } from '../../store/events.js';
+import { useReducer } from 'react';
 
 const EventForm = () => {
     const [name, setName] = useState('')
@@ -13,14 +14,16 @@ const EventForm = () => {
     const [startTime, setStartTime] = useState('')
     const [endTime, setEndTime] = useState('')
     const [errors, setErrors] = useState({})
+    const [placeHolder, Update] = useReducer(x => x + 1, 0);
     const dispatch = useDispatch()
     const history = useHistory()
 
 const group = useSelector(state=>state.groupState.currGroup)
+const user = useSelector(state=>state.session.user)
 
 //   useEffect(()=>{
-//     dispatch(fetchGroups())
-//   },[])
+   
+//   },[errors])
 
 //   const data = useSelector(state=>state.groupState.groups)
   // console.log('hi im state', data)
@@ -37,29 +40,43 @@ const payload = {
 }
 
 const payloadValidate = () =>{
-    const newErrors = {}
+    // const newErrors = {}
 
-if(!name.length || name.length < 4) newErrors.name = "I ain't no holla back girl!"
+if(!name.length || name.length < 4) errors.name = "Name is required"
 
-if(!describe.length || describe.length < 4) newErrors.describe = "No really tell me about yourself, Im a nice guy I swear!"
+if(!describe.length || describe.length < 4) errors.describe = "No really tell me about yourself, Im a nice guy I swear!"
 
-if(!online) newErrors.online = "So whats the plan"
+if(!online) errors.online = "Event Type is required"
 
-if(!url.length || url.length < 4) newErrors.url = "Let me see your pics"
+if(!url.length || url.length < 4) errors.url = "Image URL must end in .png, .jpg, or .jpeg"
 
-// console.log('payloadvallidate ',newErrors)
-setErrors(newErrors)
+if(!pri) errors.pri = "Price is required"
+
+if(!startTime.length || startTime.length < 4) errors.startTime = "Event start is required"
+
+if(!endTime.length || endTime.length < 4) errors.endTime = "Event end is required"
+
+// console.log('payloadvallidate ',errors)
+setErrors(errors)
 }
 
 const handleSubmit = async(e) => {
     e.preventDefault();
-   await payloadValidate()
+    payloadValidate()
     console.log(payload)
     // console.log('hadlesubmit',errors)
+
+    const refresh = () => {
+        Update();
+    }
+    refresh()
+
     console.log('THE ERRORS',errors)
     console.log(Object.values(errors).length)
+
     if(!Object.values(errors).length){
-      
+      console.log('OKED',errors)
+
       const sendIt = {
         venueId: 666,
         name: payload.name,
@@ -68,7 +85,9 @@ const handleSubmit = async(e) => {
         price: payload.pri,
         description: payload.describe,
         startDate: payload.startTime,
-        endDate: payload.endTime
+        endDate: payload.endTime,
+        hostFirstName: user.firstName,
+        hostLastName: user.lastName
       }
 
       const sendUrl = {
@@ -81,14 +100,15 @@ const handleSubmit = async(e) => {
        console.log('EVENT',event)
       // const group = useSelector(state=>state.groupState.currGroup)
       // console.log('RIGHT BEFORE THE PUSH',group)
-    //   if(group.id){
-    //     //image dispach here
-    //     await dispatch(createTheGroupImage(sendUrl,group.id))
-    //     history.push(`/events/${event.id}`)
+      if(group.id){
+        await dispatch(createTheEventImage(sendUrl,event.id))
+        history.push(`/events/${event.id}`)
+      }
+    }else{
 
-    //   }
+        reset();
+        return console.log('jokes on me')
     }
-    reset();
     // history.push(`/groups/${}`)
   };
 
@@ -199,7 +219,7 @@ const handleSubmit = async(e) => {
     </section>
 
     <section>
-        <button>Create Event</button>
+        <button disabled={Object.values(errors).length}>Create Event</button>
 
     </section>
 

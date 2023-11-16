@@ -5,6 +5,7 @@ import { csrfFetch } from "./csrf";
 export const LOAD_EVENTS = 'events/LOAD_EVENTS';
 export const LOAD_EVENT_INFO = 'events/LOAD_EVENT_INFO';
 export const CREATE_EVENT = 'events/CREATE_EVENT';
+export const CREATE_EVENT_IMAGE = 'events/CREATE_EVENT_IMAGE';
 export const READ_EVENT = 'events/READ_EVENT';
 export const UPDATE_EVENT = 'events/UPDATE_EVENT';
 export const DELETE_EVENT = 'events/DELETE_EVENT';
@@ -23,6 +24,12 @@ export const loadEvents = (events) => ({
   export const createEvent = (event) => ({
     type: CREATE_EVENT,
     event,
+  });
+
+  export const createEventImage = (url,eventId) => ({
+    type: CREATE_EVENT_IMAGE,
+    eventId,
+    url
   });
 
   export const readEvent = (event) => ({
@@ -89,6 +96,26 @@ export const fetchEvents = (events) => async(dispatch)=>{
           throw res.errors
         }
       }
+
+      export const createTheEventImage = (url,eventId) => async(dispatch)=>{
+        console.log('WHAT IS IMAGE?',url)
+        console.log('WHAT IS ID?',eventId)
+  
+        const res = await csrfFetch(`/api/events/${eventId}/images`,{
+          method: "POST",
+          body: JSON.stringify(url)
+        })
+        const data = await res.json()
+        console.log('DOES THE REQUEST HAPPEN?',data)
+        if(res.ok){
+          dispatch((createEventImage(data)))
+          return data
+        }else{
+          console.log('I MADE IT',res)
+          throw res.errors
+        }
+      }
+      
     
 //     export const deleteReport = (reportId) => async dispatch =>{
 //       const response = await fetch(`/api/reports/${reportId}`, {
@@ -128,6 +155,14 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
         const newState ={...eventState}
         newState.currEvent[action.event.id] = action.event
         // console.log("LINE 158", newState)
+        return newState
+      }
+
+      case CREATE_EVENT_IMAGE:{
+        const newState = {...eventState}
+        newState.currEvent.EventImages = []
+        console.log("ACTION.URL.URL",action.url.url)
+        newState.currEvent.EventImages.push(action.url.url)
         return newState
       }
       
