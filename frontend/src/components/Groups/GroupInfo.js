@@ -5,10 +5,13 @@ import { useSelector } from 'react-redux';
 import { fetchEventsByGroupId, fetchGroups } from '../../store/groups';
 import { fetchGroupInfo } from '../../store/groups';
 import EventsIndexItem from '../Events/EventsIndexItem.js'
+import DeleteModal from '../DeleteModal/index.js';
+
 
 const GroupInfo = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const dispatch = useDispatch()
+  const [deleteModal, setDeleteModal] = useState(false)
+  const dispatch = useDispatch() 
   const history = useHistory()
 
     let groupId = useParams()
@@ -71,7 +74,7 @@ const GroupInfo = () => {
             {showJoin && <button onClick={()=>{alert('Feature coming soon')}}>Join this group</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/events/new`)}}>Create event</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/groups/update`)}}>Update</button>}
-            {isOrganizer && <button>Delete</button>}
+            {isOrganizer && <button onClick={()=>{DeleteModal()}}>Delete</button>}
           </div>
         </div>
         </div>

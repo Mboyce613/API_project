@@ -4,6 +4,7 @@ import { createTheGroup, createTheGroupImage, fetchGroups } from '../../store/gr
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useReducer } from 'react';
 
+
 const GroupForm = () => {
     const [location, setLocation] = useState('')
     const [name, setName] = useState('')
@@ -18,9 +19,9 @@ const GroupForm = () => {
 
     const theGroup = useSelector(state=>state.groupState.currGroup)
     const groupId = theGroup.id
-const handleDelete = (groupId) =>{
+// const handleDelete = (groupId) =>{
 
-}
+// }
 
 const payload = {
     location,
