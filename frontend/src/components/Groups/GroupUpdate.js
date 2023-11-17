@@ -1,26 +1,33 @@
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import GroupIndexItem from './GroupsIndexItem.js';
-import { createTheGroup, createTheGroupImage, fetchGroups } from '../../store/groups';
+import { createTheGroup, createTheGroupImage, fetchGroupInfo, fetchGroups, updateTheGroup } from '../../store/groups';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useReducer } from 'react';
 
-const GroupForm = () => {
-    const [location, setLocation] = useState('')
-    const [name, setName] = useState('')
-    const [describe, setDescribe] = useState('')
-    const [online, setOnline] = useState('')
-    const [url, setUrl] = useState('')
-    const [pri, setPri] = useState('')
-    const [errors, setErrors] = useState({})
-    const [placeHolder, Update] = useReducer(x => x + 1, 0);
+const GroupUpdate = () => {
     const dispatch = useDispatch()
     const history = useHistory()
+    let preLoad = useSelector(state=>state.groupState.currGroup)
+    const user = useSelector(state=>state.session.user)
+    // const preLocation = 
+    if(!Object.values(preLoad).length){
+        // dispatch(fetchGroupInfo(1))
+        preLoad.GroupImages = ['no']
+    }
+    console.log('PRELOAD',preLoad)
+    const [location, setLocation] = useState(`${preLoad.city},${preLoad.state}`)
+    const [city, setCity] = useState(preLoad.city)
+    const [state, setState] = useState(preLoad.state)
+    const [name, setName] = useState(preLoad.name)
+    const [describe, setDescribe] = useState(preLoad.about)
+    const [online, setOnline] = useState(preLoad.type)
+    const [url, setUrl] = useState(preLoad?.GroupImages[0].url)
+    const [pri, setPri] = useState(preLoad.private)
+    const [errors, setErrors] = useState({})
+    
+    const [placeHolder, Update] = useReducer(x => x + 1, 0);
 
-    const theGroup = useSelector(state=>state.groupState.currGroup)
-    const groupId = theGroup.id
-const handleDelete = (groupId) =>{
 
-}
 
 const payload = {
     location,
@@ -40,7 +47,7 @@ if(!describe.length || describe.length < 4) errors.describe = "Description must 
 
 if(!online) errors.online = "Group Type is required"
 
-if(pri === "") errors.pri = "Visibility Type is required"
+// if(!pri) errors.pri = "Visibility Type is required"
 
 if(!url.length || url.length < 4) errors.url = "Image URL must end in .png, .jpg, or .jpeg"
 
@@ -50,7 +57,7 @@ setErrors(errors)
 
 const handleSubmit = async(e) => {
     e.preventDefault();
-   await payloadValidate()
+    payloadValidate()
     console.log(payload)
     // console.log('hadlesubmit',errors)
 
@@ -62,6 +69,7 @@ const handleSubmit = async(e) => {
     console.log(errors)
     console.log(Object.values(errors).length)
     if(!Object.values(errors).length){
+        console.log('PAYLOAD',payload)
       const cityState = payload.location.split(',')
       
       const sendIt = {
@@ -79,33 +87,39 @@ const handleSubmit = async(e) => {
       }
 
       console.log('ALL GOOD',sendIt)
-       let group = await dispatch(createTheGroup(sendIt))
+       let group = await dispatch(updateTheGroup(sendIt, preLoad.id))
        console.log('GROUP',group)
       // const group = useSelector(state=>state.groupState.currGroup)
       // console.log('RIGHT BEFORE THE PUSH',group)
-      if(group.id){
-        await dispatch(createTheGroupImage(sendUrl,group.id))
+    //   if(group.id){
+    //     await dispatch(createTheGroupImage(sendUrl,group.id))
         history.push(`/groups/${group.id}`)
 
-      }
+    //   }
     }
     reset();
   };
 
   const reset = () => {
-    setLocation('');
-    setName('');
-    setDescribe('');
-    setOnline('');
-    setUrl('');
-    setPri('')
+    setLocation(`${preLoad.city},${preLoad.state}`);
+    setName(preLoad.name);
+    setDescribe(preLoad.about);
+    setOnline(preLoad.type);
+    setUrl(preLoad.GroupImages[0].url);
+    setPri(preLoad.pri)
   };
 
+//   console.log('NOT USER',!user)
+//   console.log('NOT ORGANIZER',user.id !== preLoad.organizerId)
+  if(!user || user.id !== preLoad.organizerId) {
+
+      return <Redirect to="/" />;
+  }
 
   return (
     <>
 <form onSubmit={handleSubmit}>
-    <div>Start a New Group</div>
+    <div>Update your Group</div>
     <section>
         <header>Set your group's location.</header>
         <div>Meetup groups meet locally, in person, and online. We'll connect you with people in your area.
@@ -153,7 +167,7 @@ const handleSubmit = async(e) => {
         {errors.online && <div className='errors'>{errors.online}</div>}
 
         <header>Is this group public or private?</header>
-        <select onChange={(e) => setPri(e.target.value)} value={pri}>
+        <select onChange={(e) => setPri(e.target.value)} value={pri} defaultValue={false}>
         <option value="" disabled={true}>(Select One)</option>
         <option value={true} id='private'>Private</option>
         <option value={false} id='public'>Public</option>
@@ -171,7 +185,7 @@ const handleSubmit = async(e) => {
         </div>
         {errors.url && <div className='errors'>{errors.url}</div>}
     <section>
-        <button disabled={Object.values(errors).length}>Create Group</button>
+        <button disabled={Object.values(errors).length}>Update Group</button>
 
     </section>
 
@@ -180,4 +194,4 @@ const handleSubmit = async(e) => {
   );
 };
 
-export default GroupForm;
+export default GroupUpdate;

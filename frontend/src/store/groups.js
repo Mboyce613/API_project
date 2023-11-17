@@ -48,7 +48,7 @@ export const loadGroups = (groups) => ({
 
   export const updateGroup = (group) => ({
     type: UPDATE_GROUP,
-    group,
+    group
   });
 
   export const deleteGroup = (groupId) => ({
@@ -134,6 +134,36 @@ export const fetchGroups = (groups) => async(dispatch)=>{
         throw res.errors
       }
     }
+
+    export const updateTheGroup = (group, groupId) => async(dispatch)=>{
+      // console.log('WHAT IS LOVE?',group)
+      // const history = useHistory()
+      const resOne = await csrfFetch(`/api/groups/${groupId}`)
+      if(resOne.ok){
+        const retriveData = await resOne.json()
+        //return res
+        console.log("GROUP RETRIVED FROM BACKEND", retriveData)
+        // history.push(`/groups/${res.body.id}`)
+      }else{
+        // console.log('I MADE IT',res)
+        throw resOne.errors
+      }
+      const resTwo = await csrfFetch(`/api/groups/${groupId}`,{
+        method: "PUT",
+        body: JSON.stringify(group)
+      })
+      const data = await resTwo.json()
+      // console.log('DOES THE REQUEST HAPPEN?',data)
+      if(resTwo.ok){
+        dispatch((updateGroup(data)))
+        //return res
+        return data
+        // history.push(`/groups/${res.body.id}`)
+      }else{
+        // console.log('I MADE IT',res)
+        throw resTwo.errors
+      }
+    }
     
 //     export const deleteReport = (reportId) => async dispatch =>{
 //       const response = await fetch(`/api/reports/${reportId}`, {
@@ -194,11 +224,17 @@ const groupsReducer = (groupState = {groups:{}, currGroup:{}, groupEvents:{}}, a
         return newState
       }
 
-        // return { ...groupState, [action.group.id]: action.group };
       
-        
         case UPDATE_GROUP:{
-          return { ...groupState, [action.group.id]: action.group };
+          const newState = {...groupState}
+          // console.log('ACTION',action)
+          for(const key in action.group){
+            // console.log('KEY', key)
+            // console.log('CURRGROUP',newState.currGroup)
+            // console.log('GROUP',action.group)
+            newState.currGroup[key] = action.group[key]
+          }
+          return newState
         }
         
         case READ_GROUP:{

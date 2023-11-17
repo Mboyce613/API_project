@@ -70,7 +70,7 @@ const GroupInfo = () => {
           <div className="buttons-container">
             {showJoin && <button onClick={()=>{alert('Feature coming soon')}}>Join this group</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/events/new`)}}>Create event</button>}
-            {isOrganizer && <button>Update</button>}
+            {isOrganizer && <button onClick={()=>{history.push(`/groups/update`)}}>Update</button>}
             {isOrganizer && <button>Delete</button>}
           </div>
         </div>
