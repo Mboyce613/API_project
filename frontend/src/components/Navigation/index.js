@@ -10,21 +10,23 @@ function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
 
   return (
-    <ul>
-      <li>
+    <section className='Navigation'>
+
+      <section className='Logo'>
         <NavLink exact to="/">
           <img src={logo}/>
           </NavLink>
-      </li>
+      </section>
+
       {isLoaded && (
+        <section className='ProfileButton'>
         <>
         {sessionUser && (<Link to='/groups/new'>Start a new group</Link>)}
-        <li>
           <ProfileButton user={sessionUser} />
-        </li>
         </>
+        </section>
       )}
-    </ul>
+    </section>
   );
 }
 

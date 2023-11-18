@@ -169,6 +169,7 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
       case CREATE_EVENT:{
         const newState ={...eventState}
         newState.currEvent[action.event.id] = action.event
+        newState.events[action.event.id] = action.event
         // console.log("LINE 158", newState)
         return newState
       }
@@ -189,10 +190,13 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
         return { ...eventState, [action.event.id]: action.event };
       
         case DELETE_EVENT:
+          console.log('ACTION',action)
+          console.log('EVENTSTATE',eventState)
           const newState = { ...eventState };
+          console.log('NEWSTATE',newState)
           console.log('REDUCER ID',action.eventId)
           console.log('WANT TO DELETE', newState.events[action.eventId])
-          delete newState[action.eventId];
+          delete newState.events[action.eventId];
           newState.currEvent = {}
           console.log('DELETED?', newState)
           return newState;

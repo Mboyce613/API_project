@@ -229,6 +229,7 @@ const groupsReducer = (groupState = {groups:{}, currGroup:{}, groupEvents:{}}, a
       case CREATE_GROUP:{
         const newState ={...groupState}
         newState.currGroup[action.group.id] = action.group
+        newState.groups[action.group.id] = action.group
         // console.log("LINE 158", newState)
         return newState
       }
