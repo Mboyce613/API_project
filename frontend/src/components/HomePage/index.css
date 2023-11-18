@@ -1,0 +1,44 @@
+.titleSection1{
+    display: flex;
+    justify-content: center;
+    /* background-color: brown; */
+    /* color: aqua; */
+}
+
+.titleSection2{
+    display: flex;
+    justify-content: space-around;
+    grid-template-columns: 50% 50%;
+    /* background-color: black;
+    color: aqua; */
+}
+
+.poem{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.image{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.subtitleSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.subtitleSection1{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.subtitleSection2{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}

@@ -25,6 +25,7 @@ const EventInfo = () => {
         .then((data)=>dispatch(fetchGroupInfo(data.groupId)))
         .then(()=>setIsLoading(false))
       },[dispatch,eventId,event.groupId])
+      
 
     const group = useSelector(state=>state.groupState.currGroup)
     const user = useSelector(state=>state.session.user)
