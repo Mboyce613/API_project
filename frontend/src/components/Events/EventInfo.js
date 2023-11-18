@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import { fetchEvents } from '../../store/events.js';
 import { fetchEventInfo } from '../../store/events.js';
 import { fetchGroupInfo } from '../../store/groups.js';
+import DeleteEventModal from '../DeleteModal/deleteEvents.js';
+import OpenModalButton from '../OpenModalButton/index.js';
 
 const EventInfo = () => {
 
@@ -75,7 +77,14 @@ const EventInfo = () => {
 
       <img src={event.EventImages[0].url} />
       {showButtons && <button>Update</button>}
-      {showButtons && <button>Delete</button>}
+      {showButtons && <OpenModalButton
+              itemText="Are You Sure?"
+              buttonText="Delete"
+              modalComponent={<DeleteEventModal
+              eventId={event.id}
+              />}
+
+            />}
 
       <section>
         <img src={group.GroupImages[0].url} />

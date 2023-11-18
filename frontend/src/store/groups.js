@@ -164,6 +164,22 @@ export const fetchGroups = (groups) => async(dispatch)=>{
         throw resTwo.errors
       }
     }
+
+    export const deleteTheGroup = (groupId) => async(dispatch)=>{
+      console.log("In the thunk", groupId)
+
+      const res = await csrfFetch(`/api/groups/${groupId}`,{
+        method: "DELETE",
+      })
+      const data = await res.json()
+      if(res.ok){
+        console.log('Going to the reducer')
+        dispatch((deleteGroup(groupId)))
+        return data
+      }else{
+        throw res.errors
+      }
+    }
     
 //     export const deleteReport = (reportId) => async dispatch =>{
 //       const response = await fetch(`/api/reports/${reportId}`, {
@@ -244,6 +260,7 @@ const groupsReducer = (groupState = {groups:{}, currGroup:{}, groupEvents:{}}, a
       case DELETE_GROUP:{
         const newState = { ...groupState };
         delete newState[action.groupId];
+        newState.currGroup = {}
         return newState;
       }
       

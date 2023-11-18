@@ -1,22 +1,48 @@
 import { Link, useParams, useHistory } from 'react-router-dom';
-import { Dispatch, useEffect, useState } from 'react';
+import { Dispatch, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { fetchEventsByGroupId, fetchGroups } from '../../store/groups';
 import { fetchGroupInfo } from '../../store/groups';
 import EventsIndexItem from '../Events/EventsIndexItem.js'
 import DeleteModal from '../DeleteModal/index.js';
+import LoginFormModal from '../LoginFormModal/index.js';
+import OpenModalMenuItem from '../Navigation/OpenModalMenuItem.js';
+import OpenModalButton from '../OpenModalButton/index.js';
 
 
 const GroupInfo = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [deleteModal, setDeleteModal] = useState(false)
+  const [showMenu, setShowMenu] = useState(false);
   const dispatch = useDispatch() 
   const history = useHistory()
+  const ulRef = useRef();
 
     let groupId = useParams()
     groupId = Number(groupId.groupId)
 
+    const openMenu = () => {
+      if (showMenu) return;
+      setShowMenu(true);
+    };
+  
+    useEffect(() => {
+      if (!showMenu) return;
+  
+      const closeMenu = (e) => {
+        if (!ulRef.current?.contains(e.target)) {
+          setShowMenu(false);
+        }
+      };
+  
+      document.addEventListener('click', closeMenu);
+  
+      return () => document.removeEventListener("click", closeMenu);
+    }, [showMenu]);
+  
+    const closeMenu = () => setShowMenu(false);
+    
     useEffect(()=>{
         dispatch(fetchGroupInfo(groupId))
         .then(()=>dispatch(fetchEventsByGroupId(groupId)))
@@ -74,7 +100,14 @@ const GroupInfo = () => {
             {showJoin && <button onClick={()=>{alert('Feature coming soon')}}>Join this group</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/events/new`)}}>Create event</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/groups/update`)}}>Update</button>}
-            {isOrganizer && <button onClick={()=>{DeleteModal()}}>Delete</button>}
+            {isOrganizer && <OpenModalButton
+              itemText="Are You Sure?"
+              buttonText="Delete"
+              modalComponent={<DeleteModal
+              groupId={group.id}
+              />}
+
+            />}
           </div>
         </div>
         </div>

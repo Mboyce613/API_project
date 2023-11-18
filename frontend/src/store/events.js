@@ -116,6 +116,21 @@ export const fetchEvents = (events) => async(dispatch)=>{
         }
       }
       
+      export const deleteTheEvent = (eventId) => async(dispatch)=>{
+        console.log("In the thunk", eventId)
+  
+        const res = await csrfFetch(`/api/events/${eventId}`,{
+          method: "DELETE",
+        })
+        const data = await res.json()
+        if(res.ok){
+          console.log('Going to the reducer')
+          dispatch((deleteEvent(eventId)))
+          return data
+        }else{
+          throw res.errors
+        }
+      }
     
 //     export const deleteReport = (reportId) => async dispatch =>{
 //       const response = await fetch(`/api/reports/${reportId}`, {
@@ -163,6 +178,7 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
         newState.currEvent.EventImages = []
         console.log("ACTION.URL.URL",action.url.url)
         newState.currEvent.EventImages.push(action.url.url)
+        console.log("DID IT WORK?",newState.currEvent.EventImages)
         return newState
       }
       
@@ -173,9 +189,13 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
         return { ...eventState, [action.event.id]: action.event };
       
         case DELETE_EVENT:
-        const newState = { ...eventState };
-        delete newState[action.eventId];
-        return newState;
+          const newState = { ...eventState };
+          console.log('REDUCER ID',action.eventId)
+          console.log('WANT TO DELETE', newState.events[action.eventId])
+          delete newState[action.eventId];
+          newState.currEvent = {}
+          console.log('DELETED?', newState)
+          return newState;
       
         default:
         return eventState;

@@ -3,25 +3,25 @@ import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { useHistory } from "react-router-dom/";
-import { deleteTheGroup } from "../../store/groups";
+import { deleteTheEvent } from "../../store/events";
 
 
-function DeleteModal({groupId}) {
+function DeleteEventModal({eventId}) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
   const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(deleteTheGroup(groupId))
+    dispatch(deleteTheEvent(eventId))
     closeModal()
-    history.push("/groups")
+    history.push("/events")
   };
 
   return (
     <>
       <h1>Confirm Delete</h1>
-      <h2>Are you sure you want to remove this group?</h2>
+      <h2>Are you sure you want to remove this event?</h2>
 
       <button
         type="confirm"
@@ -36,5 +36,5 @@ function DeleteModal({groupId}) {
   );
 }
 
-export default DeleteModal;
+export default DeleteEventModal;
 
