@@ -58,12 +58,27 @@
     padding: 10px;
 }
 
+.pic1{
+    height: 90px;
+    width: 130px;
+}
+
 .link2{
     padding: 10px;
 }
 
+.pic2{
+    height: 90px;
+    width: 130px;
+}
+
 .link3{
     padding: 10px;
+}
+
+.pic3{
+    height: 90px;
+    width: 130px;
 }
 
 .join{

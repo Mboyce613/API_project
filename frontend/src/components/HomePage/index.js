@@ -5,6 +5,10 @@ import { fetchGroups } from '../../store/groups';
 import { fetchEvents } from '../../store/events';
 import './index.css'
 import poe from './Poe.jpeg'
+import cem from './cemertary.jpg'
+import skell from './skell.jpeg'
+import ghosts from './ghosts.jpeg'
+
 const HomePage = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.session.user);
@@ -40,14 +44,17 @@ useEffect(()=>{
     
     <section className='links'>
         <div className='link1'>
+          <div><img className ="pic1" src={cem}></img></div>
             <Link to="/groups" >See all groups</Link>
-            <div>Diffrent bite for Diffrent frights, find a group that suits you.</div>
+            <div>Different bites for different frights, find a group that suits you.</div>
         </div>
         <div className='link2'>
-            <Link to="/events">Find an event</Link>
+        <img className='pic2' src={skell}></img>
+            <div><Link to="/events">Find an event</Link></div>
             <div>Find out what gouls near you are doing.</div>
         </div>
         <div className='link3'>
+        <div><img className='pic3' src={ghosts}></img></div>
             {user && <Link to="/groups/new" >Start a group</Link>}
             <div>Dont see a group that speaks to you? Make your own!</div>
         </div>
