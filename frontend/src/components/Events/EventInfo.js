@@ -1,8 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
-import { Dispatch, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { fetchEvents } from '../../store/events.js';
 import { fetchEventInfo } from '../../store/events.js';
 import { fetchGroupInfo } from '../../store/groups.js';
 import DeleteEventModal from '../DeleteModal/deleteEvents.js';

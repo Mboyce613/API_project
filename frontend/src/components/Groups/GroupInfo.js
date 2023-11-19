@@ -1,19 +1,15 @@
 import { Link, useParams, useHistory } from 'react-router-dom';
-import { Dispatch, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { fetchEventsByGroupId, fetchGroups } from '../../store/groups';
+import { fetchEventsByGroupId } from '../../store/groups';
 import { fetchGroupInfo } from '../../store/groups';
-import EventsIndexItem from '../Events/EventsIndexItem.js'
 import DeleteModal from '../DeleteModal/index.js';
-import LoginFormModal from '../LoginFormModal/index.js';
-import OpenModalMenuItem from '../Navigation/OpenModalMenuItem.js';
 import OpenModalButton from '../OpenModalButton/index.js';
 
 
 const GroupInfo = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [deleteModal, setDeleteModal] = useState(false)
   const [showMenu, setShowMenu] = useState(false);
   const dispatch = useDispatch() 
   const history = useHistory()

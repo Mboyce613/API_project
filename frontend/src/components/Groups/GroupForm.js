@@ -1,5 +1,4 @@
 import { useHistory } from 'react-router-dom';
-import GroupIndexItem from './GroupsIndexItem.js';
 import { createTheGroup, createTheGroupImage, fetchGroups } from '../../store/groups';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useReducer } from 'react';
@@ -18,10 +17,6 @@ const GroupForm = () => {
     const history = useHistory()
 
     const theGroup = useSelector(state=>state.groupState.currGroup)
-    const groupId = theGroup.id
-// const handleDelete = (groupId) =>{
-
-// }
 
 const payload = {
     location,

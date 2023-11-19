@@ -1,7 +1,7 @@
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {useSelector} from 'react-redux'
 import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createTheEvent, createTheEventImage } from '../../store/events.js';
 import { useReducer } from 'react';
 

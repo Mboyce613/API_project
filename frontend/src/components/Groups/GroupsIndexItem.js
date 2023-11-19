@@ -1,10 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 
 
 const GroupIndexItem = ({ group }) => {
-  const dispatch = useDispatch()
   let gPrivate = ''
   if(group.private) gPrivate = 'Private'
   if(!group.private) gPrivate = 'Public'

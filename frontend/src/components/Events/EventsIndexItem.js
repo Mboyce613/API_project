@@ -1,7 +1,4 @@
-import { Link } from 'react-router-dom';
-import { Dispatch } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loadEventInfo } from '../../store/events.js';
+import { useDispatch } from 'react-redux';
 
 const EventIndexItem = ({ event }) => {
   const dispatch = useDispatch()

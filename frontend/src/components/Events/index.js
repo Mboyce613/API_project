@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import {useSelector} from 'react-redux'
-import EventIndexItem from './EventsIndexItem.js';
 import { fetchEvents } from '../../store/events.js';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';

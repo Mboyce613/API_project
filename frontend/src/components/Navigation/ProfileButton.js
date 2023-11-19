@@ -4,7 +4,6 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
-import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom"
 

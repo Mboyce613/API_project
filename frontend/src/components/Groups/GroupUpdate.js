@@ -1,6 +1,5 @@
 import { useHistory, Redirect } from 'react-router-dom';
-import GroupIndexItem from './GroupsIndexItem.js';
-import { createTheGroup, createTheGroupImage, fetchGroupInfo, fetchGroups, updateTheGroup } from '../../store/groups';
+import { updateTheGroup } from '../../store/groups';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useReducer } from 'react';
 
