@@ -35,12 +35,16 @@ const EventIndex = () => {
             hour = hour.slice(0,5)
             return(
             <>
-            <Link to={`/events/${event.id}`}>
-            <img src={event.previewImage}></img>
-            <div>{event.description}</div>
-            <div>{year} {"\u00b7"} {hour}</div>
-            <div>{event.name}</div>
+            <Link className ='eventlink' to={`/events/${event.id}`}>
+            <section className='eventimageandinfo'>
+            <img className ='eventimage' src={event.previewImage}></img>
+            <section className='eventinfo'>
+            <div className='eventyear'>{year} {"\u00b7"} {hour}</div>
+            <div className='eventname'>{event.name}</div>
             {/* <div>{event.Venue.city} {event.Venue.state}</div> */}
+            </section>
+            </section>
+            <div className ='eventdesc'> {event.description}</div>
             </Link>
             <hr className='solid'/>
             </>

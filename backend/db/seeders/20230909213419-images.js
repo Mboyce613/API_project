@@ -29,7 +29,7 @@ module.exports = {
       {
         imageableId: 1,
         imageableType: 'Event',
-        url: 'https://foo4.com',
+        url: 'https://cdn.staticneo.com/w/harrypotter/thumb/NearlyHeadlessNick.jpg/300px-NearlyHeadlessNick.jpg',
         preview: true,
       },
       {
@@ -53,7 +53,7 @@ module.exports = {
       {
         imageableId: 2,
         imageableType: 'Event',
-        url: 'https://bar4.com',
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCib9FCHlVJGSSM8ANZWOFprZ5UEdCIYPL1kuj7F3f0g30W-sAWOb_ueuvmcFq8vmjpUY&usqp=CAU',
         preview: true,
       },
     ], { validate: true },
