@@ -43,20 +43,21 @@ useEffect(()=>{
     </section>
     
     <section className='links'>
-        <div className='link1'>
+        <div >
           <div><img className ="pic1" src={cem}></img></div>
-            <Link to="/groups" >See all groups</Link>
-            <div>Different bites for different frights, find a group that suits you.</div>
+            <Link className='link1' to="/groups" >See all groups</Link>
+            <div className='link1text'>Different bites for different frights, find a group that suits you.</div>
         </div>
-        <div className='link2'>
+        <div >
         <img className='pic2' src={skell}></img>
-            <div><Link to="/events">Find an event</Link></div>
-            <div>Find out what gouls near you are doing.</div>
+            <div><Link className='link2' to="/events">Find an event</Link></div>
+            <div className='link1text'>Find out what gouls near you are doing.</div>
         </div>
-        <div className='link3'>
+        <div >
         <div><img className='pic3' src={ghosts}></img></div>
-            {user && <Link to="/groups/new" >Start a group</Link>}
-            <div>Dont see a group that speaks to you? Make your own!</div>
+            {user && <Link className='link3' to="/groups/new" >Start a group</Link>}
+            {!user && <Link className='link3dis' to="/groups/new" >Start a group</Link>}
+            <div className='link1text'>Dont see a group that speaks to you? Make your own!</div>
         </div>
     </section>
 

@@ -1,0 +1,37 @@
+.eventslinkG{
+    color: gray;
+    padding: 5px;
+    
+}
+
+.eventslinkG:hover{
+    cursor: default;
+    padding: 5px;
+}
+
+.groupslinkG{
+    color: teal;
+    padding: 5px;
+    
+}
+
+.groupslinkG:hover{
+    cursor: default;
+    padding: 5px;
+}
+
+.subtextG{
+    color: gray;
+    padding: 5px;
+    
+}
+
+.grouplist{
+    /* display: flex;
+    flex-direction: column; */
+}
+
+.groupBox{
+    /* display: flex;
+    flex-direction: column; */
+}

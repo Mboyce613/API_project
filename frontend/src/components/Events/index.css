@@ -1,0 +1,27 @@
+.eventslinkE{
+    color: teal;
+    padding: 5px;
+    
+}
+
+.eventslinkE:hover{
+    cursor: default;
+    padding: 5px;
+}
+
+.groupslinkE{
+    color: gray;
+    padding: 5px;
+    
+}
+
+.groupslinkE:hover{
+    cursor: default;
+    padding: 5px;
+}
+
+.subtextE{
+    color: gray;
+    padding: 5px;
+    
+}

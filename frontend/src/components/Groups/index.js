@@ -4,6 +4,7 @@ import GroupIndexItem from './GroupsIndexItem.js';
 import { fetchGroups } from '../../store/groups';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import './index.css'
 
 const GroupIndex = () => {
 
@@ -20,12 +21,13 @@ const GroupIndex = () => {
   return (
     <>
     <header>
-    <Link to={`/events`}>Events</Link>
+    <Link className='eventslinkG' to={`/events`}>Events</Link>
        {"                                 "}                             
-    <Link to={`/groups`}>Groups</Link>
+    <Link className='groupslinkG' to={`/groups`}>Groups</Link>
     </header>
-    <div>Groups in Meetup</div>
-    <section>
+    <div className='subtextG'>Groups in Meetup</div>
+    <hr className='solid'/>
+    <section className='grouplist'>
         {groups.map((group) => (
           <>
           <Link to={`/groups/${group.id}`}>{<GroupIndexItem group={group} key={group.id} />}</Link>

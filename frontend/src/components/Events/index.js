@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux'
 import { fetchEvents } from '../../store/events.js';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import './index.css'
 
 const EventIndex = () => {
 
@@ -20,10 +21,11 @@ const EventIndex = () => {
   /* **DO NOT CHANGE THE RETURN VALUE** */
   return (
     <>
-    <Link to={`/events`}>Events</Link>
-    <Link to={`/groups`}>Groups</Link>
-    <div>Events in Meetup</div>
-    <section>
+    <Link className='eventslinkE' to={`/events`}>Events</Link>
+    <Link className='groupslinkE' to={`/groups`}>Groups</Link>
+    <div className='subtextE'>Events in Meetup</div>
+    <hr className='solid'/>
+    <section className='eventlist'>
           {events.map(event=>{
             // {console.log('MAPPED EVENT', event)}
             const {startDate} = event

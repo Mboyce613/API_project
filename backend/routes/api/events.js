@@ -233,7 +233,7 @@ router.get('/', async (req,res)=>{
  
 console.log("\n", pagination)
   const theEvents = await Event.findAll({
-    attributes:["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
+    attributes:["id", "description", "groupId", "venueId", "name", "type", "startDate", "endDate"],
     where:pagination,
     limit,
     offset
