@@ -190,15 +190,16 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
       
         case DELETE_EVENT:
           console.log('ACTION',action)
-          console.log('EVENTSTATE',eventState)
-          const newState = { ...eventState };
+          // console.log('EVENTSTATE',eventState)
+          const newState = { ...eventState.events };
           console.log('NEWSTATE',newState)
-          console.log('REDUCER ID',action.eventId)
-          console.log('WANT TO DELETE', newState.events[action.eventId])
-          delete newState.events[action.eventId];
-          newState.currEvent = {}
-          console.log('DELETED?', newState)
-          return newState;
+          // console.log('REDUCER ID',action.eventId)
+          console.log('WANT TO DELETE', newState[action.eventId])
+          delete newState[action.eventId];
+          // newState.currEvent = {}
+          // newState.events = {}
+          // console.log('DELETED?', newState)
+          return {...eventState, newState};
       
         default:
         return eventState;

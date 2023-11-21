@@ -4,11 +4,13 @@ import { fetchEvents } from '../../store/events.js';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import './index.css'
+import { useState } from 'react';
 
 const EventIndex = () => {
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(()=>{
-    dispatch(fetchEvents())
+    dispatch(fetchEvents()).then(setIsLoading(false))
   },[])
 
   const data = useSelector(state=>state.eventState.events)
@@ -19,6 +21,7 @@ const EventIndex = () => {
 
 
   /* **DO NOT CHANGE THE RETURN VALUE** */
+  if(!isLoading){
   return (
     <>
     <Link className='eventslinkE' to={`/events`}>Events</Link>
@@ -55,5 +58,6 @@ const EventIndex = () => {
     </>
   );
 };
+}
 
 export default EventIndex;

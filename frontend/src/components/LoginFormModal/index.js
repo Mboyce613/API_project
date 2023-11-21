@@ -55,7 +55,7 @@ function LoginFormModal() {
             required
           />
         </label>
-        <button type="submit" onClick={handleDemoLogin}> Demo User </button>
+        <button type="submit" onClick={handleDemoLogin}> Log in as Demo User </button>
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
