@@ -12,7 +12,7 @@ function DeleteEventModal({eventId}) {
   const handleSubmit = async(e) => {
     e.preventDefault();
     dispatch(deleteTheEvent(eventId))
-    .then(history.push("/events"))
+    .then(() =>history.push("/events"))
     closeModal()
     // history.push("/events")
   };

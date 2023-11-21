@@ -706,7 +706,7 @@ router.delete('/:groupId/membership', requireAuth, async (req,res)=>{
     return res.json({"message": "Forbidden"})
   }
   
-  theMembership.destroy()
+  await theMembership.destroy()
   return res.json({"message": "Successfully deleted membership from group"})
 })
 //? --------------------------------------------------------- ?//
@@ -736,17 +736,17 @@ router.delete('/:groupId', requireAuth, async (req,res)=>{
         for(let event of theEvents){
           const theAttendees = await Attendee.findAll({where:{eventId:event.id}})
           for(let attendee of theAttendees){
-            attendee.destroy()
+            await attendee.destroy()
           }
-          event.destroy()
+          await event.destroy()
         }
         const theVenues = await Venue.findAll({where:{groupId}})
         for(let venue of theVenues){
-          venue.destroy()
+          await venue.destroy()
         }
         const theMembers = await Membership.findAll({where:{groupId}})
         for(let member of theMembers){
-          member.destroy()
+          await member.destroy()
         }
 
          await theGroup.destroy()

@@ -35,7 +35,7 @@ router.delete('/:imageId',requireAuth, async (req,res)=>{
             return res.json({"message": "Forbidden"})
         }
 
-        theImage.destroy()
+        await theImage.destroy()
         return res.json({"message": "Successfully deleted"})
 
     }
@@ -47,7 +47,7 @@ router.delete('/:imageId',requireAuth, async (req,res)=>{
       return res.json({"message": "Forbidden"})
     }
 
-    theImage.destroy()
+    await theImage.destroy()
     return res.json({"message": "Successfully deleted"})
 
 

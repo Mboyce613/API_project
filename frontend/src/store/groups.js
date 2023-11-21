@@ -255,12 +255,15 @@ const groupsReducer = (groupState = {groups:{}, currGroup:{}, groupEvents:{}}, a
           return { ...groupState, [action.group.id]: action.group };
         }
 
-      case DELETE_GROUP:{
-        const newState = { ...groupState };
+      case DELETE_GROUP:
+        console.log('ACTION',action)
+        const newState = { ...groupState.groups };
+        console.log('NEWSTATE',newState)
+        console.log('WANT TO DELETE', newState[action.groupId])
         delete newState[action.groupId];
-        newState.currGroup = {}
-        return newState;
-      }
+        // newState.currGroup = {}
+        return {...groupState, groups: newState};
+      
       
         default:
         return groupState;

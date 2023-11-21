@@ -199,7 +199,7 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
           // newState.currEvent = {}
           // newState.events = {}
           // console.log('DELETED?', newState)
-          return {...eventState, newState};
+          return { ...eventState, events: newState };
       
         default:
         return eventState;
