@@ -81,6 +81,7 @@ const GroupInfo = () => {
         // console.log('EVENTS',events)
     return (
       <>
+      <div></div>
       <Link to='/groups'>Groups</Link>
       <section className = 'groupBox'>
       <img className='detailgroupimage' src={group.GroupImages[0].url} />
@@ -125,13 +126,16 @@ const GroupInfo = () => {
             hour = hour.slice(0,5)
             return(
             <>
-            <Link to={`/events/${event.id}`}>
-            <img src={event.previewImage}></img>
-            <div>{event.description}</div>
-            <div>{year} {"\u00b7"} {hour}</div>
-            <div>{event.name}</div>
-            {/* <div>{event.Venue.city} {event.Venue.state}</div> 
-            I might need to figure out how to grab this differently*/}
+            <Link className ='eventlink' to={`/events/${event.id}`}>
+            <section className='eventimageandinfo'>
+            <img className ='eventimage' src={event.previewImage}></img>
+            <section className='eventinfo'>
+            <div className='eventyear'>{year} {"\u00b7"} {hour}</div>
+            <div className='eventname'>{event.name}</div>
+            {event.Venue?<div className='eventlocation'>{event.Venue.city} {event.Venue.state}</div>:<div className='isgray'>City: Unknown, State: Mystery</div>}
+            </section>
+            </section>
+            <div className ='eventdesc'> {event.description}</div>
             </Link>
             </>
             )

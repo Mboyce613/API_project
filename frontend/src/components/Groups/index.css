@@ -77,6 +77,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin: auto;
+    padding: 10px;
 }
 
 .groupBox2{
@@ -85,14 +87,19 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 10px;
-
-    margin-left: 200px;
-    margin-right: auto;
+    margin: auto;
+    /* margin-left: 200px;
+    margin-right: auto; */
 
 }
 
 .groupevents{
-    background-color: lightgray;
+    display: flex;
+    background-color: white;
+    width: 600px;
+    height: 250px;
+    border-radius: 10px;
+    margin: auto;
 }
 
 .jointhisgroupbutton{
