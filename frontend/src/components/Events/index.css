@@ -29,6 +29,10 @@
 .eventlink{
     text-decoration: none;
     color: black;
+    display: flex;
+    text-decoration: none;
+    flex-direction: column;
+    align-items: center;
 }
 
 .eventlink:hover{
@@ -37,6 +41,9 @@
 
 .eventimageandinfo{
     display: flex;
+    width: 600px;
+    height: 200px;
+    align-items: center;
 }
 
 .eventimage{
@@ -60,15 +67,23 @@ height: 160px;
     display: flex;
     justify-content: flex-start;
     padding: 10px;
-    width: 260px;
+    width: 600px;
 }
 
 .eventyear{
     display: flex;
     justify-content: flex-end;
+    color: teal;
+    padding: 10px;
 }
 
 .eventname{
     display: flex;
     justify-content: flex-end;
+    padding: 10px;
+}
+
+.eventlocation{
+    color: gray;
+    padding: 10px
 }

@@ -39,7 +39,7 @@ useEffect(()=>{
     
     <section className='subtitleSection'>
         <div className='subTitleSection1'>Don't be like Poe</div>
-        <div className='subTitleSection2'>Languish im misery together, with like minded people.</div>
+        <div className='subTitleSection2'>Languish in misery together, with like minded people.</div>
     </section>
     
     <section className='links'>

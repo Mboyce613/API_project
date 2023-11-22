@@ -26,12 +26,97 @@
     
 }
 
-.grouplist{
-    /* display: flex;
-    flex-direction: column; */
+.grouplink{
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    color: black;
+}
+
+.grouplink:hover{
+    cursor: default;
+}
+
+.groupimageandinfo{
+    display: flex;
+    justify-content: center;
+    width: 600px;
+    height: 180px;
+}
+
+.groupimage{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 260px;
+    height: 160px;
+    }
+
+.detailgroupimage{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 500px;
+    height: 300px;
+}
+
+.groupinfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 30px;
+}
+
+.isgray{
+    color: gray;
 }
 
 .groupBox{
-    /* display: flex;
-    flex-direction: column; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.groupBox2{
+    display: flex;
+    background-color: lightgray;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+
+    margin-left: 200px;
+    margin-right: auto;
+
+}
+
+.groupevents{
+    background-color: lightgray;
+}
+
+.jointhisgroupbutton{
+    display: flex;
+    background-color: darkred;
+    color: white;
+    box-shadow: 5px 2px 2px black;
+    margin-top: 150px;
+}
+
+.groupinfoinfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+}
+
+.organizer{
+    display: flex;
+    font-weight: bold;
+    font-size: large;
+}
+
+.graybackground{
+background-color: lightgrey;
 }

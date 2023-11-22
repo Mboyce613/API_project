@@ -82,18 +82,18 @@ const GroupInfo = () => {
     return (
       <>
       <Link to='/groups'>Groups</Link>
-      <div className = 'groupBox'>
-      <img src={group.GroupImages[0].url} />
-        <div className="li-contents-flex">
+      <section className = 'groupBox'>
+      <img className='detailgroupimage' src={group.GroupImages[0].url} />
+        <section className="groupinfoinfo">
           <div>{group.name}</div>
-          <div>{group.city}, {group.state}</div>
-          <div>{group.about}</div>
-          <div>{group.numEvents} Events</div>
-          <div>{"\u00b7"}</div>
-          <div>{gPrivate}</div>
-          <div>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</div>
+          <div className='isgray'>{group.city}, {group.state}</div>
+          {/* <div>{group.about}</div> */}
+          <div className='isgray'>{group.numEvents} Events {"\u00b7"} {gPrivate}</div>
+          {/* <div>{"\u00b7"}</div>
+          <div>{gPrivate}</div> */}
+          <div className='isgray'>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</div>
           <div className="buttons-container">
-            {showJoin && <button onClick={()=>{alert('Feature coming soon')}}>Join this group</button>}
+            {showJoin && <button className='jointhisgroupbutton' onClick={()=>{alert('Feature coming soon')}}>Join this group</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/events/new`)}}>Create event</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/groups/update`)}}>Update</button>}
             {isOrganizer && <OpenModalButton
@@ -105,19 +105,17 @@ const GroupInfo = () => {
 
             />}
           </div>
-        </div>
-        </div>
-        {/* <section>
-          <div>Organizer</div>
-          <div>{group.Organizer.firstName} {group.Organizer.lastName}</div>
-          <div>What we're about</div>
+        </section>
+        </section>
+        <section className='graybackground'>
+        <section className='groupBox2'>
+          <div className='organizer'>Organizer</div>
+          <div className='isgray'>{group.Organizer.firstName} {group.Organizer.lastName}</div>
+          <div className='organizer'>What we're about</div>
           <div>{group.about}</div>
           <div> Events ({group.numEvents})</div>
-          <div>{group.Events.map((event) => (
-          <Link to={`/events/${event.id}`}>{<EventsIndexItem event={event} key={event.id} />}</Link>
-        ))}</div>
-        </section> */}
-        <section>
+        </section>
+        <section className='groupevents'>
           {events.map(event=>{
             // {console.log('MAPPED EVENT', event)}
             const {startDate} = event
@@ -139,6 +137,7 @@ const GroupInfo = () => {
             )
 
           })}
+        </section>
         </section>
       </>
     );
