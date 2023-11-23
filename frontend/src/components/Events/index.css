@@ -88,3 +88,87 @@ height: 160px;
     color: gray;
     padding: 10px
 }
+
+.eventdetailone{
+    display: flex;
+    margin: auto;
+    /* background-color: lightblue; */
+    flex-direction: column;
+    padding: 15px;
+}
+
+.eventdetailtwo{
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.eventdetailname{
+    font-weight: bold;
+}
+
+.eventdetailinfo{
+    /* background-color: lightcoral; */
+}
+
+.eventdetailimageandinfo{
+    display: flex;
+    /* background-color: aqua; */
+    flex-direction: row;
+    justify-content: center;
+    padding: 15px;
+}
+
+.eventdetailgroupinfo{
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    height: 120px;
+    padding: 10px;
+    align-items: center;
+}
+
+.eventdetailgroupimage{
+    height: 100px;
+    width: 100px;
+}
+
+.eventdetailgroupinfo2{
+    display: flex;
+    flex-direction: column;
+
+}
+
+.eventdetaileventinfo{
+    display: flex;
+    background-color: white;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 15px;
+    height: 120px;
+}
+
+.eventdetaileventimage{
+    width: 300px;
+    height: 300px;
+}
+
+.eventdetailgroupandenventinfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.eventdetailsthree{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.eventdetailsmaster{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
