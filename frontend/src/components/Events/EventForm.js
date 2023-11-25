@@ -44,7 +44,7 @@ const payloadValidate = () =>{
 
 if(!name.length || name.length < 4) errors.name = "Name is required"
 
-if(!describe.length || describe.length < 4) errors.describe = "No really tell me about yourself, Im a nice guy I swear!"
+if(!describe.length || describe.length < 4) errors.describe = "Description must be at least 30 characters long"
 
 if(!online) errors.online = "Event Type is required"
 
@@ -176,7 +176,7 @@ const handleSubmit = async(e) => {
     type='text'
     onChange={(e) => setStartTime(e.target.value)}
     value={startTime}
-    placeholder='MM/DD/YYY,HH/mm AM' 
+    placeholder='YYYY/MM/DD,HH/mm AM' 
     name='startTime'
     />
 </section>
@@ -187,7 +187,7 @@ const handleSubmit = async(e) => {
     type='text'
     onChange={(e) => setEndTime(e.target.value)}
     value={endTime}
-    placeholder='MM/DD/YYY,HH/mm PM' 
+    placeholder='YYYY/MM/DD,HH/mm AM'  
     name='endTime'
     />
 </section>

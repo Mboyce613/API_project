@@ -5,7 +5,7 @@
 }
 
 .eventslinkE:hover{
-    cursor: default;
+    cursor: pointer;
     padding: 5px;
 }
 
@@ -16,7 +16,7 @@
 }
 
 .groupslinkE:hover{
-    cursor: default;
+    cursor: pointer;
     padding: 5px;
 }
 
@@ -36,7 +36,7 @@
 }
 
 .eventlink:hover{
-    cursor: default;
+    cursor: pointer;
 }
 
 .eventimageandinfo{
@@ -171,4 +171,8 @@ height: 160px;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.errors{
+    color: red;
 }
