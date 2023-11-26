@@ -135,8 +135,8 @@ const handleSubmit = async(e) => {
   return (
     <>
 <form onSubmit={handleSubmit}>
-    <div>Create a new event for {group.name}</div>
-<section>
+    <div id='bold'>Create a new event for {group.name}</div>
+<section className='form'>
     <header>What is the name of your event?</header>
     <div>
     <input
@@ -150,7 +150,7 @@ const handleSubmit = async(e) => {
     {errors.name && <div className='errors'>{errors.name}</div>}
 </section>
 
-<section>
+<section className='form'>
     <header>Is this an in-person on online event?</header>
     <select onChange={(e) => setOnline(e.target.value)} value={online}>
     <option value="" disabled={true}>(Select One)</option>
@@ -158,9 +158,7 @@ const handleSubmit = async(e) => {
     <option value='Online' id='Online'>Online</option>
     </select>
     {errors.online && <div className='errors'>{errors.online}</div>}
-</section>
-
-<section>
+    <div></div>
     <header>What is the price for your event?</header>
     <input 
     type="number" 
@@ -168,9 +166,11 @@ const handleSubmit = async(e) => {
     placeholder={0}
     value={pri} />
     {errors.pri && <div className='errors'>{errors.pri}</div>}
+    
 </section>
 
-<section>
+
+<section className='form'>
     <header>When does your event start?</header>
     <input
     type='text'
@@ -181,7 +181,7 @@ const handleSubmit = async(e) => {
     />
 </section>
 
-<section>
+<section className='form'>
     <header>When does your event end?</header>
     <input
     type='text'
@@ -192,19 +192,19 @@ const handleSubmit = async(e) => {
     />
 </section>
 
-<section>
-<div>Please add an image url for your event below:
+<section className='form'>
+<div>Please add an image url for your event below:</div>
         <input
         placeholder='Image Url'
         onChange={(e) => setUrl(e.target.value)}
         value={url}
         name='url'
         />
-        </div>
+        
         {errors.url && <div className='errors'>{errors.url}</div>}
 </section>
 
-    <section>
+    <section className='form'>
         <header>Please describe your event.</header>
         <div>
         <textarea 
