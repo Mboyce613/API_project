@@ -47,7 +47,7 @@ setErrors(errors)
 const handleSubmit = async(e) => {
     e.preventDefault();
    await payloadValidate()
-    console.log(payload)
+    // console.log(payload)
     // console.log('hadlesubmit',errors)
 
     const refresh = () => {
@@ -55,8 +55,8 @@ const handleSubmit = async(e) => {
   }
   refresh()
 
-    console.log(errors)
-    console.log(Object.values(errors).length)
+    // console.log(errors)
+    // console.log(Object.values(errors).length)
     if(!Object.values(errors).length){
       const cityState = payload.location.split(',')
       
@@ -74,9 +74,9 @@ const handleSubmit = async(e) => {
         preview: true
       }
 
-      console.log('ALL GOOD',sendIt)
+      // console.log('ALL GOOD',sendIt)
        let group = await dispatch(createTheGroup(sendIt))
-       console.log('GROUP',group)
+      //  console.log('GROUP',group)
       // const group = useSelector(state=>state.groupState.currGroup)
       // console.log('RIGHT BEFORE THE PUSH',group)
       if(group.id){

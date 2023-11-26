@@ -63,7 +63,7 @@ setErrors(errors)
 const handleSubmit = async(e) => {
     e.preventDefault();
     payloadValidate()
-    console.log(payload)
+    // console.log(payload)
     // console.log('hadlesubmit',errors)
 
     const refresh = () => {
@@ -71,11 +71,11 @@ const handleSubmit = async(e) => {
     }
     refresh()
 
-    console.log('THE ERRORS',errors)
-    console.log(Object.values(errors).length)
+    // console.log('THE ERRORS',errors)
+    // console.log(Object.values(errors).length)
 
     if(!Object.values(errors).length){
-      console.log('OKED',errors)
+      // console.log('OKED',errors)
 
       const sendIt = {
         venueId: 666,
@@ -95,9 +95,9 @@ const handleSubmit = async(e) => {
         preview: true
       }
 
-      console.log('ALL GOOD',sendIt)
+      // console.log('ALL GOOD',sendIt)
        let event = await dispatch(createTheEvent(sendIt,group.id))
-       console.log('EVENT',event)
+      //  console.log('EVENT',event)
       // const group = useSelector(state=>state.groupState.currGroup)
       // console.log('RIGHT BEFORE THE PUSH',group)
       if(group.id){
@@ -107,7 +107,7 @@ const handleSubmit = async(e) => {
     }else{
 
         reset();
-        return console.log('jokes on me')
+        // return console.log('jokes on me')
     }
     // history.push(`/groups/${}`)
   };

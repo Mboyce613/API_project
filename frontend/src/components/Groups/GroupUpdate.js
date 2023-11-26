@@ -13,7 +13,7 @@ const GroupUpdate = () => {
         // dispatch(fetchGroupInfo(1))
         preLoad.GroupImages = ['no']
     }
-    console.log('PRELOAD',preLoad)
+    // console.log('PRELOAD',preLoad)
     const [location, setLocation] = useState(`${preLoad.city},${preLoad.state}`)
     const [city, setCity] = useState(preLoad.city)
     const [state, setState] = useState(preLoad.state)
@@ -57,7 +57,7 @@ setErrors(errors)
 const handleSubmit = async(e) => {
     e.preventDefault();
     payloadValidate()
-    console.log(payload)
+    // console.log(payload)
     // console.log('hadlesubmit',errors)
 
     const refresh = () => {
@@ -65,10 +65,10 @@ const handleSubmit = async(e) => {
   }
   refresh()
 
-    console.log(errors)
-    console.log(Object.values(errors).length)
+    // console.log(errors)
+    // console.log(Object.values(errors).length)
     if(!Object.values(errors).length){
-        console.log('PAYLOAD',payload)
+        // console.log('PAYLOAD',payload)
       const cityState = payload.location.split(',')
       
       const sendIt = {
@@ -85,9 +85,9 @@ const handleSubmit = async(e) => {
         preview: true
       }
 
-      console.log('ALL GOOD',sendIt)
+      // console.log('ALL GOOD',sendIt)
        let group = await dispatch(updateTheGroup(sendIt, preLoad.id))
-       console.log('GROUP',group)
+      //  console.log('GROUP',group)
       // const group = useSelector(state=>state.groupState.currGroup)
       // console.log('RIGHT BEFORE THE PUSH',group)
     //   if(group.id){

@@ -74,7 +74,7 @@ export const fetchEvents = (events) => async(dispatch)=>{
       }
 
       export const createTheEvent = (event,groupId) => async(dispatch)=>{
-        console.log('CODE DONT HURT ME, DONT HURT ME, NO MORE',event,groupId)
+        // console.log('CODE DONT HURT ME, DONT HURT ME, NO MORE',event,groupId)
         // const history = useHistory()
         const res = await csrfFetch(`/api/groups/${groupId}/events`,{
           method: "POST",
@@ -84,46 +84,46 @@ export const fetchEvents = (events) => async(dispatch)=>{
           body: JSON.stringify(event)
         })
         const data = await res.json()
-        console.log('DOES THE REQUEST HAPPEN?',data)
+        // console.log('DOES THE REQUEST HAPPEN?',data)
         if(res.ok){
           dispatch((createEvent(data)))
           //return res
           return data
           // history.push(`/groups/${res.body.id}`)
         }else{
-          console.log('I MADE IT',res)
+          // console.log('I MADE IT',res)
           throw res.errors
         }
       }
 
       export const createTheEventImage = (url,eventId) => async(dispatch)=>{
-        console.log('WHAT IS IMAGE?',url)
-        console.log('WHAT IS ID?',eventId)
+        // console.log('WHAT IS IMAGE?',url)
+        // console.log('WHAT IS ID?',eventId)
   
         const res = await csrfFetch(`/api/events/${eventId}/images`,{
           method: "POST",
           body: JSON.stringify(url)
         })
         const data = await res.json()
-        console.log('DOES THE REQUEST HAPPEN?',data)
+        // console.log('DOES THE REQUEST HAPPEN?',data)
         if(res.ok){
           dispatch((createEventImage(data)))
           return data
         }else{
-          console.log('I MADE IT',res)
+          // console.log('I MADE IT',res)
           throw res.errors
         }
       }
       
       export const deleteTheEvent = (eventId) => async(dispatch)=>{
-        console.log("In the thunk", eventId)
+        // console.log("In the thunk", eventId)
   
         const res = await csrfFetch(`/api/events/${eventId}`,{
           method: "DELETE",
         })
         const data = await res.json()
         if(res.ok){
-          console.log('Going to the reducer')
+          // console.log('Going to the reducer')
           dispatch((deleteEvent(eventId)))
           return data
         }else{
@@ -176,9 +176,9 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
       case CREATE_EVENT_IMAGE:{
         const newState = {...eventState}
         newState.currEvent.EventImages = []
-        console.log("ACTION.URL.URL",action.url.url)
+        // console.log("ACTION.URL.URL",action.url.url)
         newState.currEvent.EventImages.push(action.url.url)
-        console.log("DID IT WORK?",newState.currEvent.EventImages)
+        // console.log("DID IT WORK?",newState.currEvent.EventImages)
         return newState
       }
       
@@ -189,12 +189,12 @@ const eventsReducer = (eventState = {events:{}, currEvent:{}}, action) => {
         return { ...eventState, [action.event.id]: action.event };
       
         case DELETE_EVENT:
-          console.log('ACTION',action)
+          // console.log('ACTION',action)
           // console.log('EVENTSTATE',eventState)
           const newState = { ...eventState.events };
-          console.log('NEWSTATE',newState)
+          // console.log('NEWSTATE',newState)
           // console.log('REDUCER ID',action.eventId)
-          console.log('WANT TO DELETE', newState[action.eventId])
+          // console.log('WANT TO DELETE', newState[action.eventId])
           delete newState[action.eventId];
           // newState.currEvent = {}
           // newState.events = {}

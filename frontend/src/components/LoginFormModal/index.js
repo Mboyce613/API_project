@@ -29,9 +29,6 @@ function LoginFormModal() {
     setPassword("password");
   };
 
-  const handleLogin = (e) =>{
-    closeModal();
-  }
 
   return (
     <>

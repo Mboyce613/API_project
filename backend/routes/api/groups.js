@@ -396,7 +396,7 @@ router.post('/:groupId/events', requireAuth, validateEvent, async (req,res)=>{
   const curr = req.user.id
   //! NEW STUFF CAN CAUSE ISSSUES
   const {firstName, lastName} = req.user
-  console.log('BACKEND REQ.USER', req.user)
+  // console.log('BACKEND REQ.USER', req.user)
   //! NEW STUFF CAN CAUSE ISSSUES
 
   if(validateEvent.startDate >= validateEvent.endDate){
