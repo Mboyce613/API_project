@@ -43,9 +43,14 @@ function SignupFormModal() {
 
   return (
     <>
+     <section className="loginmodal">
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
-        <label>
+      {errors.confirmPassword && (
+          <p className="errors">{errors.confirmPassword}</p>
+        )}
+      <section className="loginmodal2">
+        <label id="one">
           Email
           <input
             type="text"
@@ -55,7 +60,7 @@ function SignupFormModal() {
           />
         </label>
         {errors.email && <p>{errors.email}</p>}
-        <label>
+        <label id="one">
           Username
           <input
             type="text"
@@ -65,7 +70,7 @@ function SignupFormModal() {
           />
         </label>
         {errors.username && <p>{errors.username}</p>}
-        <label>
+        <label id="one">
           First Name
           <input
             type="text"
@@ -75,7 +80,7 @@ function SignupFormModal() {
           />
         </label>
         {errors.firstName && <p>{errors.firstName}</p>}
-        <label>
+        <label id="one">
           Last Name
           <input
             type="text"
@@ -85,7 +90,7 @@ function SignupFormModal() {
           />
         </label>
         {errors.lastName && <p>{errors.lastName}</p>}
-        <label>
+        <label id="one">
           Password
           <input
             type="password"
@@ -95,7 +100,7 @@ function SignupFormModal() {
           />
         </label>
         {errors.password && <p>{errors.password}</p>}
-        <label>
+        <label id="one">
           Confirm Password
           <input
             type="password"
@@ -104,16 +109,16 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
-        )}
-        <button disabled={!email.length ||
+
+        <button className="loginbutton" disabled={!email.length ||
           !username.length || username.length < 4 ||
           !firstName.length ||
           !lastName.length || 
           !password.length || password.length < 6 ||
           !confirmPassword.length} type="submit">Sign Up</button>
+          </section>
       </form>
+      </section>
     </>
   );
 }

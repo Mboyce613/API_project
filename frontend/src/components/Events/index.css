@@ -234,6 +234,18 @@ height: 160px;
     justify-content: space-evenly;
 }
 
+.form2{
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px;
+    border-bottom-color: gray;
+    border-bottom-style: solid;
+    padding: 10px;
+    height: 100px;
+    width: 500px;
+    justify-content: space-evenly;
+}
+
 #bold{
     font-weight: bold;
 }

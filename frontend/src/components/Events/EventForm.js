@@ -135,6 +135,7 @@ const handleSubmit = async(e) => {
   return (
     <>
 <form onSubmit={handleSubmit}>
+<section className='creategrouppage'>
     <div id='bold'>Create a new event for {group.name}</div>
 <section className='form'>
     <header>What is the name of your event?</header>
@@ -150,7 +151,7 @@ const handleSubmit = async(e) => {
     {errors.name && <div className='errors'>{errors.name}</div>}
 </section>
 
-<section className='form'>
+<section className='form2'>
     <header>Is this an in-person on online event?</header>
     <select onChange={(e) => setOnline(e.target.value)} value={online}>
     <option value="" disabled={true}>(Select One)</option>
@@ -170,7 +171,7 @@ const handleSubmit = async(e) => {
 </section>
 
 
-<section className='form'>
+<section className='form2'>
     <header>When does your event start?</header>
     <input
     type='text'
@@ -179,9 +180,8 @@ const handleSubmit = async(e) => {
     placeholder='YYYY/MM/DD,HH/mm AM' 
     name='startTime'
     />
-</section>
+    {errors.startTime && <div className='errors'>{errors.startTime}</div>}
 
-<section className='form'>
     <header>When does your event end?</header>
     <input
     type='text'
@@ -190,9 +190,10 @@ const handleSubmit = async(e) => {
     placeholder='YYYY/MM/DD,HH/mm AM'  
     name='endTime'
     />
+      {errors.endTime && <div className='errors'>{errors.endTime}</div>}
 </section>
 
-<section className='form'>
+<section className='form2'>
 <div>Please add an image url for your event below:</div>
         <input
         placeholder='Image Url'
@@ -204,7 +205,7 @@ const handleSubmit = async(e) => {
         {errors.url && <div className='errors'>{errors.url}</div>}
 </section>
 
-    <section className='form'>
+    <section className='form2'>
         <header>Please describe your event.</header>
         <div>
         <textarea 
@@ -219,8 +220,9 @@ const handleSubmit = async(e) => {
     </section>
 
     <section>
-        <button disabled={Object.values(errors).length}>Create Event</button>
+        <button className='creategroubbutton' disabled={Object.values(errors).length}>Create Event</button>
 
+    </section>
     </section>
 
     </form>
