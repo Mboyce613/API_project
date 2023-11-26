@@ -31,22 +31,16 @@ const GroupIndex = () => {
         {groups.map((group) => (
             
           <>
-          <Link to={`/groups/${group.id}`}>{
-                <div className = 'groupBox'>
-                <img src={group.previewImage} />
-                  <div className="li-contents-flex">
+          <Link className='grouplink'to={`/groups/${group.id}`}>{
+                <section className = 'groupimageandinfo'>
+                <img className ='groupimage' src={group.previewImage} />
+                <section className='groupinfo'>
                     <div>{group.name}</div>
-                    <div>{group.city}, {group.state}</div>
+                    <div className='isgray'>{group.city}, {group.state}</div>
                     <div>{group.about}</div>
-                    <div>{group.numEvents} Events</div>
-                    <div>{"\u00b7"}</div>
-                    {/* <div>{gPrivate}</div> */}
-                    {group.private && <div>private</div>}
-                    {!group.private && <div>Public</div>}
-                    <div className="buttons-container">
-                    </div>
-                  </div>
-                  </div>
+                    <div className='isgray'>{group.numEvents} Events {"\u00b7"} {group.private && 'Private'}{!group.private && 'Public'} </div>
+                  </section>
+                  </section>
             }</Link>
           <hr className='solid'/>
           </>

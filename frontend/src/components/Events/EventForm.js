@@ -44,7 +44,7 @@ const payloadValidate = () =>{
 
 if(!name.length || name.length < 4) errors.name = "Name is required"
 
-if(!describe.length || describe.length < 4) errors.describe = "No really tell me about yourself, Im a nice guy I swear!"
+if(!describe.length || describe.length < 4) errors.describe = "Description must be at least 30 characters long"
 
 if(!online) errors.online = "Event Type is required"
 
@@ -63,7 +63,7 @@ setErrors(errors)
 const handleSubmit = async(e) => {
     e.preventDefault();
     payloadValidate()
-    console.log(payload)
+    // console.log(payload)
     // console.log('hadlesubmit',errors)
 
     const refresh = () => {
@@ -71,11 +71,11 @@ const handleSubmit = async(e) => {
     }
     refresh()
 
-    console.log('THE ERRORS',errors)
-    console.log(Object.values(errors).length)
+    // console.log('THE ERRORS',errors)
+    // console.log(Object.values(errors).length)
 
     if(!Object.values(errors).length){
-      console.log('OKED',errors)
+      // console.log('OKED',errors)
 
       const sendIt = {
         venueId: 666,
@@ -95,9 +95,9 @@ const handleSubmit = async(e) => {
         preview: true
       }
 
-      console.log('ALL GOOD',sendIt)
+      // console.log('ALL GOOD',sendIt)
        let event = await dispatch(createTheEvent(sendIt,group.id))
-       console.log('EVENT',event)
+      //  console.log('EVENT',event)
       // const group = useSelector(state=>state.groupState.currGroup)
       // console.log('RIGHT BEFORE THE PUSH',group)
       if(group.id){
@@ -107,7 +107,7 @@ const handleSubmit = async(e) => {
     }else{
 
         reset();
-        return console.log('jokes on me')
+        // return console.log('jokes on me')
     }
     // history.push(`/groups/${}`)
   };
@@ -135,8 +135,9 @@ const handleSubmit = async(e) => {
   return (
     <>
 <form onSubmit={handleSubmit}>
-    <div>Create a new event for {group.name}</div>
-<section>
+<section className='creategrouppage'>
+    <div id='bold'>Create a new event for {group.name}</div>
+<section className='form'>
     <header>What is the name of your event?</header>
     <div>
     <input
@@ -150,7 +151,7 @@ const handleSubmit = async(e) => {
     {errors.name && <div className='errors'>{errors.name}</div>}
 </section>
 
-<section>
+<section className='form2'>
     <header>Is this an in-person on online event?</header>
     <select onChange={(e) => setOnline(e.target.value)} value={online}>
     <option value="" disabled={true}>(Select One)</option>
@@ -158,9 +159,7 @@ const handleSubmit = async(e) => {
     <option value='Online' id='Online'>Online</option>
     </select>
     {errors.online && <div className='errors'>{errors.online}</div>}
-</section>
-
-<section>
+    <div></div>
     <header>What is the price for your event?</header>
     <input 
     type="number" 
@@ -168,43 +167,45 @@ const handleSubmit = async(e) => {
     placeholder={0}
     value={pri} />
     {errors.pri && <div className='errors'>{errors.pri}</div>}
+    
 </section>
 
-<section>
+
+<section className='form2'>
     <header>When does your event start?</header>
     <input
     type='text'
     onChange={(e) => setStartTime(e.target.value)}
     value={startTime}
-    placeholder='MM/DD/YYY,HH/mm AM' 
+    placeholder='YYYY/MM/DD,HH/mm AM' 
     name='startTime'
     />
-</section>
+    {errors.startTime && <div className='errors'>{errors.startTime}</div>}
 
-<section>
     <header>When does your event end?</header>
     <input
     type='text'
     onChange={(e) => setEndTime(e.target.value)}
     value={endTime}
-    placeholder='MM/DD/YYY,HH/mm PM' 
+    placeholder='YYYY/MM/DD,HH/mm AM'  
     name='endTime'
     />
+      {errors.endTime && <div className='errors'>{errors.endTime}</div>}
 </section>
 
-<section>
-<div>Please add an image url for your event below:
+<section className='form2'>
+<div>Please add an image url for your event below:</div>
         <input
         placeholder='Image Url'
         onChange={(e) => setUrl(e.target.value)}
         value={url}
         name='url'
         />
-        </div>
+        
         {errors.url && <div className='errors'>{errors.url}</div>}
 </section>
 
-    <section>
+    <section className='form2'>
         <header>Please describe your event.</header>
         <div>
         <textarea 
@@ -219,8 +220,9 @@ const handleSubmit = async(e) => {
     </section>
 
     <section>
-        <button disabled={Object.values(errors).length}>Create Event</button>
+        <button className='creategroubbutton' disabled={Object.values(errors).length}>Create Event</button>
 
+    </section>
     </section>
 
     </form>

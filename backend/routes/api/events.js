@@ -231,7 +231,7 @@ router.get('/', async (req,res)=>{
   const limit = size
   const offset = ((page-1)*limit)
  
-console.log("\n", pagination)
+// console.log("\n", pagination)
   const theEvents = await Event.findAll({
     attributes:["id", "description", "groupId", "venueId", "name", "type", "startDate", "endDate"],
     where:pagination,
@@ -408,9 +408,9 @@ router.post('/:eventId/images', requireAuth, async (req,res)=>{
       //   return res.json({"message": "Forbidden"})
       // }
 
-      console.log("\n", theGroup.organizerId === curr ,"\n")
-      console.log("\n", isCoHost ,"\n")
-      console.log("\n", theGroup.id ,"\n")
+      // console.log("\n", theGroup.organizerId === curr ,"\n")
+      // console.log("\n", isCoHost ,"\n")
+      // console.log("\n", theGroup.id ,"\n")
 
       if(theGroup.organizerId === curr || isCoHost){
         await theAttendance.set({status}).save()

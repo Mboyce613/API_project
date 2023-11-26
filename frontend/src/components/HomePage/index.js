@@ -24,22 +24,18 @@ useEffect(()=>{
   return (
     <>
     <section className='titleSectionAll'>
-        <h1 className='titleSection1'>Keeping it cool at the crypt</h1>
         <div className='titleSection2'>
+        <section className='introtext'>
+        <h1 className='titleSection1'>Keeping it cool at the crypt</h1>
         <div className='poem'>From childhood’s hour I have not been as others were. I have not seen as others saw. I could not bring my passions from a common spring. From the same source I have not taken my sorrow. I could not awaken my heart to joy at the same tone. And all I lov’d, I lov’d alone.</div>
-        {/* <div className='poem'>From childhood’s hour I have not been as others were.  </div>
-        <div className='poem'>I have not seen as others saw.</div>
-        <div className='poem'>I could not bring my passions from a common spring.</div>
-        <div className='poem'>From the same source I have not taken my sorrow. </div>
-        <div className='poem'>I could not awaken my heart to joy at the same tone.</div>
-        <div className='poem'>And all I lov’d, I lov’d alone.</div> */}
+        </section>
         <div><img className='image' src={poe} alt='Edgar Allen Poe'></img></div>
         </div>
     </section>
     
     <section className='subtitleSection'>
         <div className='subTitleSection1'>Don't be like Poe</div>
-        <div className='subTitleSection2'>Languish im misery together, with like minded people.</div>
+        <div className='subTitleSection2'>Languish in misery together, with like minded people.</div>
     </section>
     
     <section className='links'>

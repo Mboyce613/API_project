@@ -5,7 +5,7 @@
 }
 
 .eventslinkE:hover{
-    cursor: default;
+    cursor: pointer;
     padding: 5px;
 }
 
@@ -16,7 +16,7 @@
 }
 
 .groupslinkE:hover{
-    cursor: default;
+    cursor: pointer;
     padding: 5px;
 }
 
@@ -29,14 +29,22 @@
 .eventlink{
     text-decoration: none;
     color: black;
+    display: flex;
+    text-decoration: none;
+    flex-direction: column;
+    align-items: center;
 }
 
 .eventlink:hover{
-    cursor: default;
+    cursor: pointer;
 }
 
 .eventimageandinfo{
     display: flex;
+    width: 600px;
+    height: 200px;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .eventimage{
@@ -60,15 +68,203 @@ height: 160px;
     display: flex;
     justify-content: flex-start;
     padding: 10px;
-    width: 260px;
+    width: 600px;
 }
 
 .eventyear{
     display: flex;
     justify-content: flex-end;
+    color: teal;
+    padding: 10px;
 }
 
 .eventname{
     display: flex;
     justify-content: flex-end;
+    padding: 10px;
+}
+
+.eventlocation{
+    color: gray;
+    padding: 10px
+}
+
+.eventdetailone{
+    display: flex;
+    margin: auto;
+    /* background-color: lightblue; */
+    flex-direction: column;
+    padding: 15px;
+}
+
+.eventdetailtwo{
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.eventdetailname{
+    font-weight: bold;
+}
+
+.eventdetailinfo{
+    /* background-color: lightcoral; */
+}
+
+.eventdetailimageandinfo{
+    display: flex;
+    /* background-color: aqua; */
+    flex-direction: row;
+    justify-content: center;
+    padding: 15px;
+}
+
+.eventdetailgroupinfo{
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    height: 120px;
+    padding: 10px;
+    align-items: center;
+}
+
+.eventdetailgroupimage{
+    height: 100px;
+    width: 100px;
+}
+
+.eventdetailgroupinfo2{
+    display: flex;
+    flex-direction: column;
+
+}
+
+.eventdetaileventinfo{
+    display: flex;
+    background-color: white;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 15px;
+    height: 120px;
+}
+
+.eventdetaileventimage{
+    width: 300px;
+    height: 300px;
+}
+
+.eventdetailgroupandenventinfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.eventdetailsthree{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.eventdetailsmaster{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.errors{
+    color: red;
+}
+
+.eventdetailtimesection{
+    display: flex;
+    /* float: left; */
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.eventdetailtimesection2{
+    display: flex;
+    flex-direction: column;
+}
+
+.money{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+}
+
+.money2{
+    display: flex;
+    flex-direction: row;
+    width: 70px;
+    float: right;
+    justify-content: center;
+}
+
+.location{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+}
+
+.location2{
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+    float: right;
+    justify-content: center;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px;
+    border-bottom-color: gray;
+    border-bottom-style: solid;
+    padding: 10px;
+    height: 200px;
+    width: 500px;
+    justify-content: space-evenly;
+}
+
+.form2{
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px;
+    border-bottom-color: gray;
+    border-bottom-style: solid;
+    padding: 10px;
+    height: 100px;
+    width: 500px;
+    justify-content: space-evenly;
+}
+
+#bold{
+    font-weight: bold;
+}
+
+.creategroubbutton{
+    background-color: red;
+    color: white;
+    width: 100px;
+    height: 30px;
+    box-shadow: 5px 5px 5px black;
+}
+
+.creategrouppage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 1000px;
+}
+
+#teal{
+    color: teal;
 }

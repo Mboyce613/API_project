@@ -13,7 +13,7 @@ const GroupUpdate = () => {
         // dispatch(fetchGroupInfo(1))
         preLoad.GroupImages = ['no']
     }
-    console.log('PRELOAD',preLoad)
+    // console.log('PRELOAD',preLoad)
     const [location, setLocation] = useState(`${preLoad.city},${preLoad.state}`)
     const [city, setCity] = useState(preLoad.city)
     const [state, setState] = useState(preLoad.state)
@@ -57,7 +57,7 @@ setErrors(errors)
 const handleSubmit = async(e) => {
     e.preventDefault();
     payloadValidate()
-    console.log(payload)
+    // console.log(payload)
     // console.log('hadlesubmit',errors)
 
     const refresh = () => {
@@ -65,10 +65,10 @@ const handleSubmit = async(e) => {
   }
   refresh()
 
-    console.log(errors)
-    console.log(Object.values(errors).length)
+    // console.log(errors)
+    // console.log(Object.values(errors).length)
     if(!Object.values(errors).length){
-        console.log('PAYLOAD',payload)
+        // console.log('PAYLOAD',payload)
       const cityState = payload.location.split(',')
       
       const sendIt = {
@@ -85,9 +85,9 @@ const handleSubmit = async(e) => {
         preview: true
       }
 
-      console.log('ALL GOOD',sendIt)
+      // console.log('ALL GOOD',sendIt)
        let group = await dispatch(updateTheGroup(sendIt, preLoad.id))
-       console.log('GROUP',group)
+      //  console.log('GROUP',group)
       // const group = useSelector(state=>state.groupState.currGroup)
       // console.log('RIGHT BEFORE THE PUSH',group)
     //   if(group.id){
@@ -118,9 +118,10 @@ const handleSubmit = async(e) => {
   return (
     <>
 <form onSubmit={handleSubmit}>
-    <div>Update your Group</div>
-    <section>
-        <header>Set your group's location.</header>
+<section className='creategrouppage'>
+    <div id='teal'>Update your Group</div>
+    <section className='form'>
+        <header id='bold'>Set your group's location.</header>
         <div>Meetup groups meet locally, in person, and online. We'll connect you with people in your area.
         <input 
         type='text'
@@ -133,8 +134,9 @@ const handleSubmit = async(e) => {
         {errors.location && <div className='errors'>{errors.location}</div>}
     </section>
 
-    <header>What will your group name be?</header>
-    <div>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.
+    <section className='form'>
+    <header id='bold'>What will your group name be?</header>
+    <div>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.</div>
     <input
     type='text'
     onChange={(e) => setName(e.target.value)}
@@ -142,21 +144,26 @@ const handleSubmit = async(e) => {
     placeholder='What is your group name?' 
     name='name'
     />
-    </div>
+    
     {errors.name && <div className='errors'>{errors.name}</div>}
-    <section>
-        <header>Describe the purpose of your group.</header>
-        <div>People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?
+    </section>
+
+    <section className='form'>
+        <header id='bold'>Describe the purpose of your group.</header>
+        <div>People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?</div>
         <textarea 
         placeholder='Please write at least 30 characters'
         onChange={(e) => setDescribe(e.target.value)}
         value={describe}
         name='describe'
         />
-        </div>
+        
     {errors.describe && <div className='errors'>{errors.describe}</div>}
     </section>
-        <header>Is this an in-person or online group?</header>
+
+    <section className='form'>
+      <header id='bold'>Final steps...</header>
+        <div>Is this an in-person or online group?</div>
         <select onChange={(e) => setOnline(e.target.value)} value={online}>
         <option value="" disabled={true}>(Select One)</option>
         <option value='In person' id='In person'>In Person</option>
@@ -165,13 +172,12 @@ const handleSubmit = async(e) => {
         
         {errors.online && <div className='errors'>{errors.online}</div>}
 
-        <header>Is this group public or private?</header>
+        <div>Is this group public or private?</div>
         <select onChange={(e) => setPri(e.target.value)} value={pri} defaultValue={false}>
         <option value="" disabled={true}>(Select One)</option>
         <option value={true} id='private'>Private</option>
         <option value={false} id='public'>Public</option>
         </select>
-        
         {errors.pri && <div className='errors'>{errors.pri}</div>}
 
         <div>Please add an image URL for your group below:
@@ -183,11 +189,14 @@ const handleSubmit = async(e) => {
         />
         </div>
         {errors.url && <div className='errors'>{errors.url}</div>}
+        </section>
+
+
     <section>
-        <button disabled={Object.values(errors).length}>Update Group</button>
+        <button className='creategroubbutton' disabled={Object.values(errors).length}>Update Group</button>
 
     </section>
-
+    </section>
     </form>
     </>
   );

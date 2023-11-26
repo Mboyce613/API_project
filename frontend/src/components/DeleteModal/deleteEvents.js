@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { useHistory } from "react-router-dom/";
 import { deleteTheEvent } from "../../store/events";
+import './delete.css'
 
 
 function DeleteEventModal({eventId}) {
@@ -23,6 +24,7 @@ function DeleteEventModal({eventId}) {
       <h2>Are you sure you want to remove this event?</h2>
 
       <button
+        className="modaldeletebutton"
         type="confirm"
         onClick={handleSubmit}
         >Yes(Delete Group)</button>

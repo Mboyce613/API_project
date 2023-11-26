@@ -1,0 +1,33 @@
+.loginmodal{
+    display: flex;
+    flex-direction: column;
+    border-radius: 15x;
+    padding: 5px;
+    margin: auto;
+    align-items: center;
+}
+
+.loginmodal2{
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 150px;
+}
+
+.loginbutton{
+    background-color: red;
+    color: white;
+    box-shadow: 5px 5px 5px black;
+}
+
+.loginbutton:disabled{
+    background-color: white;
+    color: gray;
+    box-shadow: none
+}
+
+#one{
+    display: flex;
+    justify-content: space-between;
+}

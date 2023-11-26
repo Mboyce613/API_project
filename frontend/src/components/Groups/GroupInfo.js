@@ -79,21 +79,26 @@ const GroupInfo = () => {
   if(!isLoading){
         events = events.sort(compare).reverse()
         // console.log('EVENTS',events)
+
+const groupImage = group.GroupImages.find((image)=>image.preview === true )
+// console.log('Im the image', groupImage)
+
     return (
       <>
+      <div></div>
       <Link to='/groups'>Groups</Link>
-      <div className = 'groupBox'>
-      <img src={group.GroupImages[0].url} />
-        <div className="li-contents-flex">
+      <section className = 'groupBox'>
+      <img className='detailgroupimage' src={groupImage.url} />
+        <section className="groupinfoinfo">
           <div>{group.name}</div>
-          <div>{group.city}, {group.state}</div>
-          <div>{group.about}</div>
-          <div>{group.numEvents} Events</div>
-          <div>{"\u00b7"}</div>
-          <div>{gPrivate}</div>
-          <div>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</div>
+          <div className='isgray'>{group.city}, {group.state}</div>
+          {/* <div>{group.about}</div> */}
+          <div className='isgray'>{group.numEvents} Events {"\u00b7"} {gPrivate}</div>
+          {/* <div>{"\u00b7"}</div>
+          <div>{gPrivate}</div> */}
+          <div className='isgray'>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</div>
           <div className="buttons-container">
-            {showJoin && <button onClick={()=>{alert('Feature coming soon')}}>Join this group</button>}
+            {showJoin && <button className='jointhisgroupbutton' onClick={()=>{alert('Feature coming soon')}}>Join this group</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/events/new`)}}>Create event</button>}
             {isOrganizer && <button onClick={()=>{history.push(`/groups/update`)}}>Update</button>}
             {isOrganizer && <OpenModalButton
@@ -105,19 +110,17 @@ const GroupInfo = () => {
 
             />}
           </div>
-        </div>
-        </div>
-        {/* <section>
-          <div>Organizer</div>
-          <div>{group.Organizer.firstName} {group.Organizer.lastName}</div>
-          <div>What we're about</div>
+        </section>
+        </section>
+        <section className='graybackground'>
+        <section className='groupBox2'>
+          <div className='organizer'>Organizer</div>
+          <div className='isgray'>{group.Organizer.firstName} {group.Organizer.lastName}</div>
+          <div className='organizer'>What we're about</div>
           <div>{group.about}</div>
           <div> Events ({group.numEvents})</div>
-          <div>{group.Events.map((event) => (
-          <Link to={`/events/${event.id}`}>{<EventsIndexItem event={event} key={event.id} />}</Link>
-        ))}</div>
-        </section> */}
-        <section>
+        </section>
+        <section className='groupevents'>
           {events.map(event=>{
             // {console.log('MAPPED EVENT', event)}
             const {startDate} = event
@@ -127,18 +130,22 @@ const GroupInfo = () => {
             hour = hour.slice(0,5)
             return(
             <>
-            <Link to={`/events/${event.id}`}>
-            <img src={event.previewImage}></img>
-            <div>{event.description}</div>
-            <div>{year} {"\u00b7"} {hour}</div>
-            <div>{event.name}</div>
-            {/* <div>{event.Venue.city} {event.Venue.state}</div> 
-            I might need to figure out how to grab this differently*/}
+            <Link className ='eventlink' to={`/events/${event.id}`}>
+            <section className='eventimageandinfo'>
+            <img className ='eventimage' src={event.previewImage}></img>
+            <section className='eventinfo'>
+            <div className='eventyear'>{year} {"\u00b7"} {hour}</div>
+            <div className='eventname'>{event.name}</div>
+            {event.Venue?<div className='eventlocation'>{event.Venue.city} {event.Venue.state}</div>:<div className='isgray'>City: Unknown, State: Mystery</div>}
+            </section>
+            </section>
+            <div className ='eventdesc'> {event.description}</div>
             </Link>
             </>
             )
 
           })}
+        </section>
         </section>
       </>
     );
