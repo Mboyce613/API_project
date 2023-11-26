@@ -43,8 +43,8 @@
     display: flex;
     width: 600px;
     height: 200px;
+    justify-content: flex-start;
     align-items: center;
-    justify-content: flex-end;
 }
 
 .eventimage{
@@ -175,4 +175,49 @@ height: 160px;
 
 .errors{
     color: red;
+}
+
+.eventdetailtimesection{
+    display: flex;
+    /* float: left; */
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.eventdetailtimesection2{
+    display: flex;
+    flex-direction: column;
+}
+
+.money{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+}
+
+.money2{
+    display: flex;
+    flex-direction: row;
+    width: 70px;
+    float: right;
+    justify-content: center;
+}
+
+.location{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+}
+
+.location2{
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+    float: right;
+    justify-content: center;
 }

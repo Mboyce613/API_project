@@ -79,12 +79,16 @@ const GroupInfo = () => {
   if(!isLoading){
         events = events.sort(compare).reverse()
         // console.log('EVENTS',events)
+
+const groupImage = group.GroupImages.find((image)=>image.preview === true )
+// console.log('Im the image', groupImage)
+
     return (
       <>
       <div></div>
       <Link to='/groups'>Groups</Link>
       <section className = 'groupBox'>
-      <img className='detailgroupimage' src={group.GroupImages[0].url} />
+      <img className='detailgroupimage' src={groupImage.url} />
         <section className="groupinfoinfo">
           <div>{group.name}</div>
           <div className='isgray'>{group.city}, {group.state}</div>

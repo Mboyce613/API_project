@@ -64,7 +64,9 @@ const EventInfo = () => {
     // console.log('TEST LN',user?.lastName === event.hostLastName)
     let showButtons = false
     if(isHost) showButtons = true
-    //!
+    
+    const groupImage = group.GroupImages.find((image)=>image.preview === true )
+    const eventImage = event.EventImages.find((image)=>image.preview === true )
 
     return (
       <>
@@ -77,10 +79,10 @@ const EventInfo = () => {
         <section className='graybackground'>
       <section className='eventdetailtwo'>
       <section className='eventdetailimageandinfo'>
-      <img className='eventdetaileventimage' src={event.EventImages[0].url} />
+      <img className='eventdetaileventimage' src={eventImage.url} />
       <section className='eventdetailgroupandenventinfo'>
       <section className='eventdetailgroupinfo'>
-        <img className='eventdetailgroupimage' src={group.GroupImages[0].url} />
+        <img className='eventdetailgroupimage' src={groupImage.url} />
         <section className='eventdetailgroupinfo2'>
         <div>{group.name}</div>
         {/* <div>{"\u00b7"}</div> */}
@@ -88,10 +90,25 @@ const EventInfo = () => {
         </section>
       </section>
       <section className='eventdetaileventinfo'>
+        <section className='eventdetailtimesection'>
+        <i class="fa-regular fa-clock"></i>
+        <section className='eventdetailtimesection2'>
         <div>START {startYear} {"\u00b7"} {startHour}</div>
         <div>END {endYear} {"\u00b7"} {endHour}</div>
+        </section>
+        </section>
+        <section className='money'>
+        <i className="fa-solid fa-dollar-sign"></i>
+        <section className='money2'>
         <div>{price}</div>
+        </section>
+        </section>
+        <section className='location'>
+        <i className="fa-solid fa-map-pin"></i>
+        <section className='location2'>
         <div>{event.type}</div>
+        </section>
+        </section>
         {showButtons && <button>Update</button>}
       {showButtons && <OpenModalButton
               itemText="Are You Sure?"
