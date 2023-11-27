@@ -44,7 +44,7 @@ const EventIndex = () => {
             <section className='eventinfo'>
             <div className='eventyear'>{year} {"\u00b7"} {hour}</div>
             <div className='eventname'>{event.name}</div>
-            {/* <div>{event.Venue.city} {event.Venue.state}</div> */}
+            {event.Venue?<div className='eventlocation'>{event.Venue.city} {event.Venue.state}</div>:<div className='isgray'>City: Unknown, State: Mystery</div>}
             </section>
             </section>
             <div className ='eventdesc'> {event.description}</div>

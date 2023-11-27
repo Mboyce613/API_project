@@ -139,7 +139,7 @@ export const fetchGroups = (groups) => async(dispatch)=>{
       if(resOne.ok){
         const retriveData = await resOne.json()
         //return res
-        console.log("GROUP RETRIVED FROM BACKEND", retriveData)
+        // console.log("GROUP RETRIVED FROM BACKEND", retriveData)
         // history.push(`/groups/${res.body.id}`)
       }else{
         // console.log('I MADE IT',res)
@@ -163,14 +163,14 @@ export const fetchGroups = (groups) => async(dispatch)=>{
     }
 
     export const deleteTheGroup = (groupId) => async(dispatch)=>{
-      console.log("In the thunk", groupId)
+      // console.log("In the thunk", groupId)
 
       const res = await csrfFetch(`/api/groups/${groupId}`,{
         method: "DELETE",
       })
       const data = await res.json()
       if(res.ok){
-        console.log('Going to the reducer')
+        // console.log('Going to the reducer')
         dispatch((deleteGroup(groupId)))
         return data
       }else{
@@ -216,7 +216,7 @@ const groupsReducer = (groupState = {groups:{}, currGroup:{}, groupEvents:{}}, a
 
       case LOAD_EVENTS_BY_GROUPID:{
         // const newState ={}
-        console.log('ACTION',action.groupId.Events)
+        // console.log('ACTION',action.groupId.Events)
         // for(const key in action.groupId.Events){
         //   newState[key] = action.groupId.Events[key]
         // }
@@ -256,10 +256,10 @@ const groupsReducer = (groupState = {groups:{}, currGroup:{}, groupEvents:{}}, a
         }
 
       case DELETE_GROUP:
-        console.log('ACTION',action)
+        // console.log('ACTION',action)
         const newState = { ...groupState.groups };
-        console.log('NEWSTATE',newState)
-        console.log('WANT TO DELETE', newState[action.groupId])
+        // console.log('NEWSTATE',newState)
+        // console.log('WANT TO DELETE', newState[action.groupId])
         delete newState[action.groupId];
         // newState.currGroup = {}
         return {...groupState, groups: newState};

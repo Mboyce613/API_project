@@ -56,27 +56,60 @@ const EventInfo = () => {
     //! WHY FIRST NAME FALSE?
     // const isHost = user?.fristName === event.hostFirstName && user?.lastName === event.hostLastName
     const isHost = user?.lastName === event.hostLastName
-    console.log('USER',user)
-    console.log('HOSTFN',event.hostFirstName)
-    console.log('HOSTLN',event.hostLastName)
-    console.log('ISHOST',isHost)
-    console.log('TEST FN',user?.fristName === event.hostFirstName)
-    console.log('TEST LN',user?.lastName === event.hostLastName)
+    // console.log('USER',user)
+    // console.log('HOSTFN',event.hostFirstName)
+    // console.log('HOSTLN',event.hostLastName)
+    // console.log('ISHOST',isHost)
+    // console.log('TEST FN',user?.fristName === event.hostFirstName)
+    // console.log('TEST LN',user?.lastName === event.hostLastName)
     let showButtons = false
     if(isHost) showButtons = true
-    //!
+    
+    const groupImage = group.GroupImages.find((image)=>image.preview === true )
+    const eventImage = event.EventImages.find((image)=>image.preview === true )
 
     return (
       <>
-      <Link to='/events'>Events</Link>
-
-        <section>
-        <div>{event.name}</div>
-        <div>Hosted by {event.hostFirstName} {event.hostLastName}</div>
+      <section className='eventdetailsmaster'>
+        <section className='eventdetailone'>
+        <Link to='/events'>Events</Link>
+        <div className='eventdetailname'>{event.name}</div>
+        <div className='isgray'>Hosted by {event.hostFirstName} {event.hostLastName}</div>
         </section>
-
-      <img src={event.EventImages[0].url} />
-      {showButtons && <button>Update</button>}
+        <section className='graybackground'>
+      <section className='eventdetailtwo'>
+      <section className='eventdetailimageandinfo'>
+      <img className='eventdetaileventimage' src={eventImage.url} />
+      <section className='eventdetailgroupandenventinfo'>
+      <section className='eventdetailgroupinfo'>
+        <img className='eventdetailgroupimage' src={groupImage.url} />
+        <section className='eventdetailgroupinfo2'>
+        <div>{group.name}</div>
+        {/* <div>{"\u00b7"}</div> */}
+        <div>{gPrivate}</div>
+        </section>
+      </section>
+      <section className='eventdetaileventinfo'>
+        <section className='eventdetailtimesection'>
+        <i class="fa-regular fa-clock"></i>
+        <section className='eventdetailtimesection2'>
+        <div>START {startYear} {"\u00b7"} {startHour}</div>
+        <div>END {endYear} {"\u00b7"} {endHour}</div>
+        </section>
+        </section>
+        <section className='money'>
+        <i className="fa-solid fa-dollar-sign"></i>
+        <section className='money2'>
+        <div>{price}</div>
+        </section>
+        </section>
+        <section className='location'>
+        <i className="fa-solid fa-map-pin"></i>
+        <section className='location2'>
+        <div>{event.type}</div>
+        </section>
+        </section>
+        {showButtons && <button>Update</button>}
       {showButtons && <OpenModalButton
               itemText="Are You Sure?"
               buttonText="Delete"
@@ -86,23 +119,16 @@ const EventInfo = () => {
 
             />}
 
-      <section>
-        <img src={group.GroupImages[0].url} />
-        <div>{group.name}</div>
-        <div>{"\u00b7"}</div>
-        <div>{gPrivate}</div>
+      </section>
+      </section>
+      </section>
       </section>
 
-      <section>
-        <div>START {startYear} {"\u00b7"} {startHour}</div>
-        <div>END {endYear} {"\u00b7"} {endHour}</div>
-        <div>{price}</div>
-        <div>{event.type}</div>
-      </section>
-
-      <section>
+      <section className='eventdetailsthree'>
       <div>Details</div>
       <div>{event.description}</div>
+      </section>
+      </section>
       </section>
       </>
     );
