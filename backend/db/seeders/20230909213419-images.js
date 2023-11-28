@@ -17,16 +17,12 @@ module.exports = {
       {
         imageableId: 1,
         imageableType: 'Group',
-<<<<<<< HEAD
-        url: 'https://www.alamy.com/stock-photo-young-fashionable-goths-dressed-in-black-in-a-church-graveyard-portsmouth-72780708.html',
-=======
         url: 'https://www.telegraph.co.uk/content/dam/news/2016/05/16/Whitby_Goth_Weeken_3093992k_trans_NvBQzQNjv4BqytFz5FCbPbqrOtsvFO4XOxuLPtL1t_4Ku7JyceSxvt4.jpg?imwidth=960',
->>>>>>> frontend-css-groups
         preview: true,
       },
       {
         imageableId: 1,
-        imageableType: 'Event',
+        imageableType: 'Evqent',
         url: 'https://foo3.com',
         preview: false,
       },
@@ -45,11 +41,7 @@ module.exports = {
       {
         imageableId: 2,
         imageableType: 'Group',
-<<<<<<< HEAD
-        url: 'https://i0.wp.com/www.vampires.com/wordpress/wp-content/uploads/2011/03/DSCF0070.jpg?w=1500&ssl=1',
-=======
         url: 'https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/307463561_419240617016471_3371332814708565547_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_ohc=c5jIh13I6z0AX-4RuQ0&_nc_ht=scontent-sea1-1.xx&oh=00_AfAtozQ53eK4VPv_Apw6kdc06Cr-ORERQhhef_di_V0qog&oe=6567A26D',
->>>>>>> frontend-css-groups
         preview: true,
       },
       {
